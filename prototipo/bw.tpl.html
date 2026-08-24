@@ -821,8 +821,8 @@ body.through #site{display:block;padding-top:49px}
     /* The lattice lives only in z [-159, -75]. Bounding it in space is what
        lets the camera leave it behind and cross real darkness before the wall,
        instead of the scene being switched out from under the viewer. */
-    "const float NET_MID = -320.0;",
-    "const float NET_HALF = 180.0;",
+    "const float NET_MID = 350.0;",
+    "const float NET_HALF = 320.0;",
     "float netMap(vec3 p, out float seed){",
     "  vec3 id = floor(p / 7.5);",
     "  float r = h31(id);",
@@ -863,10 +863,11 @@ body.through #site{display:block;padding-top:49px}
     "",
     /* A single path in Z. The entry flight covers the lattice and the darkness
        past it; scroll covers the approach. No branch, so no cut. */
-    "  float cz  = mix(-520.0, -30.0, uEntry)",
+    "  float adv = mix(0.0, 834.0, uEntry)",
     "            + (mix(0.0, 26.8, uAppr) + uCross * uCross * 22.0) * uEntry;",
+    "  float wallZ = 870.0 - adv;",
     "  float fov = 1.40 - uCross * 0.24;",
-    "  vec3  ro  = vec3(uM.x * 0.9, 0.5 + uM.y * 0.4 + sin(uT * 0.29) * 0.05, cz);",
+    "  vec3  ro  = vec3(uM.x * 0.9, 0.5 + uM.y * 0.4, -6.0);",
     /* PITCH tilts the view up so the horizon sits at ~64% of frame height
        instead of dead centre, which is how the wall gets to own the frame. */
     "  vec3  rd  = normalize(vec3(uv.x * fov, uv.y * fov + 0.12, 1.0));",
@@ -875,19 +876,20 @@ body.through #site{display:block;padding-top:49px}
           is anywhere near the band — that test is uniform, so no divergence. ── */
     "  vec3 netCol = vec3(0.0);",
     "  float netA = 0.0;",
-    "  if(ro.z < NET_MID + NET_HALF + 50.0){",
+    "  if(adv < 700.0){",
     "    float tn = 0.0, sd = 0.0, sdh = 0.0, hitn = 0.0;",
     "    for(int i = 0; i < 44; i++){",
     "      vec3 p = ro + rd * tn;",
-    "      float d = netMap(p, sd);",
+    "      float d = netMap(vec3(p.x, p.y, p.z + adv), sd);",
     "      if(d < 0.02 + tn * 0.0025){ hitn = 1.0; sdh = sd; break; }",
     "      tn += max(d * 0.85, 0.03);",
-    "      if(tn > 320.0) break;",
+    "      if(tn > 720.0) break;",
     "    }",
     "    if(hitn > 0.5){",
     "      vec3 p = ro + rd * tn;",
-    "      vec3 id = floor(p / 7.5);",
-    "      vec3 q = p - (id + 0.5) * 7.5;",
+    "      vec3 po = vec3(p.x, p.y, p.z + adv);",
+    "      vec3 id = floor(po / 7.5);",
+    "      vec3 q = po - (id + 0.5) * 7.5;",
     "      float ori = sdh * 3.0;",
 "      float L = 1.9 + fract(sdh * 7.3) * 2.6;",
 "      float T = 0.16 + fract(sdh * 3.1) * 0.24;",
@@ -912,14 +914,28 @@ body.through #site{display:block;padding-top:49px}
     "      netA = ss(300.0, 190.0, tn);",
     /* and fade the whole field out as the camera leaves the band, otherwise
        dimly-lit blocks linger through the darkness that should be empty */
-    "      float netFade = ss(-115.0, -150.0, ro.z);",
+    "      float netFade = ss(834.0, 690.0, adv);",
     "      netA *= netFade;",
     "      netCol *= netA;",
     "    }",
     "  }",
     /* the beam belongs to the lattice: it fades as the lattice is left behind */
-    "  float netNear = ss(-120.0, -155.0, ro.z);",
-    "  netCol += vec3(1.0, 0.16, 0.42) * exp(-abs(uv.y + 0.02) * 34.0) * 0.42 * netNear;",
+    /* The seam never goes out. It used to be gated to the tunnel and cut to
+       zero on exit, so it vanished and then the wall grew back in on its own —
+       hence the blink. Now it widens and brightens continuously from mid-tunnel
+       until the wall itself arrives. */
+    /* The window the wall is revealed through: a thin slit on the horizon that
+       opens vertically. The threads inside it are the wall's own, which is why
+       the seam looks textured rather than like a painted glow. */
+    "  float grow = ss(500.0, 820.0, adv);",
+    "  float slit = exp(-abs(uv.y + 0.02) * mix(62.0, 2.2, grow));",
+    "  float winOpen = mix(slit, 1.0, ss(0.86, 1.0, grow));",
+    /* and a soft halo bleeding out of the slit, strongest while it is narrow */
+    /* The halo starts at zero. It had a 0.30 floor, which bled red into the
+       empty space between the tunnel blocks for the whole flight — those gaps
+       must stay pure black until the seam actually opens. */
+    "  netCol += vec3(1.0, 0.16, 0.42) * slit * (grow * grow * 0.95)",
+    "            * (1.0 - ss(0.80, 1.0, grow) * 0.75);",
     "",
     /* ── floor of scattered dots, in perspective ── */
     "  vec3 floorCol = vec3(0.0);",
@@ -930,27 +946,33 @@ body.through #site{display:block;padding-top:49px}
     /* The dots share the thread grid in X. That alignment is what makes them
        read as radial rows running out from the foot of each thread, which is
        the thing an independent scattered grid could never reproduce. */
-    "      vec2 cc = vec2(gp.x / LINE_SP, gp.z / 0.44);",
+        /* match the wall's subdivision level so the rows continue its threads.
+       Derived from the wall distance, not per-ray, so the whole floor shares
+       one grid. */
+    "      float pitchW = (LINE_SP / (fov * max(wallZ - ro.z, 0.001))) * H2;",
+    "      float spW = LINE_SP / exp2(floor(max(log2(max(pitchW / 7.0, 1.0)), 0.0)));",
+    "      vec2 cc = vec2(gp.x / spW, (gp.z + adv) / 0.44);",
     "      vec2 cid = floor(cc);",
     "      float r = h21(cid);",
     "      vec2 f = cc - cid - 0.5;",
     /* square dots, not gaussian smudges */
-    "      float hw = 0.17 / LINE_SP * 0.5;",
+    "      float hw = 0.17 / spW * 0.5;",
     "      float hh = 0.15 / 0.44 * 0.5;",
     "      float sx = clamp((hw - abs(f.x)) / (hw * 0.55), 0.0, 1.0);",
     "      float sz = clamp((hh - abs(f.y)) / (hh * 0.55), 0.0, 1.0);",
     "      float d0 = sx * sz * step(0.12, r);",
     "      d0 *= 0.5 + 0.5 * sin(uT * 1.7 + r * 52.0 - gp.z * 0.4);",
     /* distant dot rows fall below a pixel: fade to their mean, do not alias */
-    "      float aaD = clamp((LINE_SP / (fov * max(tg, 0.001))) * H2 / 2.0, 0.0, 1.0);",
+    "      float aaD = clamp((spW / (fov * max(tg, 0.001))) * H2 / 2.0, 0.0, 1.0);",
     "      d0 = 0.14 * (1.0 - aaD) + d0 * aaD;",
     "      float bl = clamp(uAppr * 1.2 - 0.35, 0.0, 1.0);",
     /* exp(-tg) alone put the dots brightest under the camera and dimmest at
        the wall — backwards. Concentrate them where the wall stands. */
     /* Hard-limited to a region around the wall. Between the block field and
        the wall the floor is bare — the dots do not carpet the approach. */
-    "      float region = ss(-40.0, -20.0, gp.z);",
-    "      float att = region * exp(-abs(gp.z) * 0.030) * exp(-tg * 0.011);",
+    "      float ownZ = gp.z + adv;",
+    "      float region = ss(842.0, 864.0, ownZ) * ss(898.0, 878.0, ownZ);",
+    "      float att = region * exp(-abs(ownZ - 870.0) * 0.055) * exp(-tg * 0.011);",
     "      floorCol = mix(HOT, COLD, bl * r) * d0 * 3.4 * att;",
     "    }",
     "  }",
@@ -963,7 +985,7 @@ body.through #site{display:block;padding-top:49px}
     "  float trans = 1.0;",
     "  for(int k = 0; k < 5; k++){",
     "    float fk = float(k);",
-    "    float tc = (-1.2 + fk * 1.20 - ro.z) / rd.z;",
+    "    float tc = (wallZ + fk * 1.20 - ro.z) / rd.z;",
     "    if(tc <= 0.0) continue;",
     "    vec3 p = ro + rd * tc;",
     "    if(p.y < FLOOR_Y) continue;",
@@ -1057,13 +1079,19 @@ body.through #site{display:block;padding-top:49px}
     "    trans   *= 1.0 - min(occ * 0.62, 0.95);",
     "  }",
     "",
-    "  vec3 col = floorCol + curtCol;",
+    /* the wall and its floor are seen through the opening slit */
+    /* Gate on `grow` as well as the slit. With grow = 0 the slit still equals 1
+       at uv.y = 0, so the distant curtains were rendered in the centre band and
+       their diffuse red filled what should be pure black for the whole flight.
+       The wall does not exist until the seam starts to open. */
+    "  float wallIn = ss(0.03, 0.40, grow);",
+    "  vec3 col = (floorCol + curtCol) * winOpen * wallIn;",
     /* the lattice is nearer than the wall whenever it exists, so it occludes */
     "  col = col * (1.0 - clamp(netA, 0.0, 1.0)) + netCol;",
     "",
     /* ── the photograph, landing on the Act II rectangle ── */
     "  if(uHasPhoto > 0.5 && uReveal > 0.001){",
-    "    float s = max(FZ - ro.z, 0.001);",
+    "    float s = max(wallZ - ro.z, 0.001);",
     /* photo box follows the figure's new scale/lift: centre -0.10*1.95+0.48,
        half-size 0.623*1.95 x 0.85*1.95 */
     "    vec2 srcC = (vec2(0.0, 0.285) - ro.xy) / (fov * s);",
@@ -1105,7 +1133,7 @@ body.through #site{display:block;padding-top:49px}
   var charge = 0, chargeT = 0, autoCharge = false;
   /* The entry flight runs itself; scroll does nothing until it lands. */
   var entry = 0, entryDone = false, entryT0 = 0;
-  var ENTRY_MS = 5200;
+  var ENTRY_MS = 4400;
 
   function sh(type, src){
     var s = gl.createShader(type);

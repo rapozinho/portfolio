@@ -63,5 +63,26 @@ for pat, label in [(r'\bfloat\s+\w+\s*=\s*-?\d+\s*;', 'float assigned a bare int
     m = re.search(pat, frag)
     chk('no ' + label, m is None, m.group(0) if m else '')
 
+
+# Redeclaring a local in the same scope is a compile error, and a shader that
+# fails to compile renders black with no other symptom. Track declarations per
+# brace depth inside main().
+_body = frag[frag.index('void main()'):]
+_depth, _seen, _dupes = 0, {}, []
+for _line in _body.split('\n'):
+    _m = re.match(r'\s*(?:float|int|vec[234]|mat[234]|bool)\s+(\w+)\s*[=;]', _line)
+    if _m:
+        _b = _seen.setdefault(_depth, set())
+        if _m.group(1) in _b:
+            _dupes.append('%s (depth %d)' % (_m.group(1), _depth))
+        _b.add(_m.group(1))
+    for _ch in _line:
+        if _ch == '{':
+            _depth += 1
+        elif _ch == '}':
+            _seen.pop(_depth, None)
+            _depth -= 1
+chk('no redeclared locals', not _dupes, ', '.join(_dupes))
+
 print('\n' + ('ALL STATIC CHECKS PASSED' if ok else 'SOMETHING FAILED — fix before publishing'))
 sys.exit(0 if ok else 1)
