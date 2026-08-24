@@ -24,7 +24,16 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const SITE = "https://mauricioraposo.vercel.app";
+/* Resolved, not hardcoded: the canonical URL and the OG image URL both hang off
+   this, so pinning a domain in source would make every rename a commit.
+   NEXT_PUBLIC_SITE_URL wins when set (the custom domain);
+   VERCEL_PROJECT_PRODUCTION_URL is injected by Vercel on every deploy; the
+   literal is only the local-dev fallback. */
+const SITE =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
