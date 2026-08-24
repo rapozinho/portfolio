@@ -1,0 +1,28 @@
+# Reference material — 221MB, including the source video. Kept locally, not versioned.
+fotosreferenciablackwall/
+
+# Loose screenshots dropped in the root during design review
+*.png
+!prototipo/**/*.png
+
+# Node / build output, in case a Next.js app lands here later
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+*.tsbuildinfo
+
+# Python scratch
+__pycache__/
+*.pyc
+
+# Renderer output (regenerate with: python render.py <tag>)
+prototipo/frames/
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
