@@ -38,7 +38,3 @@ desktop.ini
 /node_modules/
 next-env.d.ts
 *.tsbuildinfo
-
-# Local env (the example file is the one that is versioned)
-.env
-.env.local
