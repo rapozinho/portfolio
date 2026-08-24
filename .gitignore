@@ -26,3 +26,15 @@ desktop.ini
 .DS_Store
 .vscode/
 .idea/
+
+# Originals live in public/ now, served as static files. Versioning both copies
+# would put 21MB of duplicate PDFs in every clone.
+/Certificados/
+/Currículos/
+/oq faco no trampo/
+
+# Next.js build output and dependencies
+/.next/
+/node_modules/
+next-env.d.ts
+*.tsbuildinfo
