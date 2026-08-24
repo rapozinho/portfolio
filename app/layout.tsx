@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Chakra_Petch, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { SITE } from "@/lib/site";
 import "./globals.css";
 
 /* Three roles, self-hosted by next/font so there is no render-blocking request to
@@ -23,16 +24,6 @@ const mono = IBM_Plex_Mono({
   variable: "--font-mono",
   display: "swap",
 });
-
-/* Resolved, not guessed. Vercel injects VERCEL_PROJECT_PRODUCTION_URL at build
-   time, so the canonical and the OG image URL are correct whatever subdomain the
-   project ends up with. Set NEXT_PUBLIC_SITE_URL to override once a real domain
-   is pointed at it. */
-const SITE =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
