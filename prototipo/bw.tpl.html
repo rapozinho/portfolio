@@ -948,6 +948,41 @@ body.through #site{display:block;padding-top:49px}
        off, subtending a thin band at the horizon, and the flight arrives at it.
        Everything that used to open, flash and dissipate here is gone. */
     "  float grow = ss(360.0, 860.0, adv);",
+    /* ── the wall from far: one emissive mass ──────────────────────────
+       At 221 units a thread projects to 2.4px and its lit core to 0.2px, so the
+       wall does not resolve -- what the eye gets is a single glowing mass, and
+       that is the big distorted red rectangle. Measured off 0:37.75: peak 0.58 at
+       the wall's foot, falling over 16.3% of frame height upward against 10.1%
+       downward, colour (1.00, 0.38, 0.71), and a top edge that wanders 40% of the
+       frame -- the raggedness is most of what "distorted" means here.
+    
+       Both edges are the wall's own projection through the same uv mapping as
+       everything else, so the band grows as 1/distance on its own. No curve times
+       this: the thin bright line, the growing rectangle and the dissolve into
+       threads are all one geometric consequence. */
+    "  float wDist = max(wallZ - ro.z, 0.001);",
+    "  float wBase = ((FLOOR_Y - ro.y) / wDist - 0.12) / fov;",
+    "  float wTop  = ((60.0     - ro.y) / wDist - 0.12) / fov;",
+    "  float wBand = max(wTop - wBase, 0.0008);",
+    /* two octaves of wander on the top edge, slow enough to read as instability */
+    "  float wRag = (vn(vec2(uv.x * 2.1, uT * 0.06)) - 0.5) * 0.55",
+    "           + (vn(vec2(uv.x * 6.3, uT * 0.11)) - 0.5) * 0.25;",
+    "  float wEdge = wTop + wRag * wBand;",
+    "  float wDy = uv.y - wBase;",
+    /* up from the foot: soft, cut off at the ragged head. down: the floor's
+       reflection, shorter and dimmer. */
+    "  float wMass = (wDy > 0.0)",
+    "    ? exp(-wDy / (wBand * 0.62)) * ss(wEdge + wBand * 0.12, wEdge - wBand * 0.12, uv.y)",
+    "    : exp(wDy / (wBand * 0.38)) * 0.55;",
+    /* it has to arrive from nothing, but early enough to be the line at 0:36.4 */
+    "  wMass *= ss(1200.0, 420.0, wDist);",
+    "  vec3 wMassCol = vec3(1.00, 0.38, 0.71) * wMass * 0.62;",
+    "",
+    /* Resolution crossfade: 0 while a thread is sub-pixel, 1 once the pitch is
+       wide enough to draw. This is what hands the wall over from mass to threads,
+       and it is why nothing needs to be switched on or timed. */
+    "  float wPitch = (LINE_SP / (fov * wDist)) * H2;",
+    "  float wRes = clamp((wPitch - 1.5) / 12.0, 0.0, 1.0);",
     "",
     /* ── floor of scattered dots, in perspective ── */
     "  vec3 floorCol = vec3(0.0);",
@@ -1128,7 +1163,7 @@ body.through #site{display:block;padding-top:49px}
     /* No gate. The wall is drawn at whatever size its distance gives it, and the
        depth fade above is what keeps it out of sight early -- the same term that
        later brings it up. Nothing switches it on. */
-    "  vec3 col = floorCol + curtCol;",
+    "  vec3 col = mix(wMassCol, floorCol + curtCol, wRes);",
     /* Half occlusion, and this one is a judgement call rather than a
        measurement: at 0:36.4 the red line is composited over the cyan blocks
        rather than hidden behind them, so the lattice cannot occlude the wall
