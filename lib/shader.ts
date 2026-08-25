@@ -87,7 +87,7 @@ export const FRAG = [
   "}",
   "",
   "const float FLOOR_Y = -2.6;",
-  "const float LINE_SP = 0.54;",
+  "const float LINE_SP = 1.40;",
   "const vec3  HOT  = vec3(1.00, 0.06, 0.36);",
   "const vec3  COLD = vec3(0.14, 0.52, 1.00);",
   "const vec3  PALE = vec3(0.80, 0.92, 1.00);",
