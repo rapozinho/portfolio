@@ -975,7 +975,12 @@ body.through #site{display:block;padding-top:49px}
     "    ? exp(-wDy / (wBand * 0.62)) * ss(wEdge + wBand * 0.12, wEdge - wBand * 0.12, uv.y)",
     "    : exp(wDy / (wBand * 0.38)) * 0.55;",
     /* it has to arrive from nothing, but early enough to be the line at 0:36.4 */
-    "  wMass *= ss(1200.0, 420.0, wDist);",
+    /* Timed off the blue passage, which runs adv 0..676 (the lattice spans own
+       z 30..670 and the camera sits at own adv - 6). The ramp opens at 940, just
+       beyond the wall's 936-unit starting distance, so the band is present from
+       the first frame of the passage rather than switching on partway through,
+       and reaches full strength at 440 -- 70% of the way along. */
+    "  wMass *= ss(940.0, 440.0, wDist);",
     "  vec3 wMassCol = vec3(1.00, 0.38, 0.71) * wMass * 0.62;",
     "",
     /* Resolution crossfade: 0 while a thread is sub-pixel, 1 once the pitch is
