@@ -42,3 +42,7 @@ next-env.d.ts
 # Local env (the example file is the one that is versioned)
 .env
 .env.local
+
+# stray syntax-check extracts
+pc*.js
+proto_check.js
