@@ -1029,12 +1029,21 @@ body.through #site{display:block;padding-top:49px}
     /* ── five curtains of threads, front to back ── */
     "  vec3 curtCol = vec3(0.0);",
     "  float trans = 1.0;",
-    "  for(int k = 0; k < 1; k++){",
+    /* Two layers, the second 2 world units back (20px at the reference scale of
+       0.288 cm/px, so about 5.8cm). */
+    "  for(int k = 0; k < 2; k++){",
     "    float fk = float(k);",
     /* Perpendicular depth to the wall plane. tc is the ray length, 2.7x longer
        at the frame edge, which dimmed and crowded the sides. */
-    "    float dw = wallZ + fk * 3.2 - ro.z;",
+    "    float dw0 = wallZ - ro.z;",
+    "    float dw = wallZ + fk * 2.0 - ro.z;",
     "    float tc = dw / rd.z;",
+    /* Screen alignment. Equal world spacing at different depths projects to
+       different pitches, so the layers would coincide only at the centre of the
+       frame and drift 34px apart by the edge. Scaling the spacing by the depth
+       ratio makes the projected pitch identical, so every back thread sits
+       exactly behind a front one at every x. */
+    "    float spScale = dw / max(dw0, 0.001);",
     /* Depth along the view axis, not along world Z. They are the same thing
        looking straight ahead and diverge as soon as the view turns; using dw
        while turned would draw the wall with no perspective compression. */
@@ -1049,7 +1058,9 @@ body.through #site{display:block;padding-top:49px}
     "    float x = p.x;",
     "    x += sign(p.x) * exp(-p.x * p.x * 0.010) * (uAppr * 0.12 + uCross * 3.0);",
     "",
-    "    float id = floor(x / LINE_SP);",
+    /* scaled too, or the layers disagree about which thread is which and the
+       occasional blazing thread lands on different ones */
+    "    float id = floor(x / (LINE_SP * spScale));",
     "    float r2 = h11(id * 3.77 + fk * 13.0);",
     "",
     /* Continuous LOD. Fixed subdivision levels miss at both ends: measured on
@@ -1058,7 +1069,7 @@ body.through #site{display:block;padding-top:49px}
        whose projected pitch lands near TARGET and blend with its neighbour, so
        apparent thread density stays constant at every distance. Two samples,
        not five — cheaper as well as more correct. */
-    "    float pitch0 = (LINE_SP / (fov * zeye)) * H2;",
+    "    float pitch0 = (LINE_SP * spScale / (fov * zeye)) * H2;",
     "    float lod = max(log2(max(pitch0 / 30.0, 1.0)), 0.0);",
     "    float lo = floor(lod);",
     "    float lfrac = lod - lo;",
@@ -1067,18 +1078,20 @@ body.through #site{display:block;padding-top:49px}
     "      float lv = lo + float(wi);",
     "      float wgt = (wi == 0) ? (1.0 - lfrac) : lfrac;",
     "      if(wgt < 0.002) continue;",
-    "      float sp = LINE_SP / exp2(lv);",
+    "      float sp = LINE_SP * spScale / exp2(lv);",
     "      float pitch = pitch0 / exp2(lv);",
     "      float idl = floor(x / sp);",
     "      float fxl = (x / sp - idl - 0.5) * sp;",
     "      float rr = h11(idl * 1.31 + fk * 71.0 + lv * 211.0);",
     "      float w = sp * 0.090;",
     "      float c0 = exp(-(fxl * fxl) / (w * w));",
-    "      float h0 = exp(-(fxl * fxl) / (w * w * (9.0 + fk * 16.0))) * (0.07 + fk * 0.055);",
+    /* identical per layer: a wider halo behind each thread would be glow in the
+       gaps, and the layers are meant to be the same */
+    "      float h0 = exp(-(fxl * fxl) / (w * w * 9.0)) * 0.07;",
     /* 11.0, not 2.2: a thread is 0.090 * pitch wide, so it is sub-pixel from a
        pitch of 11 down. Below that, fade to the mean rather than point-sample. */
     "      float aal = clamp(pitch / 11.0, 0.0, 1.0);",
-    "      float meanl = 0.090 * 1.7724539 * (1.0 + (0.07 + fk * 0.055) * sqrt(9.0 + fk * 16.0));",
+    "      float meanl = 0.090 * 1.7724539 * (1.0 + 0.07 * 3.0);",
     "      line += (meanl + ((c0 + h0) - meanl) * aal) * wgt;",
     "      core += c0 * wgt;",
     "      rsum += rr * wgt;",
@@ -1122,7 +1135,9 @@ body.through #site{display:block;padding-top:49px}
        cross each other, which is what destroyed the rhythm. One leads. During
        the crossing the back ones lift, or the passage goes dark once the camera
        clears the front curtain. */
-    "    float base = pow(0.68, fk);",
+    /* 1.0: "sem tocar no brilho" -- the depth fade is the only separation, which
+       at 2 units is 4%. */
+    "    float base = 1.0;",
     "    float fade = (base + (1.0 - base) * uCross * 0.85) * exp(-zeye * 0.020);",
     "    float a   = line * br * fade;",
     "    float occ = core * br * fade;",
