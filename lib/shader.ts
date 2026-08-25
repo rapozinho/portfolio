@@ -103,9 +103,9 @@ export const FRAG = [
   "",
   /* A single path in Z. The entry flight covers the lattice and the darkness
      past it; scroll covers the approach. No branch, so no cut. */
-  "  float adv = mix(0.0, 848.0, uEntry)",
+  "  float adv = mix(0.0, 908.0, uEntry)",
   "            + (mix(0.0, 19.0, uAppr) + uCross * uCross * 22.0) * uEntry;",
-  "  float wallZ = 870.0 - adv;",
+  "  float wallZ = 930.0 - adv;",
   "  float fov = 1.40 - uCross * 0.24;",
   "  vec3  ro  = vec3(uM.x * 0.9, 0.5 + uM.y * 0.4, -6.0);",
   /* PITCH tilts the view up so the horizon sits at ~64% of frame height
@@ -167,7 +167,7 @@ export const FRAG = [
   /* The window the wall is revealed through: a thin slit on the horizon that
      opens vertically. The threads inside it are the wall's own, which is why
      the seam looks textured rather than like a painted glow. */
-  "  float grow = ss(360.0, 800.0, adv);",
+  "  float grow = ss(360.0, 860.0, adv);",
   "  float slit = exp(-abs(uv.y + 0.02) * mix(62.0, 2.2, grow));",
   "  float winOpen = mix(slit, 1.0, ss(0.86, 1.0, grow));",
   /* and a soft halo bleeding out of the slit, strongest while it is narrow */
@@ -213,9 +213,9 @@ export const FRAG = [
   "      float ownZ = gp.z + adv;",
   /* Outside face only. The band was centred on the wall (850..890) so half
      the dots sat past it — behind the barrier, where nothing should be. The
-     curtains span own 870..875, so the floor has to stop before 870. */
-  "      float region = ss(853.0, 864.0, ownZ) * ss(870.0, 866.0, ownZ);",
-  "      float att = region * exp(-abs(ownZ - 870.0) * 0.110) * exp(-tg * 0.011);",
+     curtains span own 930..935, so the floor has to stop before 930. */
+  "      float region = ss(913.0, 924.0, ownZ) * ss(930.0, 926.0, ownZ);",
+  "      float att = region * exp(-abs(ownZ - 930.0) * 0.110) * exp(-tg * 0.011);",
   "      floorCol = mix(HOT, COLD, bl * r) * d0 * 3.4 * att;",
   "    }",
   "  }",
