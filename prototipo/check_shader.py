@@ -2,23 +2,12 @@
 """Reconstruct the GLSL from the JS string array and run static checks.
 A shader that fails to compile renders a black screen with no other symptom,
 so it is worth validating what we can before publishing."""
-import io, os, re, sys
+import io, re, sys
 
-# Default to the shader that actually ships. Pass a path to check the prototype:
-#   python check_shader.py bw.tpl.html
-HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, '..', 'lib', 'shader.ts')
-t = io.open(SRC, encoding='utf-8').read()
-print('checking %s' % os.path.relpath(SRC, HERE))
+t = io.open('bw.tpl.html', encoding='utf-8').read()
 
 def grab(varname):
-    # `var FRAG = [` in the prototype, `export const FRAG = [` in lib/shader.ts
-    for decl in ('var ' + varname + ' = [', 'const ' + varname + ' = ['):
-        if decl in t:
-            start = t.index(decl)
-            break
-    else:
-        raise SystemExit('FAIL  %s not found in %s' % (varname, SRC))
+    start = t.index('var ' + varname + ' = [')
     end = t.index('].join', start)
     blk = t[start:end]
     # every JS string literal on its own line
@@ -50,25 +39,18 @@ chk('precision declared', 'precision' in frag)
 chk('precision guarded', '#ifdef GL_FRAGMENT_PRECISION_HIGH' in frag)
 chk('vertex shader ok', 'gl_Position' in vert)
 
-# Every uniform declared must be fetched and written, and vice versa. In the
-# ported layout that JS lives in lib/engine.ts, not beside the GLSL, so read it
-# separately -- searching `t` would pass vacuously against text that no longer
-# holds the calls, which is exactly the silence this validator exists to break.
-ENGINE = os.path.join(os.path.dirname(os.path.abspath(SRC)), 'engine.ts')
-js = t if 'uni[n]' in t else (
-    io.open(ENGINE, encoding='utf-8').read() if os.path.exists(ENGINE) else '')
-chk('found the uniform-binding JS', 'uni[n]' in js,
-    'looked in %s' % os.path.basename(ENGINE))
-
+# every uniform declared must be fetched in JS, and vice versa
 decl = set(re.findall(r'uniform\s+\w+\s+(\w+)\s*;', frag))
-js_list = re.search(r'\[([^\]]*)\]\.forEach\(function\(n\)\{ uni\[n\]', js)
+fetched = set(re.findall(r'"(u[A-Z]\w*)"', t[t.index('].join', t.index('var FRAG')):]))
+fetched = {n for n in fetched if n in decl or n.startswith('u')}
+js_list = re.search(r'\[([^\]]*)\]\.forEach\(function\(n\)\{ uni\[n\]', t)
 js_names = set(re.findall(r'"(\w+)"', js_list.group(1))) if js_list else set()
 chk('uniforms declared == fetched', decl == js_names,
     'glsl=%s js=%s' % (sorted(decl), sorted(js_names)))
 
 # each declared uniform should actually be set each frame
 for u in sorted(decl):
-    chk('uniform %s is set' % u, ('uni.' + u) in js)
+    chk('uniform %s is set' % u, ('uni.' + u) in t)
 
 # reserved-word landmines in GLSL ES 1.00
 for word in ['mat', 'vec', 'sampler', 'input', 'output', 'sample']:

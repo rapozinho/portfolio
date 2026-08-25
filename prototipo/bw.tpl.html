@@ -769,7 +769,7 @@ body.through #site{display:block;padding-top:49px}
     "void main(){ gl_Position = vec4(p, 0.0, 1.0); }"
   ].join("\n");
 
-    var FRAG = [
+  var FRAG = [
     "#ifdef GL_FRAGMENT_PRECISION_HIGH",
     "precision highp float;",
     "#else",
@@ -830,9 +830,9 @@ body.through #site{display:block;padding-top:49px}
     "  vec3 q = p - (id + 0.5) * 7.5;",
     "  float rad = max(abs(p.x), abs(p.y));",
     "  float ori = r * 3.0;",
-  "  float L = 1.9 + fract(r * 7.3) * 2.6;",
-  "  float T = 0.16 + fract(r * 3.1) * 0.24;",
-  "  vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
+"  float L = 1.9 + fract(r * 7.3) * 2.6;",
+"  float T = 0.16 + fract(r * 3.1) * 0.24;",
+"  vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
     "  float d = sdBox(q, b);",
     "  if(r > 0.80) d += 7.5;",
     /* carve the corridor: the camera flies down an open channel */
@@ -847,13 +847,9 @@ body.through #site{display:block;padding-top:49px}
     "}",
     "",
     "const float FLOOR_Y = -2.6;",
-    "const float LINE_SP = 1.40;",
-    /* Measured over the lit pixels of 0:41 and 0:42, not chosen. The warm mean
-     is R145 G52 B91 -- magenta with real green and blue in it, not pure red --
-     and the cool mean is R122 G76 B124, which is lavender rather than blue. The
-     floor dots measure (1.00, 0.32, 0.58), close enough that HOT serves both. */
-    "const vec3  HOT  = vec3(1.00, 0.36, 0.63);",
-    "const vec3  COLD = vec3(0.98, 0.61, 1.00);",
+    "const float LINE_SP = 0.54;",
+    "const vec3  HOT  = vec3(1.00, 0.06, 0.36);",
+    "const vec3  COLD = vec3(0.14, 0.52, 1.00);",
     "const vec3  PALE = vec3(0.80, 0.92, 1.00);",
     "",
     "void main(){",
@@ -867,9 +863,9 @@ body.through #site{display:block;padding-top:49px}
     "",
     /* A single path in Z. The entry flight covers the lattice and the darkness
        past it; scroll covers the approach. No branch, so no cut. */
-    "  float adv = mix(0.0, 908.0, uEntry)",
-    "            + (mix(0.0, 19.0, uAppr) + uCross * uCross * 22.0) * uEntry;",
-    "  float wallZ = 930.0 - adv;",
+    "  float adv = mix(0.0, 834.0, uEntry)",
+    "            + (mix(0.0, 26.8, uAppr) + uCross * uCross * 22.0) * uEntry;",
+    "  float wallZ = 870.0 - adv;",
     "  float fov = 1.40 - uCross * 0.24;",
     "  vec3  ro  = vec3(uM.x * 0.9, 0.5 + uM.y * 0.4, -6.0);",
     /* PITCH tilts the view up so the horizon sits at ~64% of frame height
@@ -895,9 +891,9 @@ body.through #site{display:block;padding-top:49px}
     "      vec3 id = floor(po / 7.5);",
     "      vec3 q = po - (id + 0.5) * 7.5;",
     "      float ori = sdh * 3.0;",
-  "      float L = 1.9 + fract(sdh * 7.3) * 2.6;",
-  "      float T = 0.16 + fract(sdh * 3.1) * 0.24;",
-  "      vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
+"      float L = 1.9 + fract(sdh * 7.3) * 2.6;",
+"      float T = 0.16 + fract(sdh * 3.1) * 0.24;",
+"      vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
     /* second-smallest face slack marks an edge, where the glow lives */
     "      vec3 sl = b - abs(q);",
     "      float mn = min(sl.x, min(sl.y, sl.z));",
@@ -931,21 +927,15 @@ body.through #site{display:block;padding-top:49px}
     /* The window the wall is revealed through: a thin slit on the horizon that
        opens vertically. The threads inside it are the wall's own, which is why
        the seam looks textured rather than like a painted glow. */
-    "  float grow = ss(360.0, 860.0, adv);",
+    "  float grow = ss(500.0, 820.0, adv);",
     "  float slit = exp(-abs(uv.y + 0.02) * mix(62.0, 2.2, grow));",
     "  float winOpen = mix(slit, 1.0, ss(0.86, 1.0, grow));",
     /* and a soft halo bleeding out of the slit, strongest while it is narrow */
     /* The halo starts at zero. It had a 0.30 floor, which bled red into the
        empty space between the tunnel blocks for the whole flight — those gaps
        must stay pure black until the seam actually opens. */
-    "  netCol += vec3(1.0, 0.16, 0.42) * slit * (pow(grow, 1.5) * 0.95)",
+    "  netCol += vec3(1.0, 0.16, 0.42) * slit * (grow * grow * 0.95)",
     "            * (1.0 - ss(0.80, 1.0, grow) * 0.75);",
-    /* At 0:38.75 the whole frame goes magenta -- mean brightness jumps to 68
-       against a settled 36 -- and clears in 250ms onto the wall. The seam only
-       faded out monotonically, so that beat was missing. Not multiplied by slit:
-       the point is that it fills the frame rather than hugging the horizon. */
-    "  float bloom = exp(-pow((grow - 0.88) / 0.055, 2.0));",
-    "  netCol += vec3(1.0, 0.30, 0.55) * bloom * 0.75;",
     "",
     /* ── floor of scattered dots, in perspective ── */
     "  vec3 floorCol = vec3(0.0);",
@@ -960,14 +950,11 @@ body.through #site{display:block;padding-top:49px}
        Derived from the wall distance, not per-ray, so the whole floor shares
        one grid. */
     "      float pitchW = (LINE_SP / (fov * max(wallZ - ro.z, 0.001))) * H2;",
-    "      float spW = LINE_SP / exp2(floor(max(log2(max(pitchW / 30.0, 1.0)), 0.0)));",
+    "      float spW = LINE_SP / exp2(floor(max(log2(max(pitchW / 7.0, 1.0)), 0.0)));",
     "      vec2 cc = vec2(gp.x / spW, (gp.z + adv) / 0.44);",
     "      vec2 cid = floor(cc);",
     "      float r = h21(cid);",
-    /* Same offset as the threads, from the same hash and the same column index,
-       or the jitter above would slide every dot row off its thread. */
     "      vec2 f = cc - cid - 0.5;",
-    "      f.x += (h11(cid.x * 7.13) - 0.5) * 0.75;",
     /* square dots, not gaussian smudges */
     "      float hw = 0.17 / spW * 0.5;",
     "      float hh = 0.15 / 0.44 * 0.5;",
@@ -984,16 +971,8 @@ body.through #site{display:block;padding-top:49px}
     /* Hard-limited to a region around the wall. Between the block field and
        the wall the floor is bare — the dots do not carpet the approach. */
     "      float ownZ = gp.z + adv;",
-    /* Outside face only. The band was centred on the wall (850..890) so half
-       the dots sat past it — behind the barrier, where nothing should be. The
-       curtains span own 930..935, so the floor has to stop before 930. */
-    /* The band reached own 913, which projects to 78.7% down the frame -- so the
-       bottom 21% of the screen had no dots at all, while the video keeps 43-48%
-       coverage all the way to the near field. 906 is the bottom edge of the
-       frustum on the floor plane, and the falloff drops from 0.110 to 0.045 so
-       the near rows survive the extra distance. */
-    "      float region = ss(906.0, 918.0, ownZ) * ss(930.0, 926.0, ownZ);",
-    "      float att = region * exp(-abs(ownZ - 930.0) * 0.045) * exp(-tg * 0.011);",
+    "      float region = ss(842.0, 864.0, ownZ) * ss(898.0, 878.0, ownZ);",
+    "      float att = region * exp(-abs(ownZ - 870.0) * 0.055) * exp(-tg * 0.011);",
     "      floorCol = mix(HOT, COLD, bl * r) * d0 * 3.4 * att;",
     "    }",
     "  }",
@@ -1004,12 +983,9 @@ body.through #site{display:block;padding-top:49px}
     /* ── five curtains of threads, front to back ── */
     "  vec3 curtCol = vec3(0.0);",
     "  float trans = 1.0;",
-    "  for(int k = 0; k < 1; k++){",
+    "  for(int k = 0; k < 5; k++){",
     "    float fk = float(k);",
-    /* Perpendicular depth to the wall plane. tc is the ray length, 2.7x longer
-       at the frame edge, which dimmed and crowded the sides. */
-    "    float dw = wallZ + fk * 3.2 - ro.z;",
-    "    float tc = dw / rd.z;",
+    "    float tc = (wallZ + fk * 1.20 - ro.z) / rd.z;",
     "    if(tc <= 0.0) continue;",
     "    vec3 p = ro + rd * tc;",
     "    if(p.y < FLOOR_Y) continue;",
@@ -1029,8 +1005,8 @@ body.through #site{display:block;padding-top:49px}
        whose projected pitch lands near TARGET and blend with its neighbour, so
        apparent thread density stays constant at every distance. Two samples,
        not five — cheaper as well as more correct. */
-    "    float pitch0 = (LINE_SP / (fov * max(dw, 0.001))) * H2;",
-    "    float lod = max(log2(max(pitch0 / 30.0, 1.0)), 0.0);",
+    "    float pitch0 = (LINE_SP / (fov * max(tc, 0.001))) * H2;",
+    "    float lod = max(log2(max(pitch0 / 7.0, 1.0)), 0.0);",
     "    float lo = floor(lod);",
     "    float lfrac = lod - lo;",
     "    float line = 0.0, core = 0.0, rsum = 0.0, wsum = 0.000001;",
@@ -1041,17 +1017,13 @@ body.through #site{display:block;padding-top:49px}
     "      float sp = LINE_SP / exp2(lv);",
     "      float pitch = pitch0 / exp2(lv);",
     "      float idl = floor(x / sp);",
-    /* The video's threads are irregular: median 18px but min 7 and max 94, with
-       a spread/mean of 0.57-0.65. They clump into tufts with wide dark gaps. A
-       perfectly even grid is what made this read as a grid instead of as ICE. */
-    "      float jit = (h11(idl * 7.13) - 0.5) * sp * 0.75;",
-    "      float fxl = (x / sp - idl - 0.5) * sp + jit;",
+    "      float fxl = (x / sp - idl - 0.5) * sp;",
     "      float rr = h11(idl * 1.31 + fk * 71.0 + lv * 211.0);",
     "      float w = sp * 0.090;",
     "      float c0 = exp(-(fxl * fxl) / (w * w));",
-    "      float h0 = exp(-(fxl * fxl) / (w * w * (9.0 + fk * 16.0))) * (0.07 + fk * 0.055);",
+    "      float h0 = exp(-(fxl * fxl) / (w * w * 9.0)) * 0.07;",
     "      float aal = clamp(pitch / 2.2, 0.0, 1.0);",
-    "      float meanl = 0.090 * 1.7724539 * (1.0 + (0.07 + fk * 0.055) * sqrt(9.0 + fk * 16.0));",
+    "      float meanl = 0.090 * 1.7724539 * (1.0 + 0.07 * 3.0);",
     "      line += (meanl + ((c0 + h0) - meanl) * aal) * wgt;",
     "      core += c0 * wgt;",
     "      rsum += rr * wgt;",
@@ -1066,45 +1038,37 @@ body.through #site{display:block;padding-top:49px}
        renderer, noise fired so rarely it produced 1% cool pixels — invisible
        as motion. Two sines at different rates, roughened by a little noise so
        the banding is not mechanical. */
-    /* Measured: 36-48% of the lit pixels are cool, in one soft region spanning
-       85% of the frame width centred at 69%. Not a narrow band sweeping across.
-       Two sine bands could never cover that much area without also reading as
-       stripes, so it is one large slow blob of value noise instead. */
-    "    float blob = vn(vec2(p.x * 0.012 + uT * 0.020, uT * 0.015));",
+    "    float b1 = 0.5 + 0.5 * sin(p.x * 0.095 - uT * 0.30 + fk * 2.1);",
+    "    float b2 = 0.5 + 0.5 * sin(p.x * 0.038 + uT * 0.12 + fk * 1.3);",
     /* max(), not a sum: two summed smoothsteps reached 1.85 before the clamp,
        so the "wave" blanketed the wall and everything read blue. And a higher
        spatial frequency, because at 0.042 a single band filled the screen once
        the visible span shrank to a few units up close. */
-    "    float wave = ss(0.30, 0.72, blob);",
-    "    wave *= 0.80 + 0.4 * vn(vec2(p.x * 0.09, fk * 5.0 + uT * 0.05));",
+    "    float wave = max(ss(0.74, 0.96, b1), ss(0.80, 0.98, b2) * 0.9);",
+    "    wave *= 0.75 + 0.5 * vn(vec2(p.x * 0.09, fk * 5.0 + uT * 0.05));",
     "    wave = clamp(wave, 0.0, 1.0);",
     /* No approach bloom: the blue is the wave and nothing else. And the tint
        is capped — in the reference the waves read violet over magenta, not
        saturated blue. */
-    "    float cold = clamp(wave * 0.90 + uCross * 0.45, 0.0, 1.0);",
+    "    float cold = clamp(wave * 0.60 + uCross * 0.45, 0.0, 1.0);",
     "    float br = 0.80 + r * 0.30;",
     /* A wave LIGHTS the thread it crosses. Tinting alone darkened it: the
        cold colour carries a low red channel. */
     /* the wave lights its thread, but must not out-shine the wall: at 0.90
        the few blue threads became the brightest thing on screen and dominated
        the read even while a minority of pixels */
-    /* Down from 0.40: the cool region is not brighter than the wall in the
-       reference, and it now covers far more area than the old thin bands. */
-    "    br *= 1.0 + wave * 0.15;",
+    "    br *= 1.0 + wave * 0.40;",
     "    br += step(0.76, r2) * 2.8 * r2;",           /* the occasional blazing thread */
     "    br *= 0.72 + 0.28 * sin(uT * 0.66 + r * 37.0);",
-    /* Video brightness runs 34 at the top of the wall to 54 at its base: ratio
-       0.63. ss(70, 14) only reached 0.92 across the visible p.y range of
-       0.5..23.5, so the gradient was barely there. */
-    "    br *= ss(75.0, -25.0, p.y);",
+    "    br *= ss(70.0, 14.0, p.y);",
     "    br *= ss(FLOOR_Y - 0.2, FLOOR_Y + 1.4, p.y);",
     "",
     /* Equal curtains at different depths each project their own spacing and
        cross each other, which is what destroyed the rhythm. One leads. During
        the crossing the back ones lift, or the passage goes dark once the camera
        clears the front curtain. */
-    "    float base = pow(0.68, fk);",
-    "    float fade = (base + (1.0 - base) * uCross * 0.85) * exp(-dw * 0.020);",
+    "    float base = pow(0.42, fk);",
+    "    float fade = (base + (1.0 - base) * uCross * 0.85) * exp(-tc * 0.020);",
     "    float a   = line * br * fade;",
     "    float occ = core * br * fade;",
     "",
@@ -1120,7 +1084,7 @@ body.through #site{display:block;padding-top:49px}
        at uv.y = 0, so the distant curtains were rendered in the centre band and
        their diffuse red filled what should be pure black for the whole flight.
        The wall does not exist until the seam starts to open. */
-    "  float wallIn = ss(0.10, 0.55, grow);",
+    "  float wallIn = ss(0.03, 0.40, grow);",
     "  vec3 col = (floorCol + curtCol) * winOpen * wallIn;",
     /* the lattice is nearer than the wall whenever it exists, so it occludes */
     "  col = col * (1.0 - clamp(netA, 0.0, 1.0)) + netCol;",
@@ -1146,16 +1110,9 @@ body.through #site{display:block;padding-top:49px}
     "",
     /* ── void: at distance the wall is swallowed by black ── */
     "  float d2 = dot(uv, uv);",
-    /* Keyed to max(uAppr, grow), not uAppr. The tight 2.2 vignette belongs to
-       the tunnel flight, but uAppr is still 0 when the wall finishes arriving,
-       so the wall inherited it and lost its outer thirds. grow reaches 1 with
-       the wall, which opens the frame at exactly the right moment. */
-    "  float vOpen = max(uAppr, grow);",
-    "  float vf = exp(-d2 * mix(2.2, 0.26, vOpen));",
+    "  float vf = exp(-d2 * mix(2.2, 0.26, uAppr));",
     "  col *= vf + (1.0 - vf) * 0.05;",
-    /* 1.10 crosses zero at |uv| = 0.95, inside a 16:9 frame -- that was the
-       hard black bar down each side, not a falloff. */
-    "  col *= 1.0 - d2 * mix(1.10, 0.16, vOpen);",
+    "  col *= 1.0 - d2 * 1.10;",
     "",
     "  col += PALE * exp(-pow((uCross - 0.62) / 0.14, 2.0)) * 0.8;",
     /* push colour away from its own luminance: the wall reads as lit glass,
@@ -1167,7 +1124,7 @@ body.through #site{display:block;padding-top:49px}
     "",
     "  gl_FragColor = vec4(max(col, 0.0), 1.0);",
     "}"
-    ].join("\n");
+  ].join("\n");
 
   var glc = $("#gl"), gl = null, prog = null, uni = {}, glRaf = 0;
   var crossT = 0, crossTarget = 0, mx = 0, my = 0, tmx = 0, tmy = 0;

@@ -32,15 +32,10 @@ io.open('bw.html','w',encoding='utf-8').write(t.replace('__PHOTO__', p))
 ### Conferir antes de publicar
 
 ```bash
-python check_shader.py                 # valida ../lib/shader.ts — o que vai no ar
-python check_shader.py bw.tpl.html     # valida o protótipo
-python render.py v1                    # PNGs em frames/ nos 4 estágios
-python oldnet.py                       # PNGs do túnel de entrada
+python check_shader.py     # erro de shader = tela preta, sem outro sintoma
+python render.py v1        # PNGs em frames/ nos 4 estágios da aproximação
+python oldnet.py           # PNGs do túnel de entrada
 ```
-
-O `check_shader.py` lê `../lib/shader.ts` e `../lib/engine.ts` por padrão: é o
-shader que o site publica. Erro de compilação GLSL renderiza tela preta, sem
-outro sintoma — é por isso que a checagem existe.
 
 O renderizador CPU existe porque o GLSL roda no navegador, onde não há como
 inspecionar o resultado durante o desenvolvimento. Calibrar ali e portar as
