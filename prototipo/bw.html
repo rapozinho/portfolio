@@ -1137,8 +1137,7 @@ body.through #site{display:block;padding-top:49px}
     "",
     "  gl_FragColor = vec4(max(col, 0.0), 1.0);",
     "}"
-  ].join("
-");
+  ].join("\n");
 
   var glc = $("#gl"), gl = null, prog = null, uni = {}, glRaf = 0;
   var crossT = 0, crossTarget = 0, mx = 0, my = 0, tmx = 0, tmy = 0;
