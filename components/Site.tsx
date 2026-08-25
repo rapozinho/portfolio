@@ -45,9 +45,14 @@ export default function Site() {
               <i />
               {/* A plain img on purpose: the shader builds its match-cut texture from
                   this element's resolved src, so a responsive srcset would hand it a
-                  different file per device. The asset is already sized 460x628. */}
+                  different file per device.
+
+                  width/height are the file's real intrinsic size, and .ph img sets
+                  height:auto. Both matter: these attributes are presentational hints,
+                  so a height here with no height in the CSS wins and overrides the
+                  intrinsic ratio. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/eu.jpg" alt="Maurício Raposo" width={460} height={628} />
+              <img src="/eu.jpg" alt="Maurício Raposo" width={751} height={1026} />
               <em>{t(IDENT.badge)}</em>
             </div>
             <div>

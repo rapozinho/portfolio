@@ -283,7 +283,9 @@ body.through #site{display:block;padding-top:49px}
 .ident{display:grid;grid-template-columns:210px 1fr;gap:clamp(22px,4vw,46px);align-items:start}
 @media (max-width:760px){.ident{grid-template-columns:1fr}}
 .ph{position:relative;background:var(--void);border:1px solid var(--line-hot)}
-.ph img{width:100%;display:block;filter:grayscale(.35) contrast(1.08) brightness(.96)}
+/* height:auto is load-bearing: without it the img height attribute applies as a
+   presentational hint and overrides the intrinsic ratio. */
+.ph img{width:100%;height:auto;display:block;filter:grayscale(.35) contrast(1.08) brightness(.96)}
 .ph::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(196deg,rgba(255,47,69,.16),transparent 44%),
