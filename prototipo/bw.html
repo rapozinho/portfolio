@@ -830,9 +830,9 @@ body.through #site{display:block;padding-top:49px}
     "  vec3 q = p - (id + 0.5) * 7.5;",
     "  float rad = max(abs(p.x), abs(p.y));",
     "  float ori = r * 3.0;",
-"  float L = 1.9 + fract(r * 7.3) * 2.6;",
-"  float T = 0.16 + fract(r * 3.1) * 0.24;",
-"  vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
+  "  float L = 1.9 + fract(r * 7.3) * 2.6;",
+  "  float T = 0.16 + fract(r * 3.1) * 0.24;",
+  "  vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
     "  float d = sdBox(q, b);",
     "  if(r > 0.80) d += 7.5;",
     /* carve the corridor: the camera flies down an open channel */
@@ -863,9 +863,9 @@ body.through #site{display:block;padding-top:49px}
     "",
     /* A single path in Z. The entry flight covers the lattice and the darkness
        past it; scroll covers the approach. No branch, so no cut. */
-    "  float adv = mix(0.0, 834.0, uEntry)",
-    "            + (mix(0.0, 26.8, uAppr) + uCross * uCross * 22.0) * uEntry;",
-    "  float wallZ = 870.0 - adv;",
+    "  float adv = mix(0.0, 908.0, uEntry)",
+    "            + (mix(0.0, 19.0, uAppr) + uCross * uCross * 22.0) * uEntry;",
+    "  float wallZ = 930.0 - adv;",
     "  float fov = 1.40 - uCross * 0.24;",
     "  vec3  ro  = vec3(uM.x * 0.9, 0.5 + uM.y * 0.4, -6.0);",
     /* PITCH tilts the view up so the horizon sits at ~64% of frame height
@@ -891,9 +891,9 @@ body.through #site{display:block;padding-top:49px}
     "      vec3 id = floor(po / 7.5);",
     "      vec3 q = po - (id + 0.5) * 7.5;",
     "      float ori = sdh * 3.0;",
-"      float L = 1.9 + fract(sdh * 7.3) * 2.6;",
-"      float T = 0.16 + fract(sdh * 3.1) * 0.24;",
-"      vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
+  "      float L = 1.9 + fract(sdh * 7.3) * 2.6;",
+  "      float T = 0.16 + fract(sdh * 3.1) * 0.24;",
+  "      vec3 b = (ori < 2.2) ? vec3(L, T, L) : vec3(T, L * 0.7, T);",
     /* second-smallest face slack marks an edge, where the glow lives */
     "      vec3 sl = b - abs(q);",
     "      float mn = min(sl.x, min(sl.y, sl.z));",
@@ -927,14 +927,14 @@ body.through #site{display:block;padding-top:49px}
     /* The window the wall is revealed through: a thin slit on the horizon that
        opens vertically. The threads inside it are the wall's own, which is why
        the seam looks textured rather than like a painted glow. */
-    "  float grow = ss(500.0, 820.0, adv);",
+    "  float grow = ss(360.0, 860.0, adv);",
     "  float slit = exp(-abs(uv.y + 0.02) * mix(62.0, 2.2, grow));",
     "  float winOpen = mix(slit, 1.0, ss(0.86, 1.0, grow));",
     /* and a soft halo bleeding out of the slit, strongest while it is narrow */
     /* The halo starts at zero. It had a 0.30 floor, which bled red into the
        empty space between the tunnel blocks for the whole flight — those gaps
        must stay pure black until the seam actually opens. */
-    "  netCol += vec3(1.0, 0.16, 0.42) * slit * (grow * grow * 0.95)",
+    "  netCol += vec3(1.0, 0.16, 0.42) * slit * (pow(grow, 1.5) * 0.95)",
     "            * (1.0 - ss(0.80, 1.0, grow) * 0.75);",
     "",
     /* ── floor of scattered dots, in perspective ── */
@@ -950,7 +950,7 @@ body.through #site{display:block;padding-top:49px}
        Derived from the wall distance, not per-ray, so the whole floor shares
        one grid. */
     "      float pitchW = (LINE_SP / (fov * max(wallZ - ro.z, 0.001))) * H2;",
-    "      float spW = LINE_SP / exp2(floor(max(log2(max(pitchW / 7.0, 1.0)), 0.0)));",
+    "      float spW = LINE_SP / exp2(floor(max(log2(max(pitchW / 30.0, 1.0)), 0.0)));",
     "      vec2 cc = vec2(gp.x / spW, (gp.z + adv) / 0.44);",
     "      vec2 cid = floor(cc);",
     "      float r = h21(cid);",
@@ -971,8 +971,11 @@ body.through #site{display:block;padding-top:49px}
     /* Hard-limited to a region around the wall. Between the block field and
        the wall the floor is bare — the dots do not carpet the approach. */
     "      float ownZ = gp.z + adv;",
-    "      float region = ss(842.0, 864.0, ownZ) * ss(898.0, 878.0, ownZ);",
-    "      float att = region * exp(-abs(ownZ - 870.0) * 0.055) * exp(-tg * 0.011);",
+    /* Outside face only. The band was centred on the wall (850..890) so half
+       the dots sat past it — behind the barrier, where nothing should be. The
+       curtains span own 930..935, so the floor has to stop before 930. */
+    "      float region = ss(913.0, 924.0, ownZ) * ss(930.0, 926.0, ownZ);",
+    "      float att = region * exp(-abs(ownZ - 930.0) * 0.110) * exp(-tg * 0.011);",
     "      floorCol = mix(HOT, COLD, bl * r) * d0 * 3.4 * att;",
     "    }",
     "  }",
@@ -983,9 +986,12 @@ body.through #site{display:block;padding-top:49px}
     /* ── five curtains of threads, front to back ── */
     "  vec3 curtCol = vec3(0.0);",
     "  float trans = 1.0;",
-    "  for(int k = 0; k < 5; k++){",
+    "  for(int k = 0; k < 1; k++){",
     "    float fk = float(k);",
-    "    float tc = (wallZ + fk * 1.20 - ro.z) / rd.z;",
+    /* Perpendicular depth to the wall plane. tc is the ray length, 2.7x longer
+       at the frame edge, which dimmed and crowded the sides. */
+    "    float dw = wallZ + fk * 3.2 - ro.z;",
+    "    float tc = dw / rd.z;",
     "    if(tc <= 0.0) continue;",
     "    vec3 p = ro + rd * tc;",
     "    if(p.y < FLOOR_Y) continue;",
@@ -1005,8 +1011,8 @@ body.through #site{display:block;padding-top:49px}
        whose projected pitch lands near TARGET and blend with its neighbour, so
        apparent thread density stays constant at every distance. Two samples,
        not five — cheaper as well as more correct. */
-    "    float pitch0 = (LINE_SP / (fov * max(tc, 0.001))) * H2;",
-    "    float lod = max(log2(max(pitch0 / 7.0, 1.0)), 0.0);",
+    "    float pitch0 = (LINE_SP / (fov * max(dw, 0.001))) * H2;",
+    "    float lod = max(log2(max(pitch0 / 30.0, 1.0)), 0.0);",
     "    float lo = floor(lod);",
     "    float lfrac = lod - lo;",
     "    float line = 0.0, core = 0.0, rsum = 0.0, wsum = 0.000001;",
@@ -1021,9 +1027,9 @@ body.through #site{display:block;padding-top:49px}
     "      float rr = h11(idl * 1.31 + fk * 71.0 + lv * 211.0);",
     "      float w = sp * 0.090;",
     "      float c0 = exp(-(fxl * fxl) / (w * w));",
-    "      float h0 = exp(-(fxl * fxl) / (w * w * 9.0)) * 0.07;",
+    "      float h0 = exp(-(fxl * fxl) / (w * w * (9.0 + fk * 16.0))) * (0.07 + fk * 0.055);",
     "      float aal = clamp(pitch / 2.2, 0.0, 1.0);",
-    "      float meanl = 0.090 * 1.7724539 * (1.0 + 0.07 * 3.0);",
+    "      float meanl = 0.090 * 1.7724539 * (1.0 + (0.07 + fk * 0.055) * sqrt(9.0 + fk * 16.0));",
     "      line += (meanl + ((c0 + h0) - meanl) * aal) * wgt;",
     "      core += c0 * wgt;",
     "      rsum += rr * wgt;",
@@ -1067,8 +1073,8 @@ body.through #site{display:block;padding-top:49px}
        cross each other, which is what destroyed the rhythm. One leads. During
        the crossing the back ones lift, or the passage goes dark once the camera
        clears the front curtain. */
-    "    float base = pow(0.42, fk);",
-    "    float fade = (base + (1.0 - base) * uCross * 0.85) * exp(-tc * 0.020);",
+    "    float base = pow(0.68, fk);",
+    "    float fade = (base + (1.0 - base) * uCross * 0.85) * exp(-dw * 0.020);",
     "    float a   = line * br * fade;",
     "    float occ = core * br * fade;",
     "",
@@ -1084,7 +1090,7 @@ body.through #site{display:block;padding-top:49px}
        at uv.y = 0, so the distant curtains were rendered in the centre band and
        their diffuse red filled what should be pure black for the whole flight.
        The wall does not exist until the seam starts to open. */
-    "  float wallIn = ss(0.03, 0.40, grow);",
+    "  float wallIn = ss(0.10, 0.55, grow);",
     "  vec3 col = (floorCol + curtCol) * winOpen * wallIn;",
     /* the lattice is nearer than the wall whenever it exists, so it occludes */
     "  col = col * (1.0 - clamp(netA, 0.0, 1.0)) + netCol;",
@@ -1110,9 +1116,16 @@ body.through #site{display:block;padding-top:49px}
     "",
     /* ── void: at distance the wall is swallowed by black ── */
     "  float d2 = dot(uv, uv);",
-    "  float vf = exp(-d2 * mix(2.2, 0.26, uAppr));",
+    /* Keyed to max(uAppr, grow), not uAppr. The tight 2.2 vignette belongs to
+       the tunnel flight, but uAppr is still 0 when the wall finishes arriving,
+       so the wall inherited it and lost its outer thirds. grow reaches 1 with
+       the wall, which opens the frame at exactly the right moment. */
+    "  float vOpen = max(uAppr, grow);",
+    "  float vf = exp(-d2 * mix(2.2, 0.26, vOpen));",
     "  col *= vf + (1.0 - vf) * 0.05;",
-    "  col *= 1.0 - d2 * 1.10;",
+    /* 1.10 crosses zero at |uv| = 0.95, inside a 16:9 frame -- that was the
+       hard black bar down each side, not a falloff. */
+    "  col *= 1.0 - d2 * mix(1.10, 0.16, vOpen);",
     "",
     "  col += PALE * exp(-pow((uCross - 0.62) / 0.14, 2.0)) * 0.8;",
     /* push colour away from its own luminance: the wall reads as lit glass,
@@ -1124,7 +1137,8 @@ body.through #site{display:block;padding-top:49px}
     "",
     "  gl_FragColor = vec4(max(col, 0.0), 1.0);",
     "}"
-  ].join("\n");
+  ].join("
+");
 
   var glc = $("#gl"), gl = null, prog = null, uni = {}, glRaf = 0;
   var crossT = 0, crossTarget = 0, mx = 0, my = 0, tmx = 0, tmy = 0;
