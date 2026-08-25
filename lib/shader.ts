@@ -175,18 +175,50 @@ export const FRAG = [
      zero on exit, so it vanished and then the wall grew back in on its own —
      hence the blink. Now it widens and brightens continuously from mid-tunnel
      until the wall itself arrives. */
-  /* The window the wall is revealed through: a thin slit on the horizon that
-     opens vertically. The threads inside it are the wall's own, which is why
-     the seam looks textured rather than like a painted glow. */
-  "  float grow = ss(360.0, 860.0, adv);",
-  "  float slit = exp(-abs(uv.y + 0.02) * mix(62.0, 2.2, grow));",
-  "  float winOpen = mix(slit, 1.0, ss(0.86, 1.0, grow));",
-  /* and a soft halo bleeding out of the slit, strongest while it is narrow */
-  /* The halo starts at zero. It had a 0.30 floor, which bled red into the
-     empty space between the tunnel blocks for the whole flight — those gaps
-     must stay pure black until the seam actually opens. */
-  "  netCol += vec3(1.0, 0.16, 0.42) * slit * (pow(grow, 1.5) * 0.95)",
-  "            * (1.0 - ss(0.80, 1.0, grow) * 0.75);",
+  /* ── the seam, in four phases ──────────────────────────────────────
+     One curve per phase instead of one `grow` driving everything, so the line
+     can hold its hard edge while the band is already expanding behind it. */
+  "  float grow  = ss(360.0, 860.0, adv);",
+  /* grow saturates before the flight ends, which crams the last three beats into
+     its final 2%. uEntry is the eased progress, so undoing the easing recovers a
+     value linear in time, and every constant below is just the reference's
+     millisecond over 2600. */
+  "  float kt = 1.0 - pow(max(1.0 - uEntry, 0.0001), 0.71429);",
+  "  float sp = clamp((kt - 0.3027) / 0.5909, 0.0, 1.0);",
+  "  float gLine  = ss(0.000, 0.154, sp);",
+  "  float gOpen  = ss(0.077, 0.519, sp);",
+  /* the blow-out, 250ms wide: narrow on purpose, it is the one moment of impact */
+  "  float gFlash = exp(-pow((sp - 0.904) / 0.058, 2.0));",
+  "  float gClear = ss(0.923, 1.000, sp);",
+  "",
+  /* Asymmetric aperture, from 0:37.75: a hard core on the lower edge, a soft
+     bloom spreading up, and a shorter reflection below it. A symmetric
+     exponential cannot produce any of those three. */
+  "  float hy = uv.y + 0.02;",
+  "  float halfW = mix(0.0055, 0.235, gOpen * gOpen);",
+  /* an unstable edge, not a UI rule: the line breathes about a pixel */
+  "  halfW *= 1.0 + 0.10 * sin(uT * 5.7) * (1.0 - gOpen);",
+  "  float sCore  = 1.0 - ss(halfW * 0.5, halfW, abs(hy));",
+  "  float sAbove = exp(-max(hy, 0.0) / (halfW * 2.1));",
+  "  float sBelow = exp(-max(-hy, 0.0) / (halfW * 0.65)) * 0.5;",
+  /* a bright node running the length of the line while it is still a line */
+  "  float nx = fract(uT * 0.21) * 2.6 - 1.3;",
+  "  float node = exp(-pow((uv.x - nx) / 0.075, 2.0)) * (1.0 - gOpen);",
+  "  float seam = clamp(sCore * (1.0 + node * 1.7) + sAbove * 0.7 + sBelow, 0.0, 1.8);",
+  "",
+  /* The wall is seen through the aperture and nowhere else until gClear opens
+     the frame. That gate is the difference between a reveal and a crossfade. */
+  "  float winOpen = clamp(sCore + sAbove * 0.85, 0.0, 1.0);",
+  "  winOpen = mix(winOpen, 1.0, gClear);",
+  "",
+  /* deep red while it is a line, magenta once it is a band */
+  "  vec3 seamCol = mix(vec3(1.00, 0.09, 0.20), vec3(1.00, 0.34, 0.62), gOpen);",
+  /* (1.0 - gClear) takes it to exactly zero. The old term stopped at 0.25, which
+     left a permanent wash in every gap between the threads. */
+  "  netCol += seamCol * seam * gLine * (1.0 - gClear) * 0.95;",
+  /* the flash is not masked by the aperture -- filling the frame is the point */
+  "  netCol += vec3(1.00, 0.40, 0.68) * gFlash * 0.85;",
+  /* the halo is part of the aperture above, not a separate term */
   "",
   /* ── floor of scattered dots, in perspective ── */
   "  vec3 floorCol = vec3(0.0);",
@@ -347,7 +379,8 @@ export const FRAG = [
      at uv.y = 0, so the distant curtains were rendered in the centre band and
      their diffuse red filled what should be pure black for the whole flight.
      The wall does not exist until the seam starts to open. */
-  "  float wallIn = ss(0.10, 0.55, grow);",
+  /* tied to gOpen, so the threads arrive with the aperture that shows them */
+  "  float wallIn = clamp(gOpen * 1.35, 0.0, 1.0);",
   "  vec3 col = (floorCol + curtCol) * winOpen * wallIn;",
   /* the lattice is nearer than the wall whenever it exists, so it occludes */
   "  col = col * (1.0 - clamp(netA, 0.0, 1.0)) + netCol;",
