@@ -38,6 +38,9 @@ export function mountEngine(o: EngineOpts): Engine {
 
   var glc: any = $("#gl"), gl: any = null, prog: any = null, uni: any = {}, glRaf = 0;
   var crossT = 0, crossTarget = 0, mx = 0, my = 0, tmx = 0, tmy = 0;
+  /* keyboard and touch contribution to the look, kept separate from the
+     pointer so neither erases the other */
+  var kx = 0;
   /* charge = how hard you are pushing against the wall (0..1). It decays
      when you stop, so the crossing has to be earned in one sustained push. */
   var charge = 0, chargeT = 0, autoCharge = false;
@@ -160,7 +163,10 @@ export function mountEngine(o: EngineOpts): Engine {
     if(!glT0) glT0 = ms;
     var t = (ms - glT0) / 1000;
     /* inertia on the pointer: the wall is heavy */
-    mx += (tmx - mx) * 0.055;
+    /* 0.055 made the wall feel heavy, which is right for the approach and
+       wrong for looking around. The look tracks at 0.10; the vertical drift
+       keeps its weight. */
+    mx += (Math.max(-1, Math.min(1, tmx + kx)) - mx) * 0.10;
     my += (tmy - my) * 0.055;
   
     /* the automatic entry flight, then hand over to scroll */
@@ -345,16 +351,28 @@ export function mountEngine(o: EngineOpts): Engine {
   on(window, "keydown", function(e: any){
     if(crossed) return;
     if(e.key === "ArrowDown" || e.key === "PageDown" || e.key === " "){ push(0.085); e.preventDefault() }
+    else if(e.key === "ArrowLeft"){  kx = Math.max(-1, kx - 0.22); e.preventDefault() }
+    else if(e.key === "ArrowRight"){ kx = Math.min( 1, kx + 0.22); e.preventDefault() }
     else if(e.key === "Enter"){ autoCharge = true }
   });
   
-  var touchY: number | null = null;
-  on(window, "touchstart", function(e: any){ touchY = e.touches[0].clientY }, {passive:true});
+  var touchY: number | null = null, touchX: number | null = null;
+  on(window, "touchstart", function(e: any){
+    touchY = e.touches[0].clientY;
+    touchX = e.touches[0].clientX;
+  }, {passive:true});
   on(window, "touchmove", function(e: any){
     if(crossed || touchY === null) return;
     var y = e.touches[0].clientY;
     if(touchY - y > 0) push((touchY - y) * PUSH * 2.2);
     touchY = y;
+    /* vertical drag is the push, horizontal is the look: one axis each, so a
+       diagonal drag does both instead of neither */
+    if(touchX !== null){
+      var x = e.touches[0].clientX;
+      kx = Math.max(-1, Math.min(1, kx + (x - touchX) / Math.max(1, innerWidth) * 2.4));
+      touchX = x;
+    }
   }, {passive:true});
   
   /* the button does the pushing for you — nobody is forced to scroll */

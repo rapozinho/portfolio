@@ -867,10 +867,21 @@ body.through #site{display:block;padding-top:49px}
     "            + (mix(0.0, 19.0, uAppr) + uCross * uCross * 22.0) * uEntry;",
     "  float wallZ = 930.0 - adv;",
     "  float fov = 1.40 - uCross * 0.24;",
-    "  vec3  ro  = vec3(uM.x * 0.9, 0.5 + uM.y * 0.4, -6.0);",
+    /* The origin does not move. uM.x turns the view instead of sliding it:
+       sliding sideways was parallax against a static-viewpoint scene, which is
+       the one thing this composition is not allowed to do. */
+    "  vec3  ro  = vec3(0.0, 0.5 + uM.y * 0.4, -6.0);",
     /* PITCH tilts the view up so the horizon sits at ~64% of frame height
        instead of dead centre, which is how the wall gets to own the frame. */
     "  vec3  rd  = normalize(vec3(uv.x * fov, uv.y * fov + 0.12, 1.0));",
+    /* Yaw about Y, up to +/-0.62 rad (~35 deg). Damped to zero through the
+       crossing: the photo match cut is measured in screen space against a
+       forward view, so a turned camera would land the face off its rectangle. */
+    "  float yaw = uM.x * 0.55 * (1.0 - uCross);",
+    "  float cy = cos(yaw), sy = sin(yaw);",
+    "  rd = vec3(rd.x * cy + rd.z * sy, rd.y, rd.z * cy - rd.x * sy);",
+    /* the view axis after turning, so depth can be measured along it */
+    "  vec3  fwd = vec3(sy, 0.0, cy);",
     "",
     /* ── Old Net lattice, gathered as a layer. Marched only while the camera
           is anywhere near the band — that test is uniform, so no divergence. ── */
@@ -992,6 +1003,10 @@ body.through #site{display:block;padding-top:49px}
        at the frame edge, which dimmed and crowded the sides. */
     "    float dw = wallZ + fk * 3.2 - ro.z;",
     "    float tc = dw / rd.z;",
+    /* Depth along the view axis, not along world Z. They are the same thing
+       looking straight ahead and diverge as soon as the view turns; using dw
+       while turned would draw the wall with no perspective compression. */
+    "    float zeye = max(tc * dot(rd, fwd), 0.001);",
     "    if(tc <= 0.0) continue;",
     "    vec3 p = ro + rd * tc;",
     "    if(p.y < FLOOR_Y) continue;",
@@ -1011,7 +1026,7 @@ body.through #site{display:block;padding-top:49px}
        whose projected pitch lands near TARGET and blend with its neighbour, so
        apparent thread density stays constant at every distance. Two samples,
        not five — cheaper as well as more correct. */
-    "    float pitch0 = (LINE_SP / (fov * max(dw, 0.001))) * H2;",
+    "    float pitch0 = (LINE_SP / (fov * zeye)) * H2;",
     "    float lod = max(log2(max(pitch0 / 30.0, 1.0)), 0.0);",
     "    float lo = floor(lod);",
     "    float lfrac = lod - lo;",
@@ -1028,7 +1043,9 @@ body.through #site{display:block;padding-top:49px}
     "      float w = sp * 0.090;",
     "      float c0 = exp(-(fxl * fxl) / (w * w));",
     "      float h0 = exp(-(fxl * fxl) / (w * w * (9.0 + fk * 16.0))) * (0.07 + fk * 0.055);",
-    "      float aal = clamp(pitch / 2.2, 0.0, 1.0);",
+    /* 11.0, not 2.2: a thread is 0.090 * pitch wide, so it is sub-pixel from a
+       pitch of 11 down. Below that, fade to the mean rather than point-sample. */
+    "      float aal = clamp(pitch / 11.0, 0.0, 1.0);",
     "      float meanl = 0.090 * 1.7724539 * (1.0 + (0.07 + fk * 0.055) * sqrt(9.0 + fk * 16.0));",
     "      line += (meanl + ((c0 + h0) - meanl) * aal) * wgt;",
     "      core += c0 * wgt;",
@@ -1036,7 +1053,7 @@ body.through #site{display:block;padding-top:49px}
     "      wsum += wgt;",
     "    }",
     "    float r  = rsum / wsum;",
-    "    float aa = clamp(pitch0 / 2.2, 0.0, 1.0);",
+    "    float aa = clamp(pitch0 / 11.0, 0.0, 1.0);",
     "",
     "    float dash = 0.72 + 0.28 * aa * sin(p.y * 0.85 - uT * 2.1 + r * 40.0);",
     /* Every thread is red. What is blue is a WAVE sweeping across the wall.
@@ -1074,7 +1091,7 @@ body.through #site{display:block;padding-top:49px}
        the crossing the back ones lift, or the passage goes dark once the camera
        clears the front curtain. */
     "    float base = pow(0.68, fk);",
-    "    float fade = (base + (1.0 - base) * uCross * 0.85) * exp(-dw * 0.020);",
+    "    float fade = (base + (1.0 - base) * uCross * 0.85) * exp(-zeye * 0.020);",
     "    float a   = line * br * fade;",
     "    float occ = core * br * fade;",
     "",
