@@ -20,7 +20,7 @@ export const NAV: Array<{ id: string; label: Bi }> = [
   { id: "ident", label: { pt: "identificação", en: "identity" } },
   { id: "projetos", label: { pt: "projetos", en: "projects" } },
   { id: "traj", label: { pt: "trajetória", en: "career" } },
-  { id: "pericia", label: { pt: "perícia", en: "skills" } },
+  { id: "competencias", label: { pt: "competências", en: "skills" } },
   { id: "stack", label: { pt: "stack", en: "stack" } },
   { id: "shards", label: { pt: "certificados", en: "certificates" } },
   { id: "net", label: { pt: "contato", en: "contact" } },
@@ -266,7 +266,7 @@ export const SKILLS: Skill[] = [
 export type Tier = "core" | "reg" | "seen";
 
 export const STACK_LEDE: Bi = {
-  pt: "Agrupado por quanto eu encosto em cada coisa, não por categoria. É a única pergunta que esta seção responde e a Perícia não.",
+  pt: "Agrupado por quanto eu encosto em cada coisa, não por categoria. É a única pergunta que esta seção responde e Competências não.",
   en: "Grouped by how much I actually touch each thing, not by category. It is the one question this section answers and Skills does not.",
 };
 
@@ -392,7 +392,7 @@ export const SEC_TITLES = {
   ident: IDENT.title,
   projetos: { pt: "Projetos", en: "Projects" },
   traj: { pt: "Trajetória", en: "Career" },
-  pericia: { pt: "Perícia", en: "Skills" },
+  competencias: { pt: "Competências", en: "Skills" },
   stack: { pt: "Stack", en: "Stack" },
   shards: { pt: "Certificados", en: "Certificates" },
   net: { pt: "Contato", en: "Contact" },

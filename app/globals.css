@@ -101,7 +101,10 @@ body.through #top{transform:none}
 }
 #lang:hover{color:var(--amber);border-color:var(--amber)}
 #lang b{color:var(--amber);font-weight:400}
-@media (max-width:860px){
+/* 920, measured rather than calculated. The nav renders at 729px -- my estimate
+   said 714 -- and it has no wrap and no scroll, so it overflowed anywhere below
+   about 915px. 860 left a 55px band broken and 900 still left 19px of it. */
+@media (max-width:920px){
   #nav{display:none}
   #top{padding:10px 14px}
 }

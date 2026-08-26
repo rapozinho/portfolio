@@ -148,9 +148,9 @@ export default function Site() {
       </section>
 
       {/* ── 04 PERÍCIA ── */}
-      <section className="sec" id="pericia">
+      <section className="sec" id="competencias">
         <div className="wrap">
-          <SecHead n="04" title={t(SEC_TITLES.pericia)} />
+          <SecHead n="04" title={t(SEC_TITLES.competencias)} />
           <p className="sk__lede" data-r style={{ "--i": 0 } as React.CSSProperties}>
             {t(SKILLS_LEDE)}
           </p>
