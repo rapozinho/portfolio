@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   CONTACT, CV, CV_LABEL, CV_VALUE, FOOT, IDENT, PORTALS, SEC_TITLES,
-  SHARDS, SHARD_FILTERS, SHARD_NOTE, SKILLS, SKILLS_LEDE, STACK, TIERS,
-  TIMELINE, type Shard, type Tier,
+  SHARDS, SHARD_FILTERS, SHARD_NOTE, SKILLS, SKILLS_LEDE, STACK,
+  STACK_LEDE, TIMELINE, type Shard,
 } from "@/lib/content";
 import CertModal from "./CertModal";
 import { Rich, useLang } from "./Lang";
@@ -26,15 +26,9 @@ function SecHead({ n, title }: { n: string; title: string }) {
 
 export default function Site() {
   const { lang, t } = useLang();
-  const [tier, setTier] = useState<"all" | Tier>("all");
   const [shardG, setShardG] = useState<"all" | "a" | "b" | "c">("all");
   const [openCert, setOpenCert] = useState<Shard | null>(null);
 
-  const stackOn = STACK.reduce(
-    (n, g) => n + g.items.filter(([, x]) => tier === "all" || x === tier).length,
-    0,
-  );
-  const stackAll = STACK.reduce((n, g) => n + g.items.length, 0);
 
   return (
     <main id="site">
@@ -188,45 +182,25 @@ export default function Site() {
       <section className="sec" id="stack">
         <div className="wrap">
           <SecHead n="05" title={t(SEC_TITLES.stack)} />
-          <div
-            className="st__f"
-            data-r
-            style={{ "--i": 0 } as React.CSSProperties}
-            role="group"
-            aria-label={lang === "pt" ? "Filtrar por uso" : "Filter by usage"}
-          >
-            {TIERS.map((x) => (
-              <button
-                key={x.id}
-                type="button"
-                aria-pressed={x.id === tier}
-                onClick={() => setTier(x.id)}
+          <p className="sk__lede" data-r style={{ "--i": 0 } as React.CSSProperties}>
+            {t(STACK_LEDE)}
+          </p>
+          <div className="st">
+            {STACK.map((b, i) => (
+              <div
+                className={"st__b is-" + b.id}
+                key={b.id}
+                data-r
+                style={{ "--i": i + 1 } as React.CSSProperties}
               >
-                {t(x.label)}
-              </button>
-            ))}
-            <span className="st__ct" aria-live="polite">
-              {stackOn}
-              {lang === "pt" ? " de " : " of "}
-              {stackAll}
-            </span>
-          </div>
-          <div
-            className={"st" + (tier === "all" ? "" : " f-on")}
-            data-r
-            style={{ "--i": 1 } as React.CSSProperties}
-          >
-            {STACK.map((g) => (
-              <div className="st__g" key={g.k.pt}>
-                <h4>{t(g.k)}</h4>
+                <div className="st__hd">
+                  <h4>{t(b.label)}</h4>
+                  <span className="st__n">{b.items.length}</span>
+                  <span className="st__note">{t(b.note)}</span>
+                </div>
                 <ul>
-                  {g.items.map(([name, x]) => (
-                    <li
-                      key={name}
-                      className={"t-" + x + (tier === "all" || x === tier ? " on" : "")}
-                    >
-                      {name}
-                    </li>
+                  {b.items.map((name) => (
+                    <li key={name}>{name}</li>
                   ))}
                 </ul>
               </div>

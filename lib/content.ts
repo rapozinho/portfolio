@@ -255,24 +255,55 @@ export const SKILLS: Skill[] = [
   },
 ];
 
-/* ── 05 stack ───────────────────────────────────────────────────────── */
+/* ── 05 stack ───────────────────────────────────────────────────────
+   Grouped by how much each tool is actually used, which is the one question this
+   section can answer that Pericia cannot. Categories are gone as labels but kept
+   as ordering inside each block, so databases still land beside databases without
+   a second taxonomy competing for the reader.
+
+   The tiers agree with Pericia: Airflow, MongoDB and PHP are certified-only in
+   both places, so the two sections corroborate rather than contradict. */
 export type Tier = "core" | "reg" | "seen";
 
-export const STACK: Array<{ k: Bi; items: Array<[string, Tier]> }> = [
-  { k: { pt: "linguagens", en: "languages" }, items: [["SQL / T-SQL", "core"], ["Python 3.11", "core"], ["PHP", "seen"]] },
-  { k: { pt: "bancos", en: "databases" }, items: [["PostgreSQL", "core"], ["SQL Server 2022", "core"], ["MySQL", "reg"], ["MongoDB", "seen"]] },
-  { k: { pt: "bibliotecas", en: "libraries" }, items: [["Pandas", "core"], ["NumPy", "reg"], ["Matplotlib", "reg"], ["FastAPI", "reg"]] },
-  { k: { pt: "integração", en: "integration" }, items: [["Graph API", "reg"], ["Telegram API", "reg"], ["Requests", "reg"]] },
-  { k: { pt: "BI", en: "BI" }, items: [["Power BI", "reg"], ["BetMetrica", "reg"], ["Chart.js", "reg"], ["Excel", "reg"]] },
-  { k: { pt: "infra", en: "infra" }, items: [["Docker Compose", "reg"], ["nginx", "reg"], ["Linux / WSL", "core"], ["Git", "core"]] },
-  { k: { pt: "processo", en: "process" }, items: [["Jira", "reg"], ["Jupyter", "reg"], ["Airflow", "seen"], ["VS Code", "core"]] },
-];
+export const STACK_LEDE: Bi = {
+  pt: "Agrupado por quanto eu encosto em cada coisa, não por categoria. É a única pergunta que esta seção responde e a Perícia não.",
+  en: "Grouped by how much I actually touch each thing, not by category. It is the one question this section answers and Skills does not.",
+};
 
-export const TIERS: Array<{ id: "all" | Tier; label: Bi }> = [
-  { id: "all", label: { pt: "tudo", en: "all" } },
-  { id: "core", label: { pt: "núcleo · diário", en: "core · daily" } },
-  { id: "reg", label: { pt: "recorrente", en: "recurring" } },
-  { id: "seen", label: { pt: "certificado", en: "certified" } },
+export const STACK: Array<{ id: Tier; label: Bi; note: Bi; items: string[] }> = [
+  {
+    id: "core",
+    label: { pt: "núcleo", en: "core" },
+    note: { pt: "todo dia, em produção", en: "every day, in production" },
+    items: [
+      "SQL / T-SQL", "Python 3.11",
+      "PostgreSQL", "SQL Server 2022",
+      "Pandas",
+      "Linux / WSL", "Git", "VS Code",
+    ],
+  },
+  {
+    id: "reg",
+    label: { pt: "recorrente", en: "recurring" },
+    note: { pt: "com frequência, em produção", en: "regularly, in production" },
+    items: [
+      "MySQL",
+      "NumPy", "Matplotlib", "FastAPI",
+      "Graph API", "Telegram API", "Requests",
+      "Power BI", "BetMetrica", "Chart.js", "Excel",
+      "Docker Compose", "nginx",
+      "Jira", "Jupyter",
+    ],
+  },
+  {
+    id: "seen",
+    label: { pt: "certificado", en: "certified" },
+    note: {
+      pt: "estudado e certificado, ainda não em produção",
+      en: "studied and certified, not yet in production",
+    },
+    items: ["Apache Airflow", "MongoDB", "PHP"],
+  },
 ];
 
 /* ── 06 certificates ────────────────────────────────────────────────
