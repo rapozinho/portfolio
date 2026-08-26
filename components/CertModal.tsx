@@ -17,10 +17,13 @@ import { useLang } from "./Lang";
 
 const UI = {
   close: { pt: "fechar", en: "close" },
-  tab: { pt: "abrir em nova aba", en: "open in a new tab" },
+  tab: { pt: "nova aba", en: "new tab" },
+  download: { pt: "baixar", en: "download" },
+  /* Not "your browser cannot show this": it usually can, and this line has no way
+     to detect the case where it cannot. It offers the file either way. */
   fallback: {
-    pt: "Seu navegador não exibe PDF embutido.",
-    en: "Your browser will not display an embedded PDF.",
+    pt: "Não carregou? Baixe ou abra em outra aba.",
+    en: "Not loading? Download it or open it in another tab.",
   },
   issuer: { pt: "emitido por", en: "issued by" },
 } as const;
@@ -74,6 +77,11 @@ export default function CertModal({
 
   if (!shard || !mounted) return null;
   const href = `/certificados/${view}/${shard.slug}.pdf`;
+  /* No open-parameter fragment. It was added to force page-fit and coincided
+     exactly with the frame going blank; the PDF renders correctly on its own, and
+     the rotation fix means it now arrives upright and readable without help. */
+  /* the filename the visitor gets, rather than the slug */
+  const file = `${shard.slug}-${view}.pdf`;
 
   /* Portalled to body on purpose. #site is position:relative with z-index 2,
      so it is a stacking context: a child of it cannot paint above #top, which
@@ -110,6 +118,9 @@ export default function CertModal({
             ))}
           </span>
 
+          <a className="cm__d" href={href} download={file}>
+            ↓ {t(UI.download)}
+          </a>
           <a className="cm__x" href={href} target="_blank" rel="noopener">
             {t(UI.tab)} ↗
           </a>
@@ -123,6 +134,10 @@ export default function CertModal({
 
         <p className="cm__fb">
           {t(UI.fallback)}{" "}
+          <a href={href} download={file}>
+            ↓ {t(UI.download)}
+          </a>
+          {" · "}
           <a href={href} target="_blank" rel="noopener">
             {t(UI.tab)} ↗
           </a>

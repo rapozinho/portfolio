@@ -533,11 +533,16 @@ body.through #site{display:block;padding-top:49px}
   position:relative;z-index:1;
 }
 
-.cm__x{
+.cm__x,.cm__d{
   flex:0 0 auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .16s;
+  text-transform:uppercase;text-decoration:none;transition:color .16s,border-color .16s;
 }
+.cm__x{color:var(--muted)}
 .cm__x:hover{color:var(--amber)}
+/* download is the primary action here, so it gets the outline and the amber */
+.cm__d{color:var(--amber);border:1px solid var(--line-hot);padding:7px 13px}
+.cm__d:hover{border-color:var(--amber);background:rgba(252,238,10,.08)}
+.cm__x:focus-visible,.cm__d:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
 .cm__c{
   flex:0 0 auto;width:32px;height:32px;font-size:14px;line-height:1;cursor:pointer;
   color:var(--muted);background:none;border:1px solid var(--line);
