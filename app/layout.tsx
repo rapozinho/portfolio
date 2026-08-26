@@ -27,9 +27,9 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
-  title: "Maurício Raposo — Engenheiro de dados",
+  title: "Maurício Raposo · Engenheiro de dados",
   description:
-    "Engenheiro e analista de dados júnior na BSA Tech. SQL avançado, pipelines em Python e automação em produção na vertical de apostas — onde número errado é dinheiro.",
+    "Engenheiro e analista de dados júnior na BSA Tech. SQL avançado, pipelines em Python e automação em produção na vertical de apostas, onde número errado é dinheiro.",
   keywords: [
     "engenheiro de dados", "analista de dados", "data engineer",
     "SQL", "Python", "PostgreSQL", "SQL Server", "Power BI", "Recife",
@@ -43,13 +43,13 @@ export const metadata: Metadata = {
     siteName: "Maurício Raposo",
     locale: "pt_BR",
     alternateLocale: ["en_US"],
-    title: "Maurício Raposo — Engenheiro de dados",
+    title: "Maurício Raposo · Engenheiro de dados",
     description:
-      "SQL avançado, pipelines em Python e automação em produção. Uma rotina manual de 1–2 dias que hoje leva 5–10 minutos.",
+      "SQL avançado, pipelines em Python e automação em produção. Uma rotina manual de 1 a 2 dias que hoje leva 5 a 10 minutos.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Maurício Raposo — Engenheiro de dados",
+    title: "Maurício Raposo · Engenheiro de dados",
     description: "SQL avançado, pipelines em Python e automação em produção.",
   },
   robots: { index: true, follow: true },
@@ -76,7 +76,7 @@ const PERSON = {
   url: SITE,
   sameAs: ["https://github.com/rapozinho", "https://www.linkedin.com/in/mauricio-raposo/"],
   knowsAbout: ["SQL", "Python", "PostgreSQL", "Microsoft SQL Server", "Power BI", "ETL", "Docker"],
-  alumniOf: { "@type": "CollegeOrUniversity", name: "UNIBRA — Centro Universitário Brasileiro" },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "UNIBRA, Centro Universitário Brasileiro" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

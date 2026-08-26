@@ -49,14 +49,14 @@ export const TERM: Record<Lang, Array<[string, string]>> = {
     ["> ", 'ICE <span class="w">ativo</span> · camada 3'],
     ["> ", '<span class="w">[!]</span> presença detectada do outro lado'],
     ["> ", 'forma <span class="k">humanoide</span> · sinal fraco'],
-    ["> ", 'aproxime-se para identificar <span class="a">— role</span>'],
+    ["> ", 'aproxime-se para identificar <span class="a">› role</span>'],
   ],
   en: [
     ["> ", "probing blackwall perimeter"],
     ["> ", 'ICE <span class="w">active</span> · layer 3'],
     ["> ", '<span class="w">[!]</span> presence detected on the far side'],
     ["> ", '<span class="k">humanoid</span> shape · weak signal'],
-    ["> ", 'close in to identify <span class="a">— scroll</span>'],
+    ["> ", 'close in to identify <span class="a">› scroll</span>'],
   ],
 };
 
@@ -69,22 +69,20 @@ export const IDENT = {
     pt: "engenheiro e analista de dados · bsa tech",
     en: "data engineer & analyst · bsa tech",
   },
-  /* Capability, then result, then rigour -- the structure strong portfolios use.
-     The employer, the city and the seniority are deliberately absent: the role
-     line sits directly above this and Career carries the dates, so repeating them
-     spends the most-read sentence on facts already on screen. */
+  /* Three short paragraphs, not one long one. Plain order: where, what a normal
+     day is, one thing that changed, and the habit that costs time. */
   bio: [
     {
-      pt: "Extraio, trato e entrego dados operacionais. SQL em PostgreSQL e SQL Server — joins, subconsultas, CTEs, DDL —, pipelines em Python e coleta em tempo real pela Microsoft Graph API.",
-      en: "I extract, shape and deliver operational data. SQL on PostgreSQL and SQL Server — joins, subqueries, CTEs, DDL — Python pipelines, and real-time collection through the Microsoft Graph API.",
+      pt: "Sou analista e engenheiro de dados júnior na BSA Tech, em Recife, na vertical de apostas. Escrevo SQL em PostgreSQL e SQL Server, mantenho rotinas em Python, e cuido de dois bots que entregam relatório no Telegram para os times de KPI e Produto.",
+      en: "I'm a junior data analyst and engineer at BSA Tech in Recife, working in the betting vertical. I write SQL on PostgreSQL and SQL Server, keep Python routines running, and look after two bots that deliver reports on Telegram for the KPI and Product teams.",
     },
     {
-      pt: "Automatizei uma rotina manual de um a dois dias: hoje roda em <mark>5 a 10 minutos</mark>. Dois bots que mantenho entregam relatório sob demanda para os times de KPI e Produto, com GGR, turnover e retenção calculados no SQL que escrevo.",
-      en: "I automated a manual routine that took a day or two: it now runs in <mark>5 to 10 minutes</mark>. Two bots I maintain deliver reports on demand to the KPI and Product teams, with GGR, turnover and retention computed in the SQL I write.",
+      pt: "Uma dessas rotinas era feita à mão e levava um ou dois dias. Reescrevi em Python, com extração via SQL e coleta pela Graph API. Hoje leva de <mark>5 a 10 minutos</mark>.",
+      en: "One of those routines used to be done by hand and took a day or two. I rewrote it in Python, pulling with SQL and collecting through the Graph API. Now it takes <mark>5 to 10 minutes</mark>.",
     },
     {
-      pt: "Integridade vem antes da consulta: chaves, relacionamentos e restrições definidos no banco. E todo número é conferido em mais de uma fonte antes de sair.",
-      en: "Integrity comes before the query: keys, relationships and constraints defined in the database. And every number is checked against more than one source before it goes out.",
+      pt: "Antes de um número chegar numa tela eu confiro ele no banco, no Excel, no Power BI e no BetMetrica. É chato, e é o que evita retrabalho depois.",
+      en: "Before a number reaches a screen I check it against the database, Excel, Power BI and BetMetrica. It's tedious, and it's what saves the rework later.",
     },
   ],
   figs: [
@@ -110,8 +108,8 @@ export const PORTALS: Portal[] = [
     lead: true,
     label: { pt: "BlackWall Analytics", en: "BlackWall Analytics" },
     note: {
-      pt: "Portal de BI que atende duas verticais — apostas e e-commerce — a partir de um só código. Fila de jobs com polling e cancelamento, e tradução no <b>nível da query</b>, não só na UI.",
-      en: "A BI portal serving two verticals — betting and e-commerce — from one codebase. Job queue with polling and cancellation, and translation at <b>query level</b>, not just the UI.",
+      pt: "Portal de BI que atende duas verticais, apostas e e-commerce, a partir de um só código. Fila de jobs com polling e cancelamento, e tradução no <b>nível da query</b>, não só na UI.",
+      en: "A BI portal serving two verticals, betting and e-commerce, from one codebase. Job queue with polling and cancellation, and translation at <b>query level</b>, not just the UI.",
     },
     kv: [
       { pt: "queries <b>292</b>", en: "queries <b>292</b>" },
@@ -168,8 +166,8 @@ export const TIMELINE: Array<{ when: Bi; role: Bi; where: string; note: Bi }> = 
     role: { pt: "Engenheiro e analista de dados júnior", en: "Junior data engineer & analyst" },
     where: "BSA Tech · Recife/PE",
     note: {
-      pt: "SQL avançado em PostgreSQL e SQL Server — joins, subconsultas, CTEs — calculando GGR, turnover e retenção. DDL de tabelas, chaves e relacionamentos para que integridade seja estrutural. Microsoft Graph API para coleta em tempo real. Plantão quando uma rotina morre às 2h.",
-      en: "Advanced SQL on PostgreSQL and SQL Server — joins, subqueries, CTEs — computing GGR, turnover and retention. DDL for tables, keys and relationships so integrity is structural. Microsoft Graph API for real-time collection. On call when a routine dies at 2am.",
+      pt: "SQL avançado em PostgreSQL e SQL Server, com joins, subconsultas e CTEs, calculando GGR, turnover e retenção. DDL de tabelas, chaves e relacionamentos para que integridade seja estrutural. Microsoft Graph API para coleta em tempo real. Plantão quando uma rotina morre às 2h.",
+      en: "Advanced SQL on PostgreSQL and SQL Server, using joins, subqueries and CTEs, computing GGR, turnover and retention. DDL for tables, keys and relationships so integrity is structural. Microsoft Graph API for real-time collection. On call when a routine dies at 2am.",
     },
   },
   {
@@ -177,8 +175,8 @@ export const TIMELINE: Array<{ when: Bi; role: Bi; where: string; note: Bi }> = 
     role: { pt: "Estágio em análise de dados", en: "Data analysis intern" },
     where: "BSA Tech · Recife/PE",
     note: {
-      pt: "Tirei dados de bancos relacionais e planilhas externas para as bases internas. Primeiro ETL de verdade em Python — limpeza, tratamento, normalização. SQL para relatórios recorrentes, e o hábito de checar a chave primária antes de confiar numa contagem.",
-      en: "Pulled data out of relational databases and external spreadsheets into the internal bases. First real ETL in Python — cleaning, treatment, normalisation. SQL for recurring reports, and the habit of checking the primary key before trusting a count.",
+      pt: "Tirei dados de bancos relacionais e planilhas externas para as bases internas. Primeiro ETL de verdade em Python: limpeza, tratamento, normalização. SQL para relatórios recorrentes, e o hábito de checar a chave primária antes de confiar numa contagem.",
+      en: "Pulled data out of relational databases and external spreadsheets into the internal bases. First real ETL in Python: cleaning, treatment, normalisation. SQL for recurring reports, and the habit of checking the primary key before trusting a count.",
     },
   },
   {
@@ -186,8 +184,8 @@ export const TIMELINE: Array<{ when: Bi; role: Bi; where: string; note: Bi }> = 
     role: { pt: "Análise e Desenvolvimento de Sistemas", en: "Systems Analysis & Development" },
     where: "UNIBRA · Centro Universitário Brasileiro",
     note: {
-      pt: "Em andamento, conclusão prevista dez/2026 — cursado em paralelo com trabalho em produção full-time. 12 certificações Alura concluídas no caminho.",
-      en: "In progress, graduating Dec/2026 — taken in parallel with full-time production work. 12 Alura certifications finished along the way.",
+      pt: "Em andamento, conclusão prevista dez/2026, cursado em paralelo com trabalho em produção full-time. 12 certificações Alura concluídas no caminho.",
+      en: "In progress, graduating Dec/2026, taken in parallel with full-time production work. 12 Alura certifications finished along the way.",
     },
   },
 ];
@@ -202,8 +200,8 @@ export type Skill = {
 };
 
 export const SKILLS_LEDE: Bi = {
-  pt: "Sem notas que eu mesmo me dou. Cada linha diz onde a competência roda e com que frequência, e certificado não é o mesmo que em produção — a última linha diz isso em voz alta.",
-  en: "No self-assigned scores. Each row says where the skill runs and how often, and certified is not the same as in production — the last row says so out loud.",
+  pt: "Sem notas que eu mesmo me dou. Cada linha diz onde a competência roda e com que frequência, e certificado não é o mesmo que em produção. A última linha diz isso em voz alta.",
+  en: "No self-assigned scores. Each row says where the skill runs and how often, and certified is not the same as in production. The last row says so out loud.",
 };
 
 export const SKILLS: Skill[] = [
@@ -243,8 +241,8 @@ export const SKILLS: Skill[] = [
     st: "prod",
     cad: { pt: "em produção · semanal", en: "in production · weekly" },
     note: {
-      pt: "Power BI, BetMetrica, Matplotlib — e conferir um número em <em>quatro fontes</em> antes de ele chegar numa tela.",
-      en: "Power BI, BetMetrica, Matplotlib — and cross-checking one number across <em>four sources</em> before it reaches a screen.",
+      pt: "Power BI, BetMetrica e Matplotlib. E conferir um número em <em>quatro fontes</em> antes de ele chegar numa tela.",
+      en: "Power BI, BetMetrica and Matplotlib. And cross-checking one number across <em>four sources</em> before it reaches a screen.",
     },
   },
   {

@@ -10,12 +10,12 @@ import "./case.css";
    the page. */
 
 export const metadata: Metadata = {
-  title: "BlackWall Analytics — case study",
+  title: "BlackWall Analytics: case study",
   description:
     "Portal de BI servindo duas verticais de um só código: 292 queries, 1.04M linhas, 8 bases. Fila de jobs com cancelamento e tradução em nível de query.",
   alternates: { canonical: "/blackwall" },
   openGraph: {
-    title: "BlackWall Analytics — case study",
+    title: "BlackWall Analytics: case study",
     description:
       "Portal de BI servindo duas verticais de um só código: 292 queries, 1.04M linhas, 8 bases.",
   },
@@ -34,11 +34,11 @@ const DECISIONS = [
     n: "01",
     title: "Traduzir no nível da query, não só na interface",
     problem:
-      "Duas verticais, três idiomas. Traduzir só os rótulos da UI deixaria os dados em português dentro de um relatório em inglês — nome de produto, status de aposta, categoria.",
+      "Duas verticais, três idiomas. Traduzir só os rótulos da UI deixaria os dados em português dentro de um relatório em inglês: nome de produto, status de aposta, categoria.",
     choice:
       "A camada de idioma desce até a query: o catálogo devolve o rótulo já na língua pedida, então o relatório sai inteiro coerente.",
     cost:
-      "Cada query nova precisa das três variantes de rótulo. É trabalho a mais na escrita e disciplina no catálogo — o tipo de dívida que aparece na décima query, não na primeira.",
+      "Cada query nova precisa das três variantes de rótulo. É trabalho a mais na escrita e disciplina no catálogo. É o tipo de dívida que aparece na décima query, não na primeira.",
   },
   {
     n: "02",
@@ -46,7 +46,7 @@ const DECISIONS = [
     problem:
       "Uma consulta sobre 1.04M linhas não responde dentro de um request HTTP. Sem fila, o navegador espera e estoura; com fila mas sem cancelamento, quem clicou errado ocupa o worker até o fim.",
     choice:
-      "Job assíncrono, polling de status pelo front, e cancelamento de verdade — o job morre, o worker libera.",
+      "Job assíncrono, polling de status pelo front, e cancelamento de verdade: o job morre e o worker libera.",
     cost:
       "Mais partes móveis que um endpoint síncrono: estado do job, timeout, e o caso de o cliente desistir sem avisar.",
   },
@@ -54,7 +54,7 @@ const DECISIONS = [
     n: "03",
     title: "Um só código para as duas verticais",
     problem:
-      "Apostas e e-commerce têm métricas diferentes — GGR e turnover não existem no segundo. O caminho fácil é dois portais.",
+      "Apostas e e-commerce têm métricas diferentes, já que GGR e turnover não existem no segundo. O caminho fácil é dois portais.",
     choice:
       "Um código, com o catálogo de queries parametrizado por vertical. Correção de bug vale para as duas.",
     cost:
@@ -71,9 +71,9 @@ const DECISIONS = [
 ];
 
 const NEXT = [
-  "Testes no catálogo de queries. Hoje uma query errada só aparece quando alguém lê um número estranho — e essa é a pior forma de descobrir.",
+  "Testes no catálogo de queries. Hoje uma query errada só aparece quando alguém lê um número estranho, que é a pior forma de descobrir.",
   "Cache dos resultados por parâmetro. Muita consulta é repetida com os mesmos filtros e paga o custo inteiro de novo.",
-  "Orquestração por Airflow em vez da fila caseira. Certificado, ainda não em produção pelas minhas mãos — então ficou como próximo passo honesto, não como stack de vitrine.",
+  "Orquestração por Airflow em vez da fila caseira. Certificado, ainda não em produção pelas minhas mãos, então ficou como próximo passo honesto, não como stack de vitrine.",
 ];
 
 export default function BlackWallCase() {
@@ -85,10 +85,10 @@ export default function BlackWallCase() {
         </p>
 
         <header className="case__hd">
-          <span className="case__eyebrow">case study · 2025—2026</span>
+          <span className="case__eyebrow">case study · 2025–2026</span>
           <h1 className="case__t">BlackWall Analytics</h1>
           <p className="case__lede">
-            Portal de BI que atende duas verticais — apostas e e-commerce — a partir de
+            Portal de BI que atende duas verticais, apostas e e-commerce, a partir de
             um só código. O que segue é a engenharia: a restrição que forçou cada
             decisão, o que ela custou, e o que eu faria diferente.
           </p>
@@ -116,7 +116,7 @@ export default function BlackWallCase() {
           <p>
             Números operacionais chegavam a quem decide por caminhos diferentes: uma
             planilha aqui, um print de dashboard ali, um relatório que alguém montou à
-            mão na semana passada. Quando dois desses discordavam — e discordavam —
+            mão na semana passada. Quando dois desses discordavam, e discordavam,
             ninguém sabia qual estava certo, porque não havia uma fonte que se pudesse
             reexecutar.
           </p>
