@@ -483,3 +483,84 @@ body.through #site{display:block;padding-top:49px}
 @media (max-width:720px){
   .g-read{gap:6px 18px;font-size:10px;letter-spacing:.13em}
 }
+
+/* ── certificate viewer ────────────────────────────────────────────────
+   The document itself, in the language being read. Sits above the Act II
+   content and above the band-wall canvas, which is why the z-index is high. */
+.cm{
+  position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  padding:clamp(12px,3vh,34px) clamp(12px,3vw,34px);
+  background:rgba(3,5,9,.82);backdrop-filter:blur(6px);
+  animation:cm-in .18s ease-out;
+}
+@keyframes cm-in{from{opacity:0}to{opacity:1}}
+.cm__p{
+  display:flex;flex-direction:column;width:100%;max-width:1120px;height:min(88vh,900px);
+  background:var(--surface);border:1px solid var(--line-hot);
+  clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));
+}
+.cm__p:focus{outline:none}
+
+.cm__h{
+  display:flex;align-items:center;gap:clamp(10px,2vw,20px);flex-wrap:wrap;
+  padding:13px 16px;border-bottom:1px solid var(--line);flex:0 0 auto;
+}
+.cm__t{
+  flex:1 1 240px;min-width:0;font-family:var(--disp);font-size:15px;font-weight:600;
+  line-height:1.25;
+}
+.cm__t i{
+  display:block;margin-top:4px;font-style:normal;font-weight:400;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* BR / US. Both files exist for every course, so offering the other one costs
+   nothing and a recruiter reading the English page may still want the original. */
+.cm__lang{display:flex;gap:0;flex:0 0 auto}
+.cm__lang button{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  color:var(--muted);background:none;border:1px solid var(--line);cursor:pointer;
+  padding:7px 12px;transition:color .16s,border-color .16s,background .16s;
+}
+.cm__lang button + button{margin-left:-1px}
+.cm__lang button:hover{color:var(--fg);border-color:var(--line-hot)}
+.cm__lang button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.cm__lang button[aria-pressed="true"]{
+  color:var(--amber);border-color:var(--amber);background:rgba(252,238,10,.08);
+  position:relative;z-index:1;
+}
+
+.cm__x{
+  flex:0 0 auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .16s;
+}
+.cm__x:hover{color:var(--amber)}
+.cm__c{
+  flex:0 0 auto;width:32px;height:32px;font-size:14px;line-height:1;cursor:pointer;
+  color:var(--muted);background:none;border:1px solid var(--line);
+  transition:color .16s,border-color .16s;
+}
+.cm__c:hover{color:var(--red);border-color:var(--red)}
+.cm__c:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+/* The PDF. A white sheet on a near-black panel is a hard edge, so it gets its
+   own ground rather than sitting straight on the surface colour. */
+.cm__f{
+  flex:1 1 auto;width:100%;border:0;background:#14171d;display:block;min-height:0;
+}
+/* Shown only where the iframe cannot render a PDF — iOS, and some Android
+   browsers. It sits under the frame and is covered when the frame paints. */
+.cm__fb{
+  flex:0 0 auto;margin:0;padding:11px 16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:#5b6780;
+}
+.cm__fb a{color:var(--amber)}
+
+@media (max-width:620px){
+  .cm{padding:0}
+  .cm__p{height:100%;max-width:none;clip-path:none;border:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .cm{animation:none}
+}

@@ -5,8 +5,9 @@ import Link from "next/link";
 import {
   CONTACT, CV, CV_LABEL, CV_VALUE, FOOT, IDENT, PORTALS, SEC_TITLES,
   SHARDS, SHARD_FILTERS, SHARD_NOTE, SKILLS, SKILLS_LEDE, STACK, TIERS,
-  TIMELINE, type Tier,
+  TIMELINE, type Shard, type Tier,
 } from "@/lib/content";
+import CertModal from "./CertModal";
 import { Rich, useLang } from "./Lang";
 
 /* Act II. Everything here was built with innerHTML in the prototype and rebuilt
@@ -27,6 +28,7 @@ export default function Site() {
   const { lang, t } = useLang();
   const [tier, setTier] = useState<"all" | Tier>("all");
   const [shardG, setShardG] = useState<"all" | "a" | "b" | "c">("all");
+  const [openCert, setOpenCert] = useState<Shard | null>(null);
 
   const stackOn = STACK.reduce(
     (n, g) => n + g.items.filter(([, x]) => tier === "all" || x === tier).length,
@@ -257,6 +259,13 @@ export default function Site() {
                 href={`/certificados/${lang}/${s.slug}.pdf`}
                 target="_blank"
                 rel="noopener"
+                onClick={(e) => {
+                  /* let the browser keep modifier clicks, so "open in new tab"
+                     and middle-click go on working */
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                  e.preventDefault();
+                  setOpenCert(s);
+                }}
               >
                 <h4>{t(s.title)}</h4>
                 <p>Alura · {t(s.sub)}</p>
@@ -302,6 +311,8 @@ export default function Site() {
           <p className="foot">© 2026 Maurício Raposo · {t(FOOT)}</p>
         </div>
       </section>
+
+      <CertModal shard={openCert} onClose={() => setOpenCert(null)} />
     </main>
   );
 }
