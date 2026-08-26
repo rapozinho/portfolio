@@ -488,7 +488,9 @@ body.through #site{display:block;padding-top:49px}
    The document itself, in the language being read. Sits above the Act II
    content and above the band-wall canvas, which is why the z-index is high. */
 .cm{
-  position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  /* 200, above #top's 60. Portalled to body, so this z-index is read in the
+     root stacking context rather than inside #site. */
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
   padding:clamp(12px,3vh,34px) clamp(12px,3vw,34px);
   background:rgba(3,5,9,.82);backdrop-filter:blur(6px);
   animation:cm-in .18s ease-out;

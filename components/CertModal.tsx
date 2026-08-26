@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Lang, Shard } from "@/lib/content";
 import { useLang } from "./Lang";
 
@@ -35,6 +36,10 @@ export default function CertModal({
   const [view, setView] = useState<Lang>(lang);
   const panel = useRef<HTMLDivElement>(null);
   const restore = useRef<HTMLElement | null>(null);
+  /* Next renders client components on the server too, where document does not
+     exist, so the portal target is only available after mount. */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   /* Reopening on a different card must not keep the previous card's language. */
   useEffect(() => {
@@ -67,10 +72,14 @@ export default function CertModal({
     };
   }, [shard, close]);
 
-  if (!shard) return null;
+  if (!shard || !mounted) return null;
   const href = `/certificados/${view}/${shard.slug}.pdf`;
 
-  return (
+  /* Portalled to body on purpose. #site is position:relative with z-index 2,
+     so it is a stacking context: a child of it cannot paint above #top, which
+     is fixed at z-index 60 in the root context. Rendered in place, the header
+     would cover the document. */
+  return createPortal(
     <div className="cm" onMouseDown={(e) => e.target === e.currentTarget && close()}>
       <div
         className="cm__p"
@@ -119,6 +128,7 @@ export default function CertModal({
           </a>
         </p>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
