@@ -69,20 +69,17 @@ export const IDENT = {
     pt: "engenheiro e analista de dados · bsa tech",
     en: "data engineer & analyst · bsa tech",
   },
-  /* Three short paragraphs, not one long one. Plain order: where, what a normal
-     day is, one thing that changed, and the habit that costs time. */
+  /* The visitor's own text, verbatim. The English is a translation, not his
+     wording. Split after the second sentence because four run to seven unbroken
+     lines at 58ch beside a photograph; nothing else about it is changed. */
   bio: [
     {
-      pt: "Sou analista e engenheiro de dados júnior na BSA Tech, em Recife, na vertical de apostas. Escrevo SQL em PostgreSQL e SQL Server, mantenho rotinas em Python, e cuido de dois bots que entregam relatório no Telegram para os times de KPI e Produto.",
-      en: "I'm a junior data analyst and engineer at BSA Tech in Recife, working in the betting vertical. I write SQL on PostgreSQL and SQL Server, keep Python routines running, and look after two bots that deliver reports on Telegram for the KPI and Product teams.",
+      pt: "Profissional apaixonado por transformar ideias em soluções reais, unindo técnica, criatividade e visão estratégica. Acredito que os melhores resultados surgem do alinhamento entre funcionalidade, boa comunicação e foco nas pessoas.",
+      en: "A professional driven by turning ideas into real solutions, bringing together technique, creativity and strategic vision. I believe the best results come from the alignment of functionality, good communication and a focus on people.",
     },
     {
-      pt: "Uma dessas rotinas era feita à mão e levava um ou dois dias. Reescrevi em Python, com extração via SQL e coleta pela Graph API. Hoje leva de <mark>5 a 10 minutos</mark>.",
-      en: "One of those routines used to be done by hand and took a day or two. I rewrote it in Python, pulling with SQL and collecting through the Graph API. Now it takes <mark>5 to 10 minutes</mark>.",
-    },
-    {
-      pt: "Antes de um número chegar numa tela eu confiro ele no banco, no Excel, no Power BI e no BetMetrica. É chato, e é o que evita retrabalho depois.",
-      en: "Before a number reaches a screen I check it against the database, Excel, Power BI and BetMetrica. It's tedious, and it's what saves the rework later.",
+      pt: "Tenho perfil dinâmico, colaborativo e fácil adaptação a novos desafios, buscando sempre aprender e evoluir a cada projeto. Meu objetivo é entregar experiências de alto impacto, combinando eficiência e um toque humano em tudo o que faço, criando conexões genuínas e entregas que realmente geram valor.",
+      en: "I am dynamic and collaborative, and I adapt easily to new challenges, always looking to learn and grow with every project. My goal is to deliver high-impact experiences, combining efficiency with a human touch in everything I do, building genuine connections and work that truly creates value.",
     },
   ],
   figs: [
