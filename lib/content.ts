@@ -69,20 +69,22 @@ export const IDENT = {
     pt: "engenheiro e analista de dados · bsa tech",
     en: "data engineer & analyst · bsa tech",
   },
-  /* Three short paragraphs, not one long one. Plain order: where, what a normal
-     day is, one thing that changed, and the habit that costs time. */
+  /* Capability, then result, then rigour -- the structure strong portfolios use.
+     The employer, the city and the seniority are deliberately absent: the role
+     line sits directly above this and Career carries the dates, so repeating them
+     spends the most-read sentence on facts already on screen. */
   bio: [
     {
-      pt: "Sou analista e engenheiro de dados júnior na BSA Tech, em Recife, na vertical de apostas. Escrevo SQL em PostgreSQL e SQL Server, mantenho rotinas em Python, e cuido de dois bots que entregam relatório no Telegram para os times de KPI e Produto.",
-      en: "I'm a junior data analyst and engineer at BSA Tech in Recife, working in the betting vertical. I write SQL on PostgreSQL and SQL Server, keep Python routines running, and look after two bots that deliver reports on Telegram for the KPI and Product teams.",
+      pt: "Extraio, trato e entrego dados operacionais. SQL em PostgreSQL e SQL Server — joins, subconsultas, CTEs, DDL —, pipelines em Python e coleta em tempo real pela Microsoft Graph API.",
+      en: "I extract, shape and deliver operational data. SQL on PostgreSQL and SQL Server — joins, subqueries, CTEs, DDL — Python pipelines, and real-time collection through the Microsoft Graph API.",
     },
     {
-      pt: "Uma dessas rotinas era feita à mão e levava um ou dois dias. Reescrevi em Python, com extração via SQL e coleta pela Graph API. Hoje leva de <mark>5 a 10 minutos</mark>.",
-      en: "One of those routines used to be done by hand and took a day or two. I rewrote it in Python, pulling with SQL and collecting through the Graph API. Now it takes <mark>5 to 10 minutes</mark>.",
+      pt: "Automatizei uma rotina manual de um a dois dias: hoje roda em <mark>5 a 10 minutos</mark>. Dois bots que mantenho entregam relatório sob demanda para os times de KPI e Produto, com GGR, turnover e retenção calculados no SQL que escrevo.",
+      en: "I automated a manual routine that took a day or two: it now runs in <mark>5 to 10 minutes</mark>. Two bots I maintain deliver reports on demand to the KPI and Product teams, with GGR, turnover and retention computed in the SQL I write.",
     },
     {
-      pt: "Antes de um número chegar numa tela eu confiro ele no banco, no Excel, no Power BI e no BetMetrica. É chato, e é o que evita retrabalho depois.",
-      en: "Before a number reaches a screen I check it against the database, Excel, Power BI and BetMetrica. It's tedious, and it's what saves the rework later.",
+      pt: "Integridade vem antes da consulta: chaves, relacionamentos e restrições definidos no banco. E todo número é conferido em mais de uma fonte antes de sair.",
+      en: "Integrity comes before the query: keys, relationships and constraints defined in the database. And every number is checked against more than one source before it goes out.",
     },
   ],
   figs: [
