@@ -310,67 +310,74 @@ export const STACK: Array<{ id: Tier; label: Bi; note: Bi; items: string[] }> = 
    slug is the join key with public/certificados/<lang>/<slug>.pdf. Both
    language folders hold all twelve, so a card always opens in the language
    the visitor is reading. */
-export type Shard = { slug: string; g: "a" | "b" | "c"; title: Bi; sub: Bi };
+export type Shard = { slug: string; title: Bi; sub: Bi };
 
 export const SHARDS: Shard[] = [
-  { slug: "airflow-pipeline", g: "a",
+  { slug: "airflow-pipeline", 
     title: { pt: "Apache Airflow", en: "Apache Airflow" },
     sub: { pt: "orquestrando seu primeiro pipeline", en: "orchestrating your first pipeline" } },
-  { slug: "pipeline-oo", g: "a",
+  { slug: "pipeline-oo", 
     title: { pt: "Pipeline de dados + OO", en: "Data pipeline + OOP" },
     sub: { pt: "python, orientação a objeto", en: "python, object orientation" } },
-  { slug: "pipeline-mongo-mysql", g: "a",
+  { slug: "pipeline-mongo-mysql", 
     title: { pt: "Pipeline: MongoDB + MySQL", en: "Pipeline: MongoDB + MySQL" },
     sub: { pt: "integração python", en: "python integration" } },
-  { slug: "sqlserver-advanced", g: "b",
+  { slug: "sqlserver-advanced", 
     title: { pt: "SQL Server 2022", en: "SQL Server 2022" },
     sub: { pt: "consultas avançadas", en: "advanced queries" } },
-  { slug: "sqlserver-intro", g: "b",
+  { slug: "sqlserver-intro", 
     title: { pt: "SQL Server 2022", en: "SQL Server 2022" },
     sub: { pt: "conhecendo SQL", en: "getting to know SQL" } },
-  { slug: "modelagem-relacional", g: "b",
+  { slug: "modelagem-relacional", 
     title: { pt: "Modelagem relacional", en: "Relational modelling" },
     sub: { pt: "entendendo SQL", en: "understanding SQL" } },
-  { slug: "mongodb", g: "b",
+  { slug: "mongodb", 
     title: { pt: "MongoDB", en: "MongoDB" },
     sub: { pt: "um banco NoSQL", en: "a NoSQL database" } },
-  { slug: "python-requests", g: "b",
+  { slug: "python-requests", 
     title: { pt: "Python e APIs", en: "Python and APIs" },
     sub: { pt: "a biblioteca requests", en: "the requests library" } },
-  { slug: "python-dados-2", g: "b",
+  { slug: "python-dados-2", 
     title: { pt: "Python para Dados", en: "Python for Data" },
     sub: { pt: "funções, estruturas, exceções", en: "functions, structures, exceptions" } },
-  { slug: "python-dados-1", g: "b",
+  { slug: "python-dados-1", 
     title: { pt: "Python para Dados", en: "Python for Data" },
     sub: { pt: "primeiros passos", en: "getting started" } },
-  { slug: "php-app", g: "c",
+  { slug: "php-app", 
     title: { pt: "PHP", en: "PHP" },
     sub: { pt: "criando sua aplicação", en: "creating your application" } },
-  { slug: "php-organizado", g: "c",
+  { slug: "php-organizado", 
     title: { pt: "PHP", en: "PHP" },
     sub: { pt: "organize seu código", en: "organised code" } },
 ];
 
-export const SHARD_FILTERS: Array<{ id: "all" | "a" | "b" | "c"; label: Bi }> = [
-  { id: "all", label: { pt: "12", en: "12" } },
-  { id: "a", label: { pt: "pipeline", en: "pipeline" } },
-  { id: "b", label: { pt: "dados", en: "data" } },
-  { id: "c", label: { pt: "legado", en: "legacy" } },
-];
 
 export const SHARD_NOTE: Bi = {
   pt: "alura · abre o PDF na língua que você está lendo",
   en: "alura · opens the PDF in the language you are reading",
 };
 
-/* ── 07 contact ─────────────────────────────────────────────────────── */
+/* ── 07 contact ─────────────────────────────────────────────────────
+   The email is the primary action and everything else supports it, so it is not
+   in the same list as the rest. */
 export const CV: Record<Lang, string> = {
   pt: "/cv/curriculo-mauricio-raposo-pt.pdf",
   en: "/cv/resume-mauricio-raposo-en.pdf",
 };
 
+export const NET = {
+  lede: {
+    pt: "Aberto a conversas sobre engenharia e análise de dados. Respondo em até um dia útil.",
+    en: "Open to conversations about data engineering and analysis. I reply within one business day.",
+  },
+  mail: "raposo360@gmail.com",
+  mailCta: { pt: "escrever", en: "write to me" },
+  resume: { pt: "currículo", en: "résumé" },
+  based: { pt: "Recife · PE · Brasil", en: "Recife · PE · Brazil" },
+};
+
+/* Secondary channels. The email is deliberately not here. */
 export const CONTACT: Array<{ label: Bi; value: string; href: string; ext?: boolean }> = [
-  { label: { pt: "e-mail", en: "email" }, value: "raposo360@gmail.com", href: "mailto:raposo360@gmail.com" },
   { label: { pt: "linkedin", en: "linkedin" }, value: "/in/mauricio-raposo", href: "https://www.linkedin.com/in/mauricio-raposo/", ext: true },
   { label: { pt: "github", en: "github" }, value: "@rapozinho", href: "https://github.com/rapozinho", ext: true },
   { label: { pt: "telefone", en: "phone" }, value: "(81) 9.9188-6180", href: "tel:+5581991886180" },
@@ -391,5 +398,3 @@ export const SEC_TITLES = {
   net: { pt: "Contato", en: "Contact" },
 } as const;
 
-export const CV_LABEL: Bi = { pt: "currículo", en: "résumé" };
-export const CV_VALUE: Bi = { pt: "PDF · abrir", en: "PDF · open" };

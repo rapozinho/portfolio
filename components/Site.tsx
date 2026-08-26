@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  CONTACT, CV, CV_LABEL, CV_VALUE, FOOT, IDENT, PORTALS, SEC_TITLES,
-  SHARDS, SHARD_FILTERS, SHARD_NOTE, SKILLS, SKILLS_LEDE, STACK,
+  CONTACT, CV, FOOT, IDENT, NET, PORTALS, SEC_TITLES,
+  SHARDS, SHARD_NOTE, SKILLS, SKILLS_LEDE, STACK,
   STACK_LEDE, TIMELINE, type Shard,
 } from "@/lib/content";
 import CertModal from "./CertModal";
@@ -26,7 +26,6 @@ function SecHead({ n, title }: { n: string; title: string }) {
 
 export default function Site() {
   const { lang, t } = useLang();
-  const [shardG, setShardG] = useState<"all" | "a" | "b" | "c">("all");
   const [openCert, setOpenCert] = useState<Shard | null>(null);
 
 
@@ -213,23 +212,11 @@ export default function Site() {
       <section className="sec" id="shards">
         <div className="wrap">
           <SecHead n="06" title={t(SEC_TITLES.shards)} />
-          <div className="filt" data-r style={{ "--i": 0 } as React.CSSProperties}>
-            {SHARD_FILTERS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                aria-pressed={f.id === shardG}
-                onClick={() => setShardG(f.id)}
-              >
-                {t(f.label)}
-              </button>
-            ))}
-          </div>
           <div className="shs" data-r style={{ "--i": 1 } as React.CSSProperties}>
-            {SHARDS.filter((s) => shardG === "all" || s.g === shardG).map((s) => (
+            {SHARDS.map((s) => (
               <a
                 key={s.slug}
-                className={"sh sh--" + s.g}
+                className="sh"
                 href={`/certificados/${lang}/${s.slug}.pdf`}
                 target="_blank"
                 rel="noopener"
@@ -266,22 +253,38 @@ export default function Site() {
       <section className="sec" id="net">
         <div className="wrap">
           <SecHead n="07" title={t(SEC_TITLES.net)} />
-          <div className="ct" data-r style={{ "--i": 0 } as React.CSSProperties}>
-            {CONTACT.map((c) => (
-              <a
-                key={c.href}
-                href={c.href}
-                {...(c.ext ? { target: "_blank", rel: "noopener" } : {})}
-              >
-                <span>{t(c.label)}</span>
-                <b>{c.value}</b>
-              </a>
-            ))}
-            <a href={CV[lang]} target="_blank" rel="noopener">
-              <span>{t(CV_LABEL)}</span>
-              <b>{t(CV_VALUE)}</b>
+
+          <div className="net" data-r style={{ "--i": 0 } as React.CSSProperties}>
+            <p className="net__lede">{t(NET.lede)}</p>
+
+            {/* the one action this section exists for */}
+            <a className="net__mail" href={`mailto:${NET.mail}`}>
+              <span>{t(NET.mailCta)}</span>
+              <b>{NET.mail}</b>
             </a>
+
+            <ul className="net__ch">
+              {CONTACT.map((c) => (
+                <li key={c.href}>
+                  <a href={c.href} {...(c.ext ? { target: "_blank", rel: "noopener" } : {})}>
+                    <span>{t(c.label)}</span>
+                    <b>{c.value}</b>
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* both files exist, so both are offered rather than only the one
+                matching the language being read */}
+            <p className="net__cv">
+              <span>{t(NET.resume)}</span>
+              <a href={CV.pt} download="curriculo-mauricio-raposo-pt.pdf">↓ PT</a>
+              <a href={CV.en} download="resume-mauricio-raposo-en.pdf">↓ EN</a>
+            </p>
+
+            <p className="net__at">{t(NET.based)}</p>
           </div>
+
           <p className="foot">© 2026 Maurício Raposo · {t(FOOT)}</p>
         </div>
       </section>
