@@ -80,9 +80,9 @@ export default function Site() {
       </section>
 
       {/* ── 02 PORTAIS ── */}
-      <section className="sec" id="portais">
+      <section className="sec" id="projetos">
         <div className="wrap">
-          <SecHead n="02" title={t(SEC_TITLES.portais)} />
+          <SecHead n="02" title={t(SEC_TITLES.projetos)} />
           <ul className="gates">
             {PORTALS.map((p, i) => (
               <li

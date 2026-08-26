@@ -18,7 +18,7 @@ export const t = (v: Bi, l: Lang) => v[l];
 /* ── navigation ─────────────────────────────────────────────────────── */
 export const NAV: Array<{ id: string; label: Bi }> = [
   { id: "ident", label: { pt: "identificação", en: "identity" } },
-  { id: "portais", label: { pt: "portais", en: "work" } },
+  { id: "projetos", label: { pt: "projetos", en: "projects" } },
   { id: "traj", label: { pt: "trajetória", en: "career" } },
   { id: "pericia", label: { pt: "perícia", en: "skills" } },
   { id: "stack", label: { pt: "stack", en: "stack" } },
@@ -390,7 +390,7 @@ export const FOOT: Bi = {
 
 export const SEC_TITLES = {
   ident: IDENT.title,
-  portais: { pt: "Portais", en: "Portals" },
+  projetos: { pt: "Projetos", en: "Projects" },
   traj: { pt: "Trajetória", en: "Career" },
   pericia: { pt: "Perícia", en: "Skills" },
   stack: { pt: "Stack", en: "Stack" },
