@@ -305,7 +305,9 @@ body.through #site{display:block;padding-top:49px}
 .name{margin:0;font-family:var(--disp);font-size:clamp(30px,4.6vw,48px);font-weight:700;line-height:.98;letter-spacing:.01em}
 .role{margin:11px 0 0;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--muted)}
-.bio{margin:18px 0 0;color:var(--muted);font-size:16px;line-height:1.7;max-width:60ch}
+/* a wrapper now, one paragraph per idea */
+.bio{display:grid;gap:15px;margin:18px 0 0;max-width:58ch}
+.bio p{margin:0;color:var(--muted);font-size:16px;line-height:1.7}
 .bio b{color:var(--fg);font-weight:600}
 .bio mark{background:none;color:var(--amber);font-weight:600}
 

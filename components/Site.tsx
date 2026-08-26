@@ -57,12 +57,11 @@ export default function Site() {
               <p className="role" data-r style={{ "--i": 2 } as React.CSSProperties}>
                 {t(IDENT.role)}
               </p>
-              <Rich
-                className="bio"
-                data-r
-                style={{ "--i": 3 } as React.CSSProperties}
-                html={t(IDENT.bio)}
-              />
+              <div className="bio" data-r style={{ "--i": 3 } as React.CSSProperties}>
+                {IDENT.bio.map((para, k) => (
+                  <Rich key={k} html={t(para)} />
+                ))}
+              </div>
               <dl className="figs" data-r style={{ "--i": 4 } as React.CSSProperties}>
                 {IDENT.figs.map((f) => (
                   <div key={f.dt.pt}>

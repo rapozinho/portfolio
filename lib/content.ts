@@ -69,10 +69,22 @@ export const IDENT = {
     pt: "engenheiro e analista de dados · bsa tech",
     en: "data engineer & analyst · bsa tech",
   },
-  bio: {
-    pt: "Escrevo o SQL e construo as rotinas Python que mantêm os números operacionais honestos — na vertical de apostas, onde número errado é dinheiro, não erro de arredondamento. Uma rotina manual que automatizei saiu de <mark>1–2 dias para 5–10 minutos</mark> e roda em produção até hoje.",
-    en: "I write the SQL and build the Python routines that keep operational numbers honest — in the betting vertical, where a wrong number is money, not a rounding error. One manual routine I automated went from <mark>1–2 days to 5–10 minutes</mark> and still runs in production.",
-  },
+  /* Three short paragraphs, not one long one. Plain order: where, what a normal
+     day is, one thing that changed, and the habit that costs time. */
+  bio: [
+    {
+      pt: "Sou analista e engenheiro de dados júnior na BSA Tech, em Recife, na vertical de apostas. Escrevo SQL em PostgreSQL e SQL Server, mantenho rotinas em Python, e cuido de dois bots que entregam relatório no Telegram para os times de KPI e Produto.",
+      en: "I'm a junior data analyst and engineer at BSA Tech in Recife, working in the betting vertical. I write SQL on PostgreSQL and SQL Server, keep Python routines running, and look after two bots that deliver reports on Telegram for the KPI and Product teams.",
+    },
+    {
+      pt: "Uma dessas rotinas era feita à mão e levava um ou dois dias. Reescrevi em Python, com extração via SQL e coleta pela Graph API. Hoje leva de <mark>5 a 10 minutos</mark>.",
+      en: "One of those routines used to be done by hand and took a day or two. I rewrote it in Python, pulling with SQL and collecting through the Graph API. Now it takes <mark>5 to 10 minutes</mark>.",
+    },
+    {
+      pt: "Antes de um número chegar numa tela eu confiro ele no banco, no Excel, no Power BI e no BetMetrica. É chato, e é o que evita retrabalho depois.",
+      en: "Before a number reaches a screen I check it against the database, Excel, Power BI and BetMetrica. It's tedious, and it's what saves the rework later.",
+    },
+  ],
   figs: [
     { dt: { pt: "em dados desde", en: "in data since" }, dd: "2024", em: ".08" },
     { dt: { pt: "tempo de ciclo", en: "cycle time cut" }, dd: "~99", em: "%" },
