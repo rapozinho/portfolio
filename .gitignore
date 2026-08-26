@@ -47,3 +47,6 @@ next-env.d.ts
 pc*.js
 p*.mjs
 proto_check.js
+
+# static export output (only produced when output:"export" is enabled)
+/out/

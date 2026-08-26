@@ -1,4 +1,8 @@
 import type { MetadataRoute } from "next";
+
+/* Required by output: "export" -- a route handler is dynamic by default and a
+   static export has nothing to run it. */
+export const dynamic = "force-static";
 import { SITE } from "@/lib/site";
 
 /* Two pages, so this is short by nature — the point is that /blackwall gets

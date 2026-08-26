@@ -3,6 +3,10 @@ import { ImageResponse } from "next/og";
 /* Generated at build time instead of shipping a PNG, so the card never drifts out
    of sync with the copy. Next wires this file into the OG and Twitter tags
    automatically — that is why layout.tsx does not name an image. */
+/* Required by output: "export": the card is generated at build time instead of
+   on request, which is what a static host needs. */
+export const dynamic = "force-static";
+
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "Maurício Raposo — Engenheiro de dados";
