@@ -85,7 +85,7 @@ export const IDENT = {
   figs: [
     { dt: { pt: "em dados desde", en: "in data since" }, dd: "2024", em: ".08" },
     { dt: { pt: "tempo de ciclo", en: "cycle time cut" }, dd: "~99", em: "%" },
-    { dt: { pt: "bots em produção", en: "bots in production" }, dd: "2", em: "" },
+    { dt: { pt: "bots em produção", en: "bots in production" }, dd: "3", em: "" },
     { dt: { pt: "certificações", en: "certifications" }, dd: "12", em: "" },
   ],
 };
@@ -136,23 +136,15 @@ export const PORTALS: Portal[] = [
   {
     label: { pt: "Bots de relatório", en: "Telegram report bots" },
     note: {
-      pt: "Dois bots mantidos vivos para os times de KPI e Produto. Relatórios sob demanda no chat, conferidos entre banco, Excel, Power BI e BetMetrica antes de qualquer envio.",
-      en: "Two bots kept alive for the KPI and Product teams. Reports on demand in chat, cross-checked against the database, Excel, Power BI and BetMetrica before anything is sent.",
+      pt: "Três bots mantidos vivos para os times de KPI e Produto. Relatórios sob demanda no chat, conferidos entre banco, Excel, Power BI e BetMetrica antes de qualquer envio.",
+      en: "Three bots kept alive for the KPI and Product teams. Reports on demand in chat, cross-checked against the database, Excel, Power BI and BetMetrica before anything is sent.",
     },
     kv: [
-      { pt: "bots <b>2</b>", en: "bots <b>2</b>" },
+      { pt: "bots <b>3</b>", en: "bots <b>3</b>" },
       { pt: "times <b>2</b>", en: "teams <b>2</b>" },
       { pt: "KPIs <b>GGR +2</b>", en: "KPIs <b>GGR +2</b>" },
     ],
     status: { kind: "warn", label: { pt: "interno · nda", en: "internal · nda" } },
-  },
-  {
-    label: { pt: "Atrás do ICE", en: "Behind the ICE" },
-    note: {
-      pt: "Trabalho de produção da BSA Tech que não posso publicar: o banco, o catálogo de queries de KPI, o código dos bots. Explico a arquitetura numa entrevista.",
-      en: "BSA Tech production work I cannot publish: the database, the KPI query catalogue, the bot source. I will walk through the architecture in an interview.",
-    },
-    status: { kind: "off", label: { pt: "acesso negado", en: "access denied" } },
   },
 ];
 
@@ -228,8 +220,8 @@ export const SKILLS: Skill[] = [
     st: "prod",
     cad: { pt: "em produção · com plantão", en: "in production · on call" },
     note: {
-      pt: "Dois bots Telegram em produção e integração Graph API. A rotina que eles substituíram levava <em>1–2 dias; hoje leva 5–10 minutos</em>.",
-      en: "Two Telegram bots in production and Graph API integration. The routine they replaced took <em>1–2 days; it now takes 5–10 minutes</em>.",
+      pt: "Três bots Telegram em produção e integração Graph API. A rotina que eles substituíram levava <em>1–2 dias; hoje leva 5–10 minutos</em>.",
+      en: "Three Telegram bots in production and Graph API integration. The routine they replaced took <em>1–2 days; it now takes 5–10 minutes</em>.",
     },
   },
   {
