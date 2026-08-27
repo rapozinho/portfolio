@@ -66,8 +66,8 @@ export const IDENT = {
   badge: { pt: "id confirmado", en: "id confirmed" },
   name: "Maurício Raposo",
   role: {
-    pt: "engenheiro e analista de dados · bsa tech",
-    en: "data engineer & analyst · bsa tech",
+    pt: "engenheiro e analista de dados",
+    en: "data engineer & analyst",
   },
   /* The visitor's own text, verbatim. The English is a translation, not his
      wording. Split after the second sentence because four run to seven unbroken
