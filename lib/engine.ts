@@ -162,7 +162,14 @@ export function mountEngine(o: EngineOpts): Engine {
     if(charge > 0.86 || crossT > 0.06) idLine();
 
     setMeter(charge);
-  
+
+    /* brk in the shader is already zero from uCross 0.98 and is under 0.05 by
+       0.93, so past that the canvas is holding a frame with nothing left in it.
+       Hand over at that point rather than at a fixed time: it cuts the dead tail
+       and it lands at the same place in the effect on any framerate. Return
+       without scheduling -- reveal() has just stopped the loop. */
+    if(crossed && !revealed && crossT > 0.93){ reveal(); return }
+
     glRaf = requestAnimationFrame(glFrame);
   }
   
@@ -234,7 +241,7 @@ export function mountEngine(o: EngineOpts): Engine {
     nextLine();
   }
   
-  var gate: any = $("#gate"), crossed = false;
+  var gate: any = $("#gate"), crossed = false, revealed = false, revealTm: any = 0;
   function cross(){
     if(crossed) return;
     crossed = true;
@@ -244,16 +251,27 @@ export function mountEngine(o: EngineOpts): Engine {
     autoCharge = false;
     o.setEnergy(1.4);
     document.body.classList.add("breaching");
-    var wait = RM ? 0 : 3200;
-    setTimeout(function(){
-      gate.classList.add("gone");
-      document.body.classList.remove("breaching");
-      document.body.classList.add("through");
-      glStop();                             /* GL is Act I only — stop paying for it */
-      o.setEnergy(0.2);                     /* the 2D wall settles behind the content */
-      scrollTo({top:0, behavior:"auto"});
-      observe();
-    }, wait);
+    if(RM){ reveal(); return }
+    /* A backstop, not the schedule. The handover is driven by the break itself
+       decaying (see glFrame), because crossT advances per frame while a timer
+       counts wall-clock: the old fixed 3200ms was tuned at 60fps and cut into a
+       frame still tearing on anything slower. This only has to cover the case
+       where rAF stops -- a hidden tab freezes crossT, and nobody may come back
+       to a page parked mid-crossing. */
+    revealTm = setTimeout(reveal, 4200);
+  }
+  /* Act I is over: stop drawing it and hand the page to Act II. */
+  function reveal(){
+    if(revealed) return;
+    revealed = true;
+    clearTimeout(revealTm);
+    gate.classList.add("gone");
+    document.body.classList.remove("breaching");
+    document.body.classList.add("through");
+    glStop();                             /* GL is Act I only — stop paying for it */
+    o.setEnergy(0.2);                     /* the 2D wall settles behind the content */
+    scrollTo({top:0, behavior:"auto"});
+    observe();
   }
   /* The wall resists. Every push adds charge; letting go lets it drain.
      Reaching full charge is what opens the tear — one gesture never does. */
@@ -364,6 +382,11 @@ export function mountEngine(o: EngineOpts): Engine {
      open halfway down. Take Act II directly and leave the scroll alone. */
   if(o.skipEntry){
     crossed = true; entryDone = true;
+    /* revealed too, and not only for tidiness: Act II is already up, and
+       reveal() ends on scrollTo(0), which would throw away the section this
+       path exists to open at. Today glStop() below beats the first frame so
+       glFrame never runs, but that is an ordering accident, not a guarantee. */
+    revealed = true;
     entry = 1; charge = 1; chargeT = 1; crossT = 1; crossTarget = 1;
     clearTimeout(typing);
     if(gate) gate.classList.add("gone");
@@ -378,6 +401,9 @@ export function mountEngine(o: EngineOpts): Engine {
       cancelAnimationFrame(glRaf);
       clearTimeout(typing);
       clearTimeout(nudgeTm);
+      /* or a visitor who leaves mid-crossing gets .through written onto a body
+         the unmount has just cleaned */
+      clearTimeout(revealTm);
       if(io) io.disconnect();
       if(io2) io2.disconnect();
       offs.forEach(function(f){ f() });
