@@ -381,9 +381,15 @@ body.through #site{display:block;padding-top:var(--top-h)}
 /* metric readout — mono figures, tabular */
 .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;
   background:var(--line);border:1px solid var(--line);margin-top:26px}
-.figs > div{background:var(--surface);padding:13px 15px}
+/* Values sit on the baseline of their cell rather than under their own label,
+   so a label that wraps to two lines does not push its number out of line with
+   the ones beside it. The labels differ in length between the two languages as
+   well, so pinning the number to the bottom is the only version that holds for
+   both. */
+.figs > div{background:var(--surface);padding:13px 15px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:6px}
 .figs dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
-.figs dd{margin:6px 0 0;font-family:var(--mono);font-size:23px;color:var(--fg);font-variant-numeric:tabular-nums}
+.figs dd{margin:0;font-family:var(--mono);font-size:23px;color:var(--fg);font-variant-numeric:tabular-nums}
 .figs dd em{color:var(--cyan);font-style:normal;font-size:.66em}
 
 /* ── PORTALS (projects) — the gate grammar from the app ── */

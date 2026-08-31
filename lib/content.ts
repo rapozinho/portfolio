@@ -83,7 +83,12 @@ export const IDENT = {
   ],
   figs: [
     { dt: { pt: "em dados desde", en: "in data since" }, dd: "2024", em: ".08" },
-    { dt: { pt: "tempo de ciclo", en: "cycle time cut" }, dd: "~99", em: "%" },
+    /* The label carries the before and the value carries the after, so the row
+       means something on its own rather than needing the projects card to
+       explain it. It replaces "tempo de ciclo / cycle time cut ~99%", where the
+       two languages claimed opposite things: the English read as a 99% cut and
+       the Portuguese as a cycle time that IS 99%. */
+    { dt: { pt: "rotina de 1–2 dias", en: "a 1–2 day routine" }, dd: "5–10", em: " min" },
     { dt: { pt: "bots em produção", en: "bots in production" }, dd: "3", em: "" },
     { dt: { pt: "certificações", en: "certifications" }, dd: "12", em: "" },
   ],
