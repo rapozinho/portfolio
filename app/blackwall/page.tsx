@@ -128,7 +128,7 @@ export default function BlackWallCase() {
       <main id="case">
         <div className="wrap">
           <header className="case__hd">
-            <span className="case__eyebrow">estudo de caso · 2025—2026</span>
+            <span className="case__eyebrow">estudo de caso · 2025–2026</span>
             <h1 className="case__t">
               BlackWall <span>Analytics</span>
             </h1>

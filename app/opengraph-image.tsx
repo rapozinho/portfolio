@@ -74,7 +74,7 @@ export default function OG() {
             <span style={{ color: "#37e6ff" }}>1.04M</span> LINHAS
           </span>
           <span>
-            <span style={{ color: "#37e6ff" }}>2</span> BOTS EM PRODUÇÃO
+            <span style={{ color: "#37e6ff" }}>3</span> BOTS EM PRODUÇÃO
           </span>
           <span>
             <span style={{ color: "#37e6ff" }}>12</span> CERTIFICAÇÕES
