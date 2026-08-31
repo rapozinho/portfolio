@@ -28,7 +28,7 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
-  title: "Maurício Raposo · Engenheiro de dados",
+  title: "Maurício Raposo · Engenheiro e analista de dados",
   description:
     "Engenheiro e analista de dados júnior na BSA Tech. SQL avançado, pipelines em Python e automação em produção na vertical de apostas, onde número errado é dinheiro.",
   keywords: [
@@ -44,13 +44,13 @@ export const metadata: Metadata = {
     siteName: "Maurício Raposo",
     locale: "pt_BR",
     alternateLocale: ["en_US"],
-    title: "Maurício Raposo · Engenheiro de dados",
+    title: "Maurício Raposo · Engenheiro e analista de dados",
     description:
       "SQL avançado, pipelines em Python e automação em produção. Uma rotina manual de 1 a 2 dias que hoje leva 5 a 10 minutos.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Maurício Raposo · Engenheiro de dados",
+    title: "Maurício Raposo · Engenheiro e analista de dados",
     description: "SQL avançado, pipelines em Python e automação em produção.",
   },
   robots: { index: true, follow: true },

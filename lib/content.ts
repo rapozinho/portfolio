@@ -74,10 +74,10 @@ export const IDENT = {
   bio: [
     {
       pt: "Profissional apaixonado por transformar ideias em soluções reais, unindo técnica, criatividade e visão estratégica. Acredito que os melhores resultados surgem do alinhamento entre funcionalidade, boa comunicação e foco nas pessoas.",
-      en: "A professional driven by turning ideas into real solutions, bringing together technique, creativity and strategic vision. I believe the best results come from the alignment of functionality, good communication and a focus on people.",
+      en: "A professional driven by turning ideas into real solutions, bringing together craft, creativity and strategic vision. I believe the best results come from the alignment of functionality, good communication and a focus on people.",
     },
     {
-      pt: "Tenho perfil dinâmico, colaborativo e fácil adaptação a novos desafios, buscando sempre aprender e evoluir a cada projeto. Meu objetivo é entregar experiências de alto impacto, combinando eficiência e um toque humano em tudo o que faço, criando conexões genuínas e entregas que realmente geram valor.",
+      pt: "Tenho perfil dinâmico e colaborativo, me adapto com facilidade a novos desafios, e busco sempre aprender e evoluir a cada projeto. Meu objetivo é entregar experiências de alto impacto, combinando eficiência e um toque humano em tudo o que faço, criando conexões genuínas e entregas que realmente geram valor.",
       en: "I am dynamic and collaborative, and I adapt easily to new challenges, always looking to learn and grow with every project. My goal is to deliver high-impact experiences, combining efficiency with a human touch in everything I do, building genuine connections and work that truly creates value.",
     },
   ],
@@ -109,18 +109,18 @@ export const PORTALS: Portal[] = [
     lead: true,
     label: { pt: "BlackWall Analytics", en: "BlackWall Analytics" },
     note: {
-      pt: "Dashboard de BI que disponibiliza dados de forma inteligente com gráficos interativos, unificando <b>8 bases de dados</b> num único ponto de verdade. Fila de jobs com polling e cancelamento.",
-      en: "BI dashboard delivering data intelligently with interactive charts, unifying <b>8 databases</b> into a single source of truth. Job queue with polling and cancellation.",
+      pt: "Dashboard de BI que disponibiliza dados de forma inteligente com gráficos interativos, unificando <b>8 bases de dados</b> numa fonte única da verdade. Fila de jobs com polling e cancelamento.",
+      en: "A BI dashboard delivering data intelligently with interactive charts, unifying <b>8 databases</b> into a single source of truth. Job queue with polling and cancellation.",
     },
     kv: [
       { pt: "queries <b>292</b>", en: "queries <b>292</b>" },
-      { pt: "linhas <b>1.04M</b>", en: "rows <b>1.04M</b>" },
+      { pt: "linhas <b>1,04M</b>", en: "rows <b>1.04M</b>" },
       { pt: "bases <b>8</b>", en: "databases <b>8</b>" },
       { pt: "idiomas <b>3</b>", en: "languages <b>3</b>" },
     ],
     status: { kind: "ok", label: { pt: "online · público", en: "online · public" } },
     links: [
-      { href: "/blackwall", label: { pt: "case study →", en: "case study →" }, internal: true },
+      { href: "/blackwall", label: { pt: "estudo de caso →", en: "case study →" }, internal: true },
       { href: "https://rapozinho.github.io/blackwall-analytics/", label: { pt: "abrir demo →", en: "open demo →" } },
       { href: "https://github.com/rapozinho/blackwall-analytics", label: { pt: "repo →", en: "repo →" } },
     ],
@@ -135,7 +135,7 @@ export const PORTALS: Portal[] = [
       { pt: "antes <b>1–2 d</b>", en: "before <b>1–2 d</b>" },
       { pt: "depois <b>5–10 min</b>", en: "after <b>5–10 min</b>" },
     ],
-    status: { kind: "warn", label: { pt: "interno · nda", en: "internal · nda" } },
+    status: { kind: "warn", label: { pt: "interno · NDA", en: "internal · NDA" } },
   },
   {
     label: { pt: "Bots de relatório", en: "Telegram report bots" },
@@ -148,7 +148,7 @@ export const PORTALS: Portal[] = [
       { pt: "times <b>2</b>", en: "teams <b>2</b>" },
       { pt: "KPIs <b>GGR +2</b>", en: "KPIs <b>GGR +2</b>" },
     ],
-    status: { kind: "warn", label: { pt: "interno · nda", en: "internal · nda" } },
+    status: { kind: "warn", label: { pt: "interno · NDA", en: "internal · NDA" } },
   },
 ];
 
@@ -167,11 +167,14 @@ export const CASE = {
   },
   demo: { pt: "abrir demo →", en: "open demo →" },
   repo: { pt: "repo →", en: "repo →" },
+  /* All four values are pairs even though only the first differs, so the shape
+     is one thing rather than a string here and a pair there: Portuguese takes
+     the comma as its decimal separator, English the point. */
   facts: [
-    { k: { pt: "linhas consultadas", en: "rows queried" }, v: "1.04M" },
-    { k: { pt: "queries no catálogo", en: "queries in the catalogue" }, v: "292" },
-    { k: { pt: "bases atendidas", en: "databases served" }, v: "8" },
-    { k: { pt: "idiomas", en: "languages" }, v: "3" },
+    { k: { pt: "linhas consultadas", en: "rows queried" }, v: { pt: "1,04M", en: "1.04M" } },
+    { k: { pt: "queries no catálogo", en: "queries in the catalogue" }, v: { pt: "292", en: "292" } },
+    { k: { pt: "bases atendidas", en: "databases served" }, v: { pt: "8", en: "8" } },
+    { k: { pt: "idiomas", en: "languages" }, v: { pt: "3", en: "3" } },
   ],
   secProblem: { pt: "O problema", en: "The problem" },
   secDecisions: { pt: "Decisões", en: "Decisions" },
@@ -183,7 +186,7 @@ export const CASE = {
   problem: [
     {
       pt: "Números operacionais chegavam a quem decide por caminhos diferentes: uma planilha aqui, um print de dashboard ali, um relatório que alguém montou à mão na semana passada. Quando dois desses discordavam, e discordavam, ninguém sabia qual estava certo, porque não havia uma fonte que se pudesse reexecutar.",
-      en: "Operational numbers reached the people deciding by different routes: a spreadsheet here, a screenshot of a dashboard there, a report someone assembled by hand last week. When two of them disagreed, and they did, nobody knew which was right, because there was no source anyone could re-run.",
+      en: "Operational numbers reached decision-makers by different routes: a spreadsheet here, a screenshot of a dashboard there, a report someone assembled by hand last week. When two of them disagreed, and they did, nobody knew which was right, because there was no source anyone could re-run.",
     },
     {
       pt: "A vertical de apostas piora isso: número errado é dinheiro, não erro de arredondamento. O portal existe para que a resposta seja sempre a mesma query rodando sobre a mesma base, e para que qualquer pessoa consiga reproduzi-la.",
@@ -217,11 +220,11 @@ export const CASE = {
         en: "A job queue with polling and cancellation",
       },
       problem: {
-        pt: "Uma consulta sobre 1.04M linhas não responde dentro de um request HTTP. Sem fila, o navegador espera e estoura; com fila mas sem cancelamento, quem clicou errado ocupa o worker até o fim.",
+        pt: "Uma consulta sobre 1,04M linhas não responde dentro de um request HTTP. Sem fila, o navegador espera e estoura; com fila mas sem cancelamento, quem clicou errado ocupa o worker até o fim.",
         en: "A query over 1.04M rows does not answer inside an HTTP request. With no queue the browser waits and times out; with a queue but no cancellation, whoever clicked the wrong thing holds the worker to the end.",
       },
       choice: {
-        pt: "Job assíncrono, polling de status pelo front, e cancelamento de verdade: o job morre e o worker libera.",
+        pt: "Job assíncrono, polling de status pelo front, e cancelamento de verdade: o job morre e o worker é liberado.",
         en: "An async job, status polling from the front end, and real cancellation: the job dies and the worker is freed.",
       },
       cost: {
@@ -281,7 +284,7 @@ export const CASE = {
     },
     {
       pt: "Orquestração por Airflow em vez da fila caseira. Certificado, ainda não em produção pelas minhas mãos, então ficou como próximo passo honesto, não como stack de vitrine.",
-      en: "Airflow orchestration instead of the home-made queue. Certified, not yet in production under my hands, so it stays an honest next step rather than shop-window stack.",
+      en: "Airflow orchestration instead of the home-made queue. Certified, not yet in production under my hands, so it stays an honest next step rather than a shop-window stack.",
     },
   ],
 };
@@ -292,27 +295,38 @@ export const TIMELINE: Array<{ when: Bi; role: Bi; where: string; note: Bi }> = 
     when: { pt: "2025.05 → atual", en: "2025.05 → present" },
     role: { pt: "Engenheiro e analista de dados júnior", en: "Junior data engineer & analyst" },
     where: "BSA Tech · Recife/PE",
+    /* The acronyms that prove something stay and the ones that only filled space
+       go: joins, subconsultas and CTEs are table stakes for anyone writing SQL,
+       while GGR, turnover and retention say which industry and which numbers.
+       Each line now says what the technique buys instead of only naming it. */
     note: {
-      pt: "SQL avançado em PostgreSQL e SQL Server, com joins, subconsultas e CTEs, calculando GGR, turnover e retenção. DDL de tabelas, chaves e relacionamentos para que integridade seja estrutural. Microsoft Graph API para coleta em tempo real. Plantão quando uma rotina morre às 2h.",
-      en: "Advanced SQL on PostgreSQL and SQL Server, using joins, subqueries and CTEs, computing GGR, turnover and retention. DDL for tables, keys and relationships so integrity is structural. Microsoft Graph API for real-time collection. On call when a routine dies at 2am.",
+      pt: "SQL avançado em PostgreSQL e SQL Server para apurar GGR, turnover e retenção, que são os números pelos quais a operação decide. Modelo tabelas, chaves e relacionamentos para que a integridade seja garantida pelo banco e não por combinação entre pessoas. Coleta em tempo real pela Microsoft Graph API. Plantão quando uma rotina morre às 2h.",
+      en: "Advanced SQL on PostgreSQL and SQL Server to compute GGR, turnover and retention, the numbers the operation decides on. I model tables, keys and relationships so integrity is enforced by the database rather than agreed between people. Real-time collection through the Microsoft Graph API. On call when a routine dies at 2am.",
     },
   },
   {
     when: { pt: "2024.08 → 2025.05", en: "2024.08 → 2025.05" },
-    role: { pt: "Estágio em análise de dados", en: "Data analysis intern" },
+    /* The person, not the contract, so it reads level with the row above it and
+       matches the English, which already named the person. */
+    role: { pt: "Estagiário em análise de dados", en: "Data analysis intern" },
     where: "BSA Tech · Recife/PE",
     note: {
-      pt: "Tirei dados de bancos relacionais e planilhas externas para as bases internas. Primeiro ETL de verdade em Python: limpeza, tratamento, normalização. SQL para relatórios recorrentes, e o hábito de checar a chave primária antes de confiar numa contagem.",
-      en: "Pulled data out of relational databases and external spreadsheets into the internal bases. First real ETL in Python: cleaning, treatment, normalisation. SQL for recurring reports, and the habit of checking the primary key before trusting a count.",
+      pt: "Levei dados de bancos relacionais e planilhas externas para as bases internas. Primeiro ETL de verdade em Python: limpeza, tratamento e normalização. SQL para os relatórios recorrentes, e o hábito de conferir a chave primária antes de confiar numa contagem.",
+      en: "Brought data out of relational databases and external spreadsheets into the internal databases. First real ETL in Python: cleaning, transformation and normalisation. SQL for the recurring reports, and the habit of checking the primary key before trusting a count.",
     },
   },
   {
     when: { pt: "2026.12 · previsto", en: "2026.12 · forecast" },
-    role: { pt: "Análise e Desenvolvimento de Sistemas", en: "Systems Analysis & Development" },
+    /* Labelled, because this field holds a job title in the two rows above and a
+       course name here, and the three sit in one list looking alike. */
+    role: {
+      pt: "Formação · Análise e Desenvolvimento de Sistemas",
+      en: "Degree · Systems Analysis & Development",
+    },
     where: "UNIBRA · Centro Universitário Brasileiro",
     note: {
-      pt: "Em andamento, conclusão prevista dez/2026, cursado em paralelo com trabalho em produção full-time. 12 certificações Alura concluídas no caminho.",
-      en: "In progress, graduating Dec/2026, taken in parallel with full-time production work. 12 Alura certifications finished along the way.",
+      pt: "Em andamento, com conclusão prevista para dez/2026, em paralelo com trabalho em produção em tempo integral. 12 certificações Alura concluídas no caminho.",
+      en: "In progress, due December 2026, alongside full-time production work. 12 Alura certifications finished along the way.",
     },
   },
 ];
@@ -338,8 +352,8 @@ export const SKILLS: Skill[] = [
     st: "prod",
     cad: { pt: "em produção · diário", en: "in production · daily" },
     note: {
-      pt: "T-SQL avançado: joins, subconsultas, CTEs, DDL, chaves e relacionamentos. O catálogo de <em>292 queries</em> do BlackWall mora aqui.",
-      en: "Advanced T-SQL: joins, subqueries, CTEs, DDL, keys and relationships. The BlackWall catalogue of <em>292 queries</em> lives here.",
+      pt: "SQL avançado: joins, subconsultas, CTEs, DDL, chaves e relacionamentos. O catálogo de <em>292 queries</em> do BlackWall mora aqui.",
+      en: "Advanced SQL: joins, subqueries, CTEs, DDL, keys and relationships. The BlackWall catalogue of <em>292 queries</em> lives here.",
     },
   },
   {
@@ -348,7 +362,7 @@ export const SKILLS: Skill[] = [
     st: "prod",
     cad: { pt: "em produção · diário", en: "in production · daily" },
     note: {
-      pt: "Pandas, NumPy, Matplotlib, Jupyter. Pipelines orientados a objeto, e o <em>backend FastAPI do BlackWall</em>.",
+      pt: "Pandas, NumPy, Matplotlib, Jupyter. Pipelines orientados a objetos, e o <em>backend FastAPI do BlackWall</em>.",
       en: "Pandas, NumPy, Matplotlib, Jupyter. Object-oriented pipelines, and the <em>BlackWall FastAPI backend</em>.",
     },
   },
@@ -378,7 +392,7 @@ export const SKILLS: Skill[] = [
     st: "prod",
     cad: { pt: "em produção · diário", en: "in production · daily" },
     note: {
-      pt: "Docker Compose e nginx servindo o BlackWall, Linux (Ubuntu/WSL) como ambiente de trabalho, Git no versionamento.",
+      pt: "Docker Compose e nginx servindo o BlackWall, Linux (Ubuntu/WSL) como ambiente de trabalho, Git para versionamento.",
       en: "Docker Compose and nginx serving BlackWall, Linux (Ubuntu/WSL) as the working environment, Git for versioning.",
     },
   },
@@ -457,7 +471,7 @@ export const SHARDS: Shard[] = [
     sub: { pt: "orquestrando seu primeiro pipeline", en: "orchestrating your first pipeline" } },
   { slug: "pipeline-oo", 
     title: { pt: "Pipeline de dados + OO", en: "Data pipeline + OOP" },
-    sub: { pt: "python, orientação a objeto", en: "python, object orientation" } },
+    sub: { pt: "python, orientação a objetos", en: "python, object orientation" } },
   { slug: "pipeline-mongo-mysql", 
     title: { pt: "Pipeline: MongoDB + MySQL", en: "Pipeline: MongoDB + MySQL" },
     sub: { pt: "integração python", en: "python integration" } },
@@ -492,8 +506,8 @@ export const SHARDS: Shard[] = [
 
 
 export const SHARD_NOTE: Bi = {
-  pt: "alura · abre o PDF na língua que você está lendo",
-  en: "alura · opens the PDF in the language you are reading",
+  pt: "Alura · abre o PDF na língua que você está lendo",
+  en: "Alura · opens the PDF in the language you are reading",
 };
 
 /* ── 07 contact ─────────────────────────────────────────────────────
@@ -525,7 +539,7 @@ export const NET = {
 export const CONTACT: Array<{ label: Bi; value: string; href: string; ext?: boolean }> = [
   { label: { pt: "LinkedIn", en: "LinkedIn" }, value: "Maurício Raposo", href: "https://www.linkedin.com/in/mauricio-raposo/", ext: true },
   { label: { pt: "GitHub", en: "GitHub" }, value: "@rapozinho", href: "https://github.com/rapozinho", ext: true },
-  { label: { pt: "Telefone", en: "Phone" }, value: "(81) 9.9188-6180", href: "tel:+5581991886180" },
+  { label: { pt: "Telefone", en: "Phone" }, value: "(81) 99188-6180", href: "tel:+5581991886180" },
 ];
 
 export const FOOT: Bi = {

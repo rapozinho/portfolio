@@ -101,7 +101,7 @@ export default function CaseStudy() {
             {CASE.facts.map((f) => (
               <div key={f.k.pt}>
                 <dt>{t(f.k)}</dt>
-                <dd>{f.v}</dd>
+                <dd>{t(f.v)}</dd>
               </div>
             ))}
           </dl>
