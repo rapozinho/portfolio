@@ -297,6 +297,13 @@ body.breaching #gate{animation:bw-clear .5s ease-out forwards}
 body.through #site{display:block;padding-top:var(--top-h)}
 .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,6vw,90px)}
 .sec{padding:clamp(56px,11vh,104px) 0;position:relative;scroll-margin-top:var(--top-h)}
+/* 11vh is generous air on a desktop and 93px of nothing at each end of every
+   section on a phone: seven sections, both ends, a screen and a half of the
+   page spent on gaps. The rhythm survives at 6vh; the scrolling does not have
+   to. */
+@media (max-width:760px){
+  .sec{padding:clamp(38px,6vh,60px) 0}
+}
 .sec + .sec{border-top:1px solid var(--line)}
 
 .sec__h{display:flex;align-items:center;gap:14px;margin:0 0 32px}
@@ -331,7 +338,29 @@ body.through #site{display:block;padding-top:var(--top-h)}
 
 /* ── IDENT ── */
 .ident{display:grid;grid-template-columns:210px 1fr;gap:clamp(22px,4vw,46px);align-items:start}
-@media (max-width:760px){.ident{grid-template-columns:1fr}}
+/* On a phone the single column made the portrait the width of the content, and
+   its 751x1026 ratio then made it 468px tall: 55% of the screen, with the name
+   pushed off the first screenful entirely. It becomes a badge beside the name
+   instead, which is also what this section is about.
+
+   The name, role, bio and figures are one <div> in the markup, and that div is
+   the second column. Shrinking the photo column alone would have squeezed the
+   bio into a 225px ribbon and made the page LONGER. display:contents dissolves
+   that wrapper into the grid, so the photo can sit beside the name while the
+   bio and the figures keep the full width underneath. The wrapper carries no
+   box of its own, so nothing is lost with it. */
+@media (max-width:760px){
+  .ident{grid-template-columns:104px minmax(0,1fr);gap:0 16px;align-items:start}
+  .ident > div:last-child{display:contents}
+  .ph{grid-column:1;grid-row:1/span 2}
+  .name{grid-column:2;grid-row:1;align-self:end;font-size:clamp(26px,7vw,34px)}
+  .role{grid-column:2;grid-row:2;align-self:start;margin-top:7px}
+  .bio{grid-column:1/-1;grid-row:3;margin-top:20px}
+  .figs{grid-column:1/-1;grid-row:4}
+  /* the caption was set for a 210px photo; at 104px it wrapped to two lines and
+     took a third of the badge */
+  .ph em{font-size:8px;letter-spacing:.06em;padding:4px 5px}
+}
 .ph{position:relative;background:var(--void);border:1px solid var(--line-hot)}
 /* height:auto is load-bearing: without it the img height attribute applies as a
    presentational hint and overrides the intrinsic ratio. */
@@ -517,6 +546,13 @@ body.through #site{display:block;padding-top:var(--top-h)}
 
 /* ── SHARDS ── */
 .shs{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:7px}
+/* 212px needs 431px of content to fit two, and a phone gives 343px, so all
+   twelve certificates were landing in a single column: 869px of stack for
+   cards that are 81px tall and mostly empty space. At 148px they pair up and
+   the section loses about 430px, half a screen, with nothing removed. */
+@media (max-width:760px){
+  .shs{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:6px}
+}
 .sh{position:relative;display:block;background:var(--surface-2);border:1px solid var(--line);
   padding:12px 13px 11px 16px;transition:border-color .17s,background .17s}
 .sh::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line-hot)}
