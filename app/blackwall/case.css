@@ -1,6 +1,12 @@
 /* The case study reads, it does not perform: no canvas, no entry, no reveal
-   animations. It reuses the tokens and .figs / .foot from globals.css and adds
-   only what a long-form document needs. */
+   animations. It reuses the tokens from globals.css and adds only what a
+   long-form document needs.
+
+   Every rule is scoped under #case on purpose. globals.css already owns .figs,
+   .foot and .wrap at the same specificity, and which of the two sheets wins a
+   tie depends on the order Next puts them in the bundle, which is not the same
+   on a hard load as it is after a client-side navigation. Scoping by id settles
+   it regardless of order. */
 
 #case {
   display: block;
@@ -12,18 +18,18 @@
 }
 #case .wrap { max-width: 820px }
 
-.case__back {
+#case .case__back {
   margin: 0 0 clamp(30px, 6vh, 54px);
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .14em;
   text-transform: uppercase;
 }
-.case__back a { color: var(--muted); text-decoration: none; transition: color .16s }
-.case__back a:hover { color: var(--amber) }
+#case .case__back a { color: var(--muted); text-decoration: none; transition: color .16s }
+#case .case__back a:hover { color: var(--amber) }
 
-.case__hd { border-bottom: 1px solid var(--line); padding-bottom: 30px }
-.case__eyebrow {
+#case .case__hd { border-bottom: 1px solid var(--line); padding-bottom: 30px }
+#case .case__eyebrow {
   display: block;
   font-family: var(--mono);
   font-size: 10.5px;
@@ -31,7 +37,7 @@
   text-transform: uppercase;
   color: var(--red);
 }
-.case__t {
+#case .case__t {
   margin: 12px 0 0;
   font-family: var(--disp);
   font-size: clamp(30px, 5.2vw, 50px);
@@ -40,15 +46,15 @@
   letter-spacing: .01em;
   text-wrap: balance;
 }
-.case__lede {
+#case .case__lede {
   margin: 18px 0 0;
   color: var(--muted);
   font-size: 16.5px;
   line-height: 1.66;
   max-width: 62ch;
 }
-.case__go { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0 }
-.case__go a {
+#case .case__go { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0 }
+#case .case__go a {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .14em;
@@ -59,20 +65,25 @@
   padding: 9px 15px;
   transition: border-color .16s, background .16s;
 }
-.case__go a:hover { border-color: var(--amber); background: rgba(252, 238, 10, .07) }
+#case .case__go a:hover { border-color: var(--amber); background: rgba(252, 238, 10, .07) }
 
-/* the numbers, stated once, near the top, where a skim finds them */
-.case__figs {
+/* the numbers, stated once, near the top, where a skim finds them.
+   globals.css draws .figs as a hairline-gapped bordered grid; here the strip is
+   open and unboxed, so every property that sheet sets has to be answered. */
+#case .case__figs {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
   gap: 22px 26px;
   margin: 34px 0 0;
   padding-bottom: 34px;
+  background: none;
+  border: 0;
   border-bottom: 1px solid var(--line);
 }
+#case .case__figs > div { background: none; padding: 0 }
 
-.case__s { margin: 42px 0 0 }
-.case__s > h2 {
+#case .case__s { margin: 42px 0 0 }
+#case .case__s > h2 {
   margin: 0 0 16px;
   font-family: var(--mono);
   font-size: 10.5px;
@@ -81,18 +92,18 @@
   color: var(--muted);
   font-weight: 400;
 }
-.case__s p { margin: 0 0 15px; color: #b6c1d1; font-size: 16px; line-height: 1.7; max-width: 66ch }
+#case .case__s p { margin: 0 0 15px; color: #b6c1d1; font-size: 16px; line-height: 1.7; max-width: 66ch }
 
 /* Numbered because these ARE a sequence: each decision constrains the next. */
-.dec { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line) }
-.dec > li { position: relative; background: var(--surface); padding: 22px 24px 20px }
-.dec__n {
+#case .dec { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line) }
+#case .dec > li { position: relative; background: var(--surface); padding: 22px 24px 20px }
+#case .dec__n {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .16em;
   color: var(--red);
 }
-.dec > li > h3 {
+#case .dec > li > h3 {
   margin: 8px 0 14px;
   font-family: var(--disp);
   font-size: 19px;
@@ -100,14 +111,14 @@
   line-height: 1.28;
   text-wrap: balance;
 }
-.dec__l { margin: 0 0 10px; color: var(--muted); font-size: 15px; line-height: 1.66; max-width: 66ch }
-.dec__l b { color: var(--fg); font-weight: 500 }
+#case .dec__l { margin: 0 0 10px; color: var(--muted); font-size: 15px; line-height: 1.66; max-width: 66ch }
+#case .dec__l b { color: var(--fg); font-weight: 500 }
 /* the cost is the half most write-ups leave out, so it gets the marker */
-.dec__cost { margin-bottom: 0; padding-left: 13px; border-left: 2px solid var(--line-hot) }
-.dec__cost b { color: var(--amber) }
+#case .dec__cost { margin-bottom: 0; padding-left: 13px; border-left: 2px solid var(--line-hot) }
+#case .dec__cost b { color: var(--amber) }
 
-.case__stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 }
-.case__stack span {
+#case .case__stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 }
+#case .case__stack span {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--fg);
@@ -116,8 +127,8 @@
   padding: 6px 11px;
 }
 
-.nxt { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px }
-.nxt li {
+#case .nxt { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px }
+#case .nxt li {
   position: relative;
   padding-left: 20px;
   color: var(--muted);
@@ -125,7 +136,7 @@
   line-height: 1.66;
   max-width: 70ch;
 }
-.nxt li::before {
+#case .nxt li::before {
   content: "→";
   position: absolute;
   left: 0;

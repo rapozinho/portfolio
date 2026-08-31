@@ -41,6 +41,12 @@ export default function Entry() {
       eng?.destroy();
       wall?.destroy();
       engine.current = null;
+      /* <body> is in the root layout, so it survives client-side navigation while
+         this component does not. The engine writes the crossing state onto it and
+         a fresh engine starts from zero, so leaving the classes behind means
+         coming back from /blackwall lands on a site that believes it is already
+         through: #gl hidden, #site visible, and a new #gate drawn over the top. */
+      document.body.classList.remove("through", "landed", "gl-ok", "breaching");
     };
   }, []);
 
