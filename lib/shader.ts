@@ -110,13 +110,29 @@ export const FRAG = [
   "  uv.x += step(0.88, gk) * (gk - 0.5) * 0.05 * burst;",
   /* The crossing is the whole frame breaking along its own scanlines. This
      shears the ray direction, so the geometry genuinely tears rather than a
-     filter being laid over a picture of it. Finer bands and a faster reseed
-     than the idle glitch above: that one is the wall ticking over, this one is
-     the wall failing. */
-  "  float tb = floor(gl_FragCoord.y / 4.0);",
-  "  float tk = h21(vec2(tb, floor(uT * 26.0)));",
-  "  float tear = (tk - 0.5) * step(0.55, tk) * brk;",
-  "  uv.x += tear * 0.30;",
+     filter being laid over a picture of it.
+
+     On the site's own rhythm: 3px is the period of the #grain overlay in
+     globals.css, so the break runs on the rhythm already laid over every page
+     rather than on an unrelated scanline of its own.
+
+     tAmp and tDir are split apart on purpose. The previous form was
+     (tk - 0.5) * step(0.55, tk), which reads as symmetric and is not: the step
+     discards every band below 0.55, and those were exactly the bands whose
+     (tk - 0.5) was negative. Only the positive half survived, so every band
+     pushed the same way and the red/cyan pair below could never produce a cyan
+     band -- the whole frame went red. Selecting the band and choosing its
+     direction separately keeps the two halves. tDir is keyed to tb alone, so a
+     band holds its side while its amplitude flickers, which reads as a comb
+     coming apart rather than as noise. */
+  "  float tb = floor(gl_FragCoord.y / 3.0);",
+  "  float tk = h21(vec2(tb, floor(uT * 18.0)));",
+  /* 0.72: roughly a quarter of the bands at any instant, down from the 45% that
+     made this read as broken-signal static instead of a wall giving way */
+  "  float tAmp = max(tk - 0.72, 0.0) / 0.28;",
+  "  float tDir = step(0.5, h21(vec2(tb, 91.7))) * 2.0 - 1.0;",
+  "  float tear = tAmp * tDir * brk;",
+  "  uv.x += tear * 0.12;",
   "",
   /* A single path in Z. The entry flight covers the lattice and the darkness
      past it; scroll covers the approach. No branch, so no cut. */
@@ -457,8 +473,14 @@ export const FRAG = [
      wall is holding. Opposed channels, so a band that loses red gains exactly
      the cyan it lost, and the frame reads as one signal splitting rather than
      as two colours being added to it. */
-  "  col.r  += tear * 2.6;",
-  "  col.gb -= vec2(tear * 2.6);",
+  /* 0.35, not 2.6. tear reaches 1.0, so 2.6 pushed the red channel to +1.3 on a
+     channel that tops out at 1.0 and drove green and blue to -1.3, which the
+     final max() clamped flat to zero. Every affected band came out the same
+     blown red with no detail left in it, and the wall behind it was gone. At
+     0.35 the band moves far enough to read as split while what is underneath
+     survives it. */
+  "  col.r  += tear * 0.35;",
+  "  col.gb -= vec2(tear * 0.35);",
   "  col += PALE * exp(-pow((uCross - 0.62) / 0.14, 2.0)) * 0.8;",
   /* push colour away from its own luminance: the wall reads as lit glass,
      not tinted grey */
