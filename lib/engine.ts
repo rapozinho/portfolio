@@ -178,11 +178,17 @@ export function mountEngine(o: EngineOpts): Engine {
     document.body.classList.add("gl-ok");
     glRaf = requestAnimationFrame(glFrame);
     on(window, "resize", function(){ glResize() });
-    addEventListener("pointermove", function(e){
+    /* Through on(), like every other listener here. Registered raw, these two
+       outlived destroy(): one pair leaked per mount, and the visibilitychange
+       one was the dangerous half -- it holds a dead closure, so the next tab
+       switch restarted glFrame on an engine React had already torn down. That
+       zombie loop writes landed/through/breaching onto a body Entry's cleanup
+       has just cleared, from a route that no longer has a canvas. */
+    on(window, "pointermove", function(e: any){
       tmx = (e.clientX / Math.max(1, innerWidth)  - 0.5) * 2;
       tmy = (e.clientY / Math.max(1, innerHeight) - 0.5) * -2;
     }, {passive:true});
-    document.addEventListener("visibilitychange", function(){
+    on(document, "visibilitychange", function(){
       cancelAnimationFrame(glRaf);
       if(!document.hidden && !crossed) glRaf = requestAnimationFrame(glFrame);
     });
@@ -265,7 +271,11 @@ export function mountEngine(o: EngineOpts): Engine {
     if(revealed) return;
     revealed = true;
     clearTimeout(revealTm);
-    gate.classList.add("gone");
+    /* Guarded like the skipEntry path below. Unguarded, a missing #gate threw
+       here -- after the revealed latch is set and before .through goes on, so
+       Act II stayed display:none and the latch blocked any second attempt.
+       A missing overlay should not cost the visitor the whole site. */
+    if(gate) gate.classList.add("gone");
     document.body.classList.remove("breaching");
     document.body.classList.add("through");
     glStop();                             /* GL is Act I only — stop paying for it */
@@ -304,7 +314,9 @@ export function mountEngine(o: EngineOpts): Engine {
   function setMeter(v: number){
     if(!meterFill) return;
     meterFill.style.transform = "scaleX(" + v.toFixed(3) + ")";
-    meter.classList.toggle("hot", v > 0.03);
+    /* the one node in this block that was dereferenced on the strength of a
+       different element's guard: meterFill is #meter-i, this is #meter */
+    if(meter) meter.classList.toggle("hot", v > 0.03);
     if(cueFill) cueFill.style.transform = "scaleY(" + v.toFixed(3) + ")";
     if(cue) cue.classList.toggle("done", v > 0.92);   /* out of the way at the end */
     if(meterTxt) meterTxt.textContent = Math.round(v * 100) + "%";
@@ -316,6 +328,13 @@ export function mountEngine(o: EngineOpts): Engine {
   
   on(window, "keydown", function(e: any){
     if(crossed) return;
+    /* A focused control keeps its own activation keys. Space fires a button's
+       click on keyup and preventDefault on the keydown cancels it, so this
+       handler was making both of Act I's controls dead to the keyboard: tabbing
+       to "skip the crossing" and pressing Space nudged the charge by 0.085
+       instead of skipping. Arrows still steer from anywhere. */
+    var onCtl = !!(e.target && e.target.closest && e.target.closest("button, a[href]"));
+    if(onCtl && (e.key === " " || e.key === "Enter")) return;
     if(e.key === "ArrowDown" || e.key === "PageDown" || e.key === " "){ push(0.085); e.preventDefault() }
     else if(e.key === "ArrowLeft"){  kx = Math.max(-1, kx - 0.22); e.preventDefault() }
     else if(e.key === "ArrowRight"){ kx = Math.min( 1, kx + 0.22); e.preventDefault() }
