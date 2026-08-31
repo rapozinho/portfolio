@@ -92,10 +92,17 @@ export const FRAG = [
   "  vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;",
   "  float H2 = uRes.y * 0.5;",
   "",
-  /* One envelope drives the crossing. It opens as the wall starts to give,
-     peaks while the frame is being torn through, and returns to zero, so Act II
-     is arrived at clean rather than mid-effect. */
-  "  float brk = exp(-pow((uCross - 0.52) / 0.27, 2.0));",
+  /* One envelope drives the crossing: it opens as the wall starts to give,
+     holds while the frame is torn through, and shuts, so Act II is arrived at
+     clean rather than mid-effect.
+
+     Two smoothsteps rather than a gaussian, because this has to be exactly zero
+     at both ends and a gaussian never is. At uCross 0 the tail was still worth
+     0.0245, which is nothing on paper and on screen was a permanent red/cyan
+     flicker across the idle wall, before the visitor had pushed anything.
+     Everything below is keyed to brk, so brk being truly 0 before the push is
+     what keeps the wall itself untouched until it is pushed. */
+  "  float brk = ss(0.02, 0.42, uCross) * ss(0.98, 0.62, uCross);",
   "",
   "  float band = floor(gl_FragCoord.y / 7.0);",
   "  float burst = step(0.968, h21(vec2(floor(uT * 3.4), 7.7)));",
