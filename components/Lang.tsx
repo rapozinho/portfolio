@@ -17,7 +17,14 @@ export function useLang() {
 }
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>("en");
+  /* Portuguese, to agree with the document the server actually sends. Booting
+     in English left <html lang="pt-BR">, a Portuguese title, description,
+     keywords, JSON-LD and OG card wrapped around an English body: a screen
+     reader read English prose with Portuguese pronunciation until hydration
+     corrected it, a crawler or a JS-less visitor never saw the correction, and
+     every shared link previewed in Portuguese whatever the visitor was reading.
+     English stays one click away on the toggle. */
+  const [lang, setLang] = useState<Lang>("pt");
 
   /* The <html lang> attribute is set on the server as pt-BR and has to follow the
      toggle, or a screen reader keeps reading English copy with Portuguese
