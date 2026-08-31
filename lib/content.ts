@@ -105,8 +105,8 @@ export const PORTALS: Portal[] = [
     lead: true,
     label: { pt: "BlackWall Analytics", en: "BlackWall Analytics" },
     note: {
-      pt: "Portal de BI que atende duas verticais, apostas e e-commerce, a partir de um só código. Fila de jobs com polling e cancelamento, e tradução no <b>nível da query</b>, não só na UI.",
-      en: "A BI portal serving two verticals, betting and e-commerce, from one codebase. Job queue with polling and cancellation, and translation at <b>query level</b>, not just the UI.",
+      pt: "Dashboard de BI com 292 queries, 1M+ linhas, 8 bases diferentes. Fila de jobs com polling e cancelamento, tradução no <b>nível da query</b>, não só na UI.",
+      en: "BI dashboard with 292 queries, 1M+ rows, 8 different databases. Job queue with polling and cancellation, translation at <b>query level</b>, not just the UI.",
     },
     kv: [
       { pt: "queries <b>292</b>", en: "queries <b>292</b>" },

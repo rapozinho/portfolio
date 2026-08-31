@@ -17,7 +17,7 @@ export function useLang() {
 }
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>("pt");
+  const [lang, setLang] = useState<Lang>("en");
 
   /* The <html lang> attribute is set on the server as pt-BR and has to follow the
      toggle, or a screen reader keeps reading English copy with Portuguese
