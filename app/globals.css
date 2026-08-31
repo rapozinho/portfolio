@@ -23,6 +23,14 @@
   --fg:#e6eaf2; --muted:#8593a8;
   --red:#ff2f45; --red-deep:#8f0f22; --amber:#fcee0a; --cyan:#37e6ff;
   --shadow:0 1px 0 rgba(255,255,255,.03), 0 18px 44px rgba(0,0,0,.55);
+  /* Height of the fixed bar, stated once. #top measures 11+11 padding, a 1px
+     border and a 32.4px tallest child (#nav a: 11.5px at line-height 1.6, plus
+     6px padding and a 1px border each side) = 55.4px. Three places used to
+     carry their own number for this -- 49, 56, and a third in case.css -- and
+     the 49 was copied from the prototype, where it was already short, so the
+     top of #site sat under the bar. Masked by .sec's own padding, but wrong,
+     and it drifted the moment any of the three was touched. */
+  --top-h:56px;
   /* display: headings and buttons only -- inherited from blackwall-analytics */
   --disp:var(--font-disp),system-ui,"Segoe UI",Roboto,Arial,sans-serif;
   /* text: everything read in sentences. Chakra Petch was doing this job and
@@ -107,6 +115,9 @@ body.through #top{transform:none}
 @media (max-width:920px){
   #nav{display:none}
   #top{padding:10px 14px}
+  /* the nav is gone and the padding drops, so #lang is now the tallest child:
+     11px at 1.6, plus 6px padding and a 1px border each side = 31.6px */
+  :root{--top-h:53px}
 }
 
 /* ══════════ ACT I — THE 3D WALL ══════════ */
@@ -232,6 +243,10 @@ body.landed .cue{opacity:1;transform:none}
   transition:background .16s,box-shadow .2s,transform .16s;
 }
 .breach-btn:hover{background:#fff;box-shadow:0 0 40px -6px var(--amber);transform:translateY(-1px)}
+/* The global :focus-visible outline sits outside the border box, and the
+   clip-path above cuts everything outside it away, so Act I's primary action
+   had no visible focus at all. An inset ring is inside the clip and survives. */
+.breach-btn:focus-visible{outline:none;box-shadow:inset 0 0 0 3px var(--amber)}
 .breach-btn i{width:9px;height:9px;background:var(--amber);display:block}
 .breach-btn:hover i{background:#0a0a05}
 .g-skip{
@@ -255,9 +270,9 @@ body.breaching #gate{animation:bw-clear .5s ease-out forwards}
 
 /* ══════════ ACT II — THE PORTFOLIO ══════════ */
 #site{display:none;position:relative;z-index:2}
-body.through #site{display:block;padding-top:49px}
+body.through #site{display:block;padding-top:var(--top-h)}
 .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,6vw,90px)}
-.sec{padding:clamp(56px,11vh,104px) 0;position:relative;scroll-margin-top:56px}
+.sec{padding:clamp(56px,11vh,104px) 0;position:relative;scroll-margin-top:var(--top-h)}
 .sec + .sec{border-top:1px solid var(--line)}
 
 .sec__h{display:flex;align-items:center;gap:14px;margin:0 0 32px}
@@ -280,6 +295,14 @@ body.through #site{display:block;padding-top:49px}
 @media (prefers-reduced-motion:reduce){
   [data-r]{opacity:1!important;transform:none!important;transition:none}
   .sec__r::after{transform:scaleX(1)!important;transition:none}
+  /* The four infinite loops the earlier reduced-motion blocks never reached.
+     bw-blink is the one that matters most: a flash that never stops is the
+     case WCAG 2.3.1 names. Both keyframe sets end at full opacity, so holding
+     them there leaves every element looking the way it already does at rest.
+     lib/engine.ts and lib/wall2d.ts already read the same query, so this is
+     the CSS half of a decision the JS half had made on its own. */
+  .brand::before,.term__hd i,.caret,.gate-status.off em{animation:none}
+  .gate:hover{transform:none}
 }
 
 /* ── IDENT ── */

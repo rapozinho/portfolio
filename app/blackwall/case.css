@@ -47,7 +47,9 @@
    cover the #grain layer sitting at z-index -1. */
 #case {
   display: block;
-  padding: 49px 0 96px;
+  /* the same bar height globals.css defines, rather than a third private copy
+     of a number that was already short */
+  padding: var(--top-h) 0 96px;
   opacity: 1;
   transform: none;
   min-height: 100vh;
@@ -210,7 +212,11 @@
 #case .dec__row--cost p { color: #9dabc2 }
 
 /* ── stack ──────────────────────────────────────────────────────────── */
-#case .case__stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 }
+/* `> p` because the chip row IS a p inside .case__s, so the prose rule above --
+   one type selector heavier -- was winning and handing it that rule's bottom
+   margin and 64ch cap, which squeezed a flex row of chips into ~500px of an
+   820px column. */
+#case .case__s > p.case__stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; max-width: none }
 #case .case__stack span {
   font-family: var(--mono);
   font-size: 12px;
