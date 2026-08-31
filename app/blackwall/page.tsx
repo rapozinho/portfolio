@@ -78,7 +78,7 @@ const NEXT = [
 
 export default function BlackWallCase() {
   return (
-    <main id="site" className="case">
+    <main id="case" className="case">
       <div className="wrap">
         <p className="case__back">
           <Link href="/">← Maurício Raposo</Link>
