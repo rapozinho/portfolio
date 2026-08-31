@@ -286,6 +286,14 @@ body.landed .cue{opacity:1;transform:none}
 @media (max-height:460px){
   .term{display:none}
 }
+/* The handshake log is the heaviest thing on the gate: about 260px of a 667px
+   phone, 39% of the screen, for text that the readout along the top already
+   states in four words. It is atmosphere written for a desktop, where there is
+   room for atmosphere. What is left is what the visitor needs: where they are,
+   what to do, how far along they are, and two ways through. */
+@media (max-width:760px){
+  .term{display:none}
+}
 
 /* the crossing: the overlay clears, the shader does the travel */
 body.breaching #gate{animation:bw-clear .5s ease-out forwards}

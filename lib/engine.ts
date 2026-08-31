@@ -27,6 +27,18 @@ export type Engine = {
 
 export function mountEngine(o: EngineOpts): Engine {
   var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* Act I was built for a mouse, and three of its ideas do not survive the trip
+     to a phone. Looking around costs a finger you need for pushing; standing
+     this close to the wall fills a small screen with one texture; and a scroll
+     length tuned to a wheel is a long way to drag a thumb. */
+  var COARSE = matchMedia("(pointer: coarse)").matches;
+  /* the camera does not move, the world does, so backing off means letting the
+     entry flight stop a little short: 936 - 908 leaves 28 units of gap, and
+     0.985 of it leaves about 42 */
+  var ENTRY_END = COARSE ? 0.985 : 1;
+  /* a drag has to be about 530px to cross rather than about 860, which was most
+     of a phone screen for one gesture */
+  var TOUCH_GAIN = COARSE ? 3.6 : 2.2;
   var $ = function(s: string, r?: any): any { return (r || document).querySelector(s) };
   var $$ = function(s: string, r?: any): any[] {
     return Array.prototype.slice.call((r || document).querySelectorAll(s));
@@ -151,7 +163,7 @@ export function mountEngine(o: EngineOpts): Engine {
     gl.uniform2f(uni.uRes, glc.width, glc.height);
     gl.uniform1f(uni.uT, RM ? 2.4 : t);
     gl.uniform2f(uni.uM, mx, my);
-    gl.uniform1f(uni.uEntry, entry);
+    gl.uniform1f(uni.uEntry, entry * ENTRY_END);
     gl.uniform1f(uni.uAppr, charge);
     gl.uniform1f(uni.uCross, crossT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -184,7 +196,9 @@ export function mountEngine(o: EngineOpts): Engine {
        switch restarted glFrame on an engine React had already torn down. That
        zombie loop writes landed/through/breaching onto a body Entry's cleanup
        has just cleared, from a route that no longer has a canvas. */
-    on(window, "pointermove", function(e: any){
+    /* Not bound at all on a touch screen. A finger fires pointermove while it
+       drags, so leaving this on would have swung the camera with every push. */
+    if(!COARSE) on(window, "pointermove", function(e: any){
       tmx = (e.clientX / Math.max(1, innerWidth)  - 0.5) * 2;
       tmy = (e.clientY / Math.max(1, innerHeight) - 0.5) * -2;
     }, {passive:true});
@@ -349,11 +363,13 @@ export function mountEngine(o: EngineOpts): Engine {
   on(window, "touchmove", function(e: any){
     if(crossed || touchY === null) return;
     var y = e.touches[0].clientY;
-    if(touchY - y > 0) push((touchY - y) * PUSH * 2.2);
+    if(touchY - y > 0) push((touchY - y) * PUSH * TOUCH_GAIN);
     touchY = y;
-    /* vertical drag is the push, horizontal is the look: one axis each, so a
-       diagonal drag does both instead of neither */
-    if(touchX !== null){
+    /* Horizontal drag used to turn the camera, one axis each so a diagonal did
+       both. On a phone that meant every slightly crooked push also swung the
+       view, and the wall is the whole subject here. The vertical axis keeps the
+       finger; the horizontal one does nothing. */
+    if(!COARSE && touchX !== null){
       var x = e.touches[0].clientX;
       kx = Math.max(-1, Math.min(1, kx + (x - touchX) / Math.max(1, innerWidth) * 2.4));
       touchX = x;
