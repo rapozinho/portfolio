@@ -502,20 +502,26 @@ export const CV: Record<Lang, string> = {
 
 export const NET = {
   lede: {
-    pt: "Aberto a conversas sobre engenharia e análise de dados. Respondo em até um dia útil.",
-    en: "Open to conversations about data engineering and analysis. I reply within one business day.",
+    pt: "Disponível para oportunidades e conversas técnicas em engenharia e análise de dados. Respondo em até um dia útil.",
+    en: "Available for opportunities and technical conversations in data engineering and analysis. I reply within one business day.",
   },
   mail: "raposo360@gmail.com",
-  mailCta: { pt: "escrever", en: "write to me" },
-  resume: { pt: "currículo", en: "résumé" },
+  mailCta: { pt: "Enviar e-mail", en: "Send an email" },
+  resume: { pt: "Currículo", en: "Résumé" },
   based: { pt: "Recife · PE · Brasil", en: "Recife · PE · Brazil" },
 };
 
-/* Secondary channels. The email is deliberately not here. */
+/* Secondary channels. The email is deliberately not here.
+
+   The labels are written in their real casing even though .net__ch span
+   uppercases them in CSS: the transform is presentation, and a screen reader
+   reads the DOM, where "LinkedIn" and "GitHub" are the names of the products.
+   The values are what actually changes on screen, since .net__ch b carries no
+   transform, so the LinkedIn one reads as a name rather than a URL fragment. */
 export const CONTACT: Array<{ label: Bi; value: string; href: string; ext?: boolean }> = [
-  { label: { pt: "linkedin", en: "linkedin" }, value: "/in/mauricio-raposo", href: "https://www.linkedin.com/in/mauricio-raposo/", ext: true },
-  { label: { pt: "github", en: "github" }, value: "@rapozinho", href: "https://github.com/rapozinho", ext: true },
-  { label: { pt: "telefone", en: "phone" }, value: "(81) 9.9188-6180", href: "tel:+5581991886180" },
+  { label: { pt: "LinkedIn", en: "LinkedIn" }, value: "Maurício Raposo", href: "https://www.linkedin.com/in/mauricio-raposo/", ext: true },
+  { label: { pt: "GitHub", en: "GitHub" }, value: "@rapozinho", href: "https://github.com/rapozinho", ext: true },
+  { label: { pt: "Telefone", en: "Phone" }, value: "(81) 9.9188-6180", href: "tel:+5581991886180" },
 ];
 
 export const FOOT: Bi = {
