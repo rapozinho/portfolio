@@ -148,6 +148,140 @@ export const PORTALS: Portal[] = [
   },
 ];
 
+/* ── the BlackWall case study ────────────────────────────────────────
+   Here rather than in the page, for the reason every other string is here: the
+   page was written in Portuguese only, while the card that links to it offers
+   "case study" in both languages, so an English reader clicking the lead
+   project landed in a wall of Portuguese. */
+export const CASE = {
+  eyebrow: { pt: "estudo de caso · 2025–2026", en: "case study · 2025–2026" },
+  back: { pt: "← projetos", en: "← projects" },
+  backFoot: { pt: "← voltar aos projetos", en: "← back to projects" },
+  lede: {
+    pt: "Dashboard de BI que disponibiliza dados de forma inteligente, com gráficos interativos sobre oito bases. O que segue é a engenharia: a restrição que forçou cada decisão, o que ela custou, e o que eu faria diferente.",
+    en: "A BI dashboard that delivers data intelligently, with interactive charts over eight databases. What follows is the engineering: the constraint that forced each decision, what it cost, and what I would do differently.",
+  },
+  demo: { pt: "abrir demo →", en: "open demo →" },
+  repo: { pt: "repo →", en: "repo →" },
+  facts: [
+    { k: { pt: "linhas consultadas", en: "rows queried" }, v: "1.04M" },
+    { k: { pt: "queries no catálogo", en: "queries in the catalogue" }, v: "292" },
+    { k: { pt: "bases atendidas", en: "databases served" }, v: "8" },
+    { k: { pt: "idiomas", en: "languages" }, v: "3" },
+  ],
+  secProblem: { pt: "O problema", en: "The problem" },
+  secDecisions: { pt: "Decisões", en: "Decisions" },
+  secStack: { pt: "Stack", en: "Stack" },
+  secNext: { pt: "O que eu faria diferente", en: "What I would do differently" },
+  rowProblem: { pt: "Restrição", en: "Constraint" },
+  rowChoice: { pt: "Escolha", en: "Choice" },
+  rowCost: { pt: "Custo", en: "Cost" },
+  problem: [
+    {
+      pt: "Números operacionais chegavam a quem decide por caminhos diferentes: uma planilha aqui, um print de dashboard ali, um relatório que alguém montou à mão na semana passada. Quando dois desses discordavam, e discordavam, ninguém sabia qual estava certo, porque não havia uma fonte que se pudesse reexecutar.",
+      en: "Operational numbers reached the people deciding by different routes: a spreadsheet here, a screenshot of a dashboard there, a report someone assembled by hand last week. When two of them disagreed, and they did, nobody knew which was right, because there was no source anyone could re-run.",
+    },
+    {
+      pt: "A vertical de apostas piora isso: número errado é dinheiro, não erro de arredondamento. O portal existe para que a resposta seja sempre a mesma query rodando sobre a mesma base, e para que qualquer pessoa consiga reproduzi-la.",
+      en: "The betting vertical makes that worse: a wrong number is money, not a rounding error. The portal exists so the answer is always the same query running against the same database, and so anyone can reproduce it.",
+    },
+  ],
+  decisions: [
+    {
+      n: "01",
+      title: {
+        pt: "Traduzir no nível da query, não só na interface",
+        en: "Translate at query level, not just in the interface",
+      },
+      problem: {
+        pt: "Três idiomas. Traduzir só os rótulos da UI deixaria os dados em português dentro de um relatório em inglês: nome de produto, status de aposta, categoria.",
+        en: "Three languages. Translating only the UI labels would leave the data in Portuguese inside an English report: product name, bet status, category.",
+      },
+      choice: {
+        pt: "A camada de idioma desce até a query: o catálogo devolve o rótulo já na língua pedida, então o relatório sai inteiro coerente.",
+        en: "The language layer reaches down into the query: the catalogue returns the label already in the language asked for, so the whole report comes out coherent.",
+      },
+      cost: {
+        pt: "Cada query nova precisa das três variantes de rótulo. É trabalho a mais na escrita e disciplina no catálogo. É o tipo de dívida que aparece na décima query, não na primeira.",
+        en: "Every new query needs all three label variants. That is more work to write and more discipline to keep in the catalogue. It is the kind of debt that shows up at the tenth query, not the first.",
+      },
+    },
+    {
+      n: "02",
+      title: {
+        pt: "Fila de jobs com polling e cancelamento",
+        en: "A job queue with polling and cancellation",
+      },
+      problem: {
+        pt: "Uma consulta sobre 1.04M linhas não responde dentro de um request HTTP. Sem fila, o navegador espera e estoura; com fila mas sem cancelamento, quem clicou errado ocupa o worker até o fim.",
+        en: "A query over 1.04M rows does not answer inside an HTTP request. With no queue the browser waits and times out; with a queue but no cancellation, whoever clicked the wrong thing holds the worker to the end.",
+      },
+      choice: {
+        pt: "Job assíncrono, polling de status pelo front, e cancelamento de verdade: o job morre e o worker libera.",
+        en: "An async job, status polling from the front end, and real cancellation: the job dies and the worker is freed.",
+      },
+      cost: {
+        pt: "Mais partes móveis que um endpoint síncrono: estado do job, timeout, e o caso de o cliente desistir sem avisar.",
+        en: "More moving parts than a synchronous endpoint: job state, timeouts, and the case where the client gives up without saying so.",
+      },
+    },
+    {
+      n: "03",
+      title: {
+        pt: "Um só código para as duas verticais",
+        en: "One codebase for both verticals",
+      },
+      problem: {
+        pt: "Apostas e e-commerce têm métricas diferentes, já que GGR e turnover não existem no segundo. O caminho fácil é dois portais.",
+        en: "Betting and e-commerce have different metrics, since GGR and turnover do not exist in the second. The easy path is two portals.",
+      },
+      choice: {
+        pt: "Um código, com o catálogo de queries parametrizado por vertical. Correção de bug vale para as duas.",
+        en: "One codebase, with the query catalogue parameterised by vertical. A bug fix counts for both.",
+      },
+      cost: {
+        pt: "O catálogo carrega condicionais por vertical. Compensa em duas; numa terceira bem diferente eu revisaria a decisão.",
+        en: "The catalogue carries per-vertical conditionals. It pays off at two; at a third one very different from these I would revisit the decision.",
+      },
+    },
+    {
+      n: "04",
+      title: {
+        pt: "Docker Compose e nginx, não uma plataforma gerenciada",
+        en: "Docker Compose and nginx, not a managed platform",
+      },
+      problem: {
+        pt: "Precisava rodar em qualquer máquina, inclusive na minha, sem custo fixo.",
+        en: "It had to run on any machine, mine included, with no fixed cost.",
+      },
+      choice: {
+        pt: "Compose para subir tudo junto, nginx na frente do FastAPI.",
+        en: "Compose to bring everything up together, nginx in front of FastAPI.",
+      },
+      cost: {
+        pt: "Nada de escala automática nem deploy sem downtime. Para o volume atual não faz diferença; num tráfego maior faria.",
+        en: "No autoscaling and no zero-downtime deploys. At the current volume it makes no difference; at heavier traffic it would.",
+      },
+    },
+  ],
+  /* product names, so they read the same in both languages */
+  stack: ["Python · FastAPI", "PostgreSQL · SQL Server", "Chart.js", "Docker Compose · nginx"],
+  next: [
+    {
+      pt: "Testes no catálogo de queries. Hoje uma query errada só aparece quando alguém lê um número estranho, que é a pior forma de descobrir.",
+      en: "Tests on the query catalogue. Today a wrong query only surfaces when someone reads an odd number, which is the worst way to find out.",
+    },
+    {
+      pt: "Cache dos resultados por parâmetro. Muita consulta é repetida com os mesmos filtros e paga o custo inteiro de novo.",
+      en: "Caching results by parameter. Many queries are repeated with the same filters and pay the full cost again.",
+    },
+    {
+      pt: "Orquestração por Airflow em vez da fila caseira. Certificado, ainda não em produção pelas minhas mãos, então ficou como próximo passo honesto, não como stack de vitrine.",
+      en: "Airflow orchestration instead of the home-made queue. Certified, not yet in production under my hands, so it stays an honest next step rather than shop-window stack.",
+    },
+  ],
+};
+
 /* ── 03 career ──────────────────────────────────────────────────────── */
 export const TIMELINE: Array<{ when: Bi; role: Bi; where: string; note: Bi }> = [
   {

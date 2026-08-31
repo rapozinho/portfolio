@@ -1,11 +1,10 @@
 import Entry from "@/components/Entry";
 import Header from "@/components/Header";
 import Site from "@/components/Site";
-import { LangProvider } from "@/components/Lang";
 
 export default function Home() {
   return (
-    <LangProvider>
+    <>
       {/* Act II background: the 2D band wall, behind the content the whole way. */}
       <canvas id="wall-c" aria-hidden="true" />
       <div id="grain" aria-hidden="true" />
@@ -14,6 +13,6 @@ export default function Home() {
       <Header />
       <Entry />
       <Site />
-    </LangProvider>
+    </>
   );
 }

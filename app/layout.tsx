@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Chakra_Petch, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { SITE } from "@/lib/site";
+import { LangProvider } from "@/components/Lang";
 import "./globals.css";
 
 /* Three roles, self-hosted by next/font so there is no render-blocking request to
@@ -83,7 +84,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`${disp.variable} ${body.variable} ${mono.variable}`}>
       <body>
-        {children}
+        {/* Here rather than in app/page.tsx, so the case study is inside it too
+            and a language chosen on one route survives the navigation to the
+            other. The layout does not remount between routes; a provider in a
+            page does. */}
+        <LangProvider>{children}</LangProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON) }}
