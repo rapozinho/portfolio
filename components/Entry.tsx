@@ -23,11 +23,18 @@ export default function Entry() {
   useEffect(() => {
     let wall: Wall2D | null = null;
     let eng: Engine | null = null;
+    /* A link from another route can name the section it wants to open at, the
+       way the case study returns to /#projetos. Reaching that link meant
+       crossing the wall already, so the crossing is not asked for a second
+       time. */
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    const target = hash ? document.getElementById(hash) : null;
     try {
       wall = mountWall2D();
       eng = mountEngine({
         lines: () => TERM[langRef.current],
         setEnergy: (v) => wall?.setEnergy(v),
+        skipEntry: !!target,
       });
       engine.current = eng;
     } catch (err) {
@@ -36,6 +43,14 @@ export default function Entry() {
          visitor on a black screen. */
       console.error("[blackwall] entry failed, skipping to content", err);
       document.body.classList.add("through");
+    }
+    /* Outside the try: both paths above end with Act II laid out, and a visitor
+       who asked for a section should land on it whether or not the shader
+       compiled. #site was display:none while the browser made its own attempt
+       at the hash, so that attempt had nothing to scroll to. auto, not smooth,
+       because this is an arrival rather than a movement. */
+    if (target) {
+      requestAnimationFrame(() => target.scrollIntoView({ block: "start", behavior: "auto" }));
     }
     return () => {
       eng?.destroy();

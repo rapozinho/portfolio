@@ -1,34 +1,63 @@
-/* The case study reads, it does not perform: no canvas, no entry, no reveal
-   animations. It reuses the tokens from globals.css and adds only what a
-   long-form document needs.
+/* The case study reads, it does not perform: no canvas, no entry flight, no
+   scroll-triggered reveals. It borrows the portfolio's palette and three type
+   roles so the two pages are obviously the same product, and spends its one
+   loud gesture on the cost of each decision.
 
-   Every rule is scoped under #case on purpose. globals.css already owns .figs,
-   .foot and .wrap at the same specificity, and which of the two sheets wins a
-   tie depends on the order Next puts them in the bundle, which is not the same
-   on a hard load as it is after a client-side navigation. Scoping by id settles
-   it regardless of order. */
+   Every rule is scoped under #case or .case-rail on purpose. globals.css
+   already owns .figs, .foot, .brand and .wrap at the same specificity, and
+   which sheet wins a tie depends on the order Next puts them in the bundle,
+   which is not the same on a hard load as after a client-side navigation.
+   Scoping settles it regardless of order. */
 
+/* ── the way back, always in reach ──────────────────────────────────── */
+.case-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(10, 14, 22, .94), rgba(5, 7, 12, .74));
+  backdrop-filter: blur(6px);
+}
+.case-rail .wrap {
+  max-width: 820px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+.case-rail .brand { font-size: 13.5px }
+.case-rail__back {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 6px 11px;
+  transition: color .16s, border-color .16s;
+}
+.case-rail__back:hover { color: var(--amber); border-color: var(--amber) }
+
+/* ── the document ───────────────────────────────────────────────────── */
+/* No background: body already paints --void, and an opaque box here would
+   cover the #grain layer sitting at z-index -1. */
 #case {
   display: block;
-  padding: clamp(28px, 6vh, 64px) 0 90px;
+  padding: 49px 0 96px;
   opacity: 1;
   transform: none;
   min-height: 100vh;
-  background: var(--void);
 }
 #case .wrap { max-width: 820px }
 
-#case .case__back {
-  margin: 0 0 clamp(30px, 6vh, 54px);
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
+#case .case__hd {
+  padding: clamp(38px, 8vh, 74px) 0 clamp(28px, 5vh, 40px);
+  border-bottom: 1px solid var(--line);
 }
-#case .case__back a { color: var(--muted); text-decoration: none; transition: color .16s }
-#case .case__back a:hover { color: var(--amber) }
-
-#case .case__hd { border-bottom: 1px solid var(--line); padding-bottom: 30px }
 #case .case__eyebrow {
   display: block;
   font-family: var(--mono);
@@ -37,86 +66,150 @@
   text-transform: uppercase;
   color: var(--red);
 }
+/* Two lines on purpose: the name is the subject, the category is the qualifier,
+   and stacking them lets the display face carry the hero without a graphic. */
 #case .case__t {
-  margin: 12px 0 0;
+  margin: 14px 0 0;
   font-family: var(--disp);
-  font-size: clamp(30px, 5.2vw, 50px);
+  font-size: clamp(38px, 8vw, 76px);
   font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: .01em;
-  text-wrap: balance;
+  line-height: .94;
+  letter-spacing: -.01em;
+}
+#case .case__t span {
+  display: block;
+  color: var(--muted);
+  font-weight: 500;
 }
 #case .case__lede {
-  margin: 18px 0 0;
-  color: var(--muted);
-  font-size: 16.5px;
-  line-height: 1.66;
-  max-width: 62ch;
+  margin: clamp(20px, 3vh, 28px) 0 0;
+  color: #b6c1d1;
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 58ch;
 }
-#case .case__go { display: flex; flex-wrap: wrap; gap: 10px; margin: 24px 0 0 }
+
+#case .case__go { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 0 }
 #case .case__go a {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--amber);
-  text-decoration: none;
-  border: 1px solid var(--line-hot);
-  padding: 9px 15px;
-  transition: border-color .16s, background .16s;
+  color: #0a0a05;
+  background: var(--amber);
+  border: 1px solid var(--amber);
+  padding: 10px 16px;
+  transition: background .16s, color .16s;
 }
-#case .case__go a:hover { border-color: var(--amber); background: rgba(252, 238, 10, .07) }
+#case .case__go a:hover { background: transparent; color: var(--amber) }
+/* One primary action. The repo is the same gesture at a lower volume. */
+#case .case__go a.case__go--quiet {
+  color: var(--muted);
+  background: transparent;
+  border-color: var(--line-hot);
+}
+#case .case__go a.case__go--quiet:hover { color: var(--fg); border-color: var(--fg) }
 
-/* the numbers, stated once, near the top, where a skim finds them.
-   globals.css draws .figs as a hairline-gapped bordered grid; here the strip is
-   open and unboxed, so every property that sheet sets has to be answered. */
+/* the numbers, stated once, near the top, where a skim finds them */
 #case .case__figs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
-  gap: 22px 26px;
-  margin: 34px 0 0;
-  padding-bottom: 34px;
-  background: none;
-  border: 0;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  background: var(--line);
   border-bottom: 1px solid var(--line);
 }
-#case .case__figs > div { background: none; padding: 0 }
+#case .case__figs > div { background: var(--void); padding: 18px 18px 20px }
+#case .case__figs dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+#case .case__figs dd {
+  margin: 8px 0 0;
+  font-family: var(--mono);
+  font-size: 26px;
+  line-height: 1;
+  color: var(--cyan);
+  font-variant-numeric: tabular-nums;
+}
 
-#case .case__s { margin: 42px 0 0 }
-#case .case__s > h2 {
-  margin: 0 0 16px;
+/* ── sections ───────────────────────────────────────────────────────── */
+#case .case__s { margin: clamp(46px, 8vh, 72px) 0 0 }
+#case .case__sh { display: flex; align-items: center; gap: 14px; margin: 0 0 22px }
+#case .case__sh h2 {
+  margin: 0;
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--muted);
   font-weight: 400;
+  flex: none;
 }
-#case .case__s p { margin: 0 0 15px; color: #b6c1d1; font-size: 16px; line-height: 1.7; max-width: 66ch }
+#case .case__rule { flex: 1; height: 1px; background: var(--line) }
+#case .case__s > p {
+  margin: 0 0 15px;
+  color: #b6c1d1;
+  font-size: 16px;
+  line-height: 1.75;
+  max-width: 64ch;
+}
 
-/* Numbered because these ARE a sequence: each decision constrains the next. */
+/* ── decisions ──────────────────────────────────────────────────────── */
+/* Numbered because these are a sequence: each decision narrows the next. The
+   section headings deliberately carry no numbers, so there is only ever one
+   counter running on the page. */
 #case .dec { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; background: var(--line) }
-#case .dec > li { position: relative; background: var(--surface); padding: 22px 24px 20px }
+#case .dec > li { background: var(--surface); padding: 24px clamp(18px, 3vw, 28px) 0 }
+
+#case .dec__hd { display: flex; align-items: baseline; gap: 14px; margin: 0 0 18px }
 #case .dec__n {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .16em;
   color: var(--red);
+  flex: none;
 }
-#case .dec > li > h3 {
-  margin: 8px 0 14px;
+#case .dec__hd h3 {
+  margin: 0;
   font-family: var(--disp);
-  font-size: 19px;
+  font-size: clamp(18px, 2.4vw, 21px);
   font-weight: 600;
-  line-height: 1.28;
+  line-height: 1.26;
   text-wrap: balance;
 }
-#case .dec__l { margin: 0 0 10px; color: var(--muted); font-size: 15px; line-height: 1.66; max-width: 66ch }
-#case .dec__l b { color: var(--fg); font-weight: 500 }
-/* the cost is the half most write-ups leave out, so it gets the marker */
-#case .dec__cost { margin-bottom: 0; padding-left: 13px; border-left: 2px solid var(--line-hot) }
-#case .dec__cost b { color: var(--amber) }
 
+/* label in its own column: three lines of a decision read as a table, not as
+   three paragraphs that happen to start in bold */
+#case .dec__row { display: grid; grid-template-columns: 74px 1fr; gap: 0 18px; padding: 0 0 16px }
+#case .dec__k {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #55617a;
+  padding-top: .35em;
+}
+#case .dec__row p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 62ch }
+
+/* The signature. Cost is the half of an engineering write-up that normally goes
+   missing, so it is the one place on the page that raises its voice: it breaks
+   out to the panel's full width, keys amber, and closes every decision. */
+#case .dec__row--cost {
+  margin: 4px calc(clamp(18px, 3vw, 28px) * -1) 0;
+  padding: 16px clamp(18px, 3vw, 28px);
+  background: var(--surface-2);
+  border-top: 1px solid var(--line);
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+#case .dec__row--cost .dec__k { color: var(--amber) }
+#case .dec__row--cost p { color: #9dabc2 }
+
+/* ── stack ──────────────────────────────────────────────────────────── */
 #case .case__stack { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 }
 #case .case__stack span {
   font-family: var(--mono);
@@ -124,17 +217,18 @@
   color: var(--fg);
   border: 1px solid var(--line-hot);
   box-shadow: inset 2px 0 0 var(--cyan);
-  padding: 6px 11px;
+  padding: 7px 12px;
 }
 
-#case .nxt { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px }
+/* ── open items ─────────────────────────────────────────────────────── */
+#case .nxt { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px }
 #case .nxt li {
   position: relative;
-  padding-left: 20px;
+  padding-left: 22px;
   color: var(--muted);
   font-size: 15.5px;
-  line-height: 1.66;
-  max-width: 70ch;
+  line-height: 1.7;
+  max-width: 66ch;
 }
 #case .nxt li::before {
   content: "→";
@@ -144,6 +238,26 @@
   font-family: var(--mono);
 }
 
-#case .foot { margin-top: 56px; border-top: 1px solid var(--line); padding: 26px 0 0 }
-#case .foot a { color: var(--muted); transition: color .16s }
-#case .foot a:hover { color: var(--amber) }
+/* ── foot ───────────────────────────────────────────────────────────── */
+#case .case__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: clamp(56px, 9vh, 82px);
+  border-top: 1px solid var(--line);
+  padding: 26px 0 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #4d586e;
+}
+#case .case__foot a { color: var(--muted); transition: color .16s }
+#case .case__foot a:hover { color: var(--amber) }
+
+@media (max-width: 640px) {
+  #case .dec__row { grid-template-columns: 1fr; gap: 5px }
+  #case .dec__k { padding-top: 0 }
+}

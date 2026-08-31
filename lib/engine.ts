@@ -15,6 +15,8 @@ export type EngineOpts = {
   lines: () => Array<[string, string]>;
   /** hands the Act II band wall its reaction level */
   setEnergy: (v: number) => void;
+  /** land in Act II with no flight, for a link that names a section to open at */
+  skipEntry?: boolean;
 };
 
 export type Engine = {
@@ -408,6 +410,22 @@ export function mountEngine(o: EngineOpts): Engine {
   /* ════════════════════════════════════════════════════════════════
      BOOT
      ════════════════════════════════════════════════════════════════ */
+
+  /* Arriving from a link that already names a section, e.g. the case study
+     returning to /#projetos. The visitor crossed the wall to reach that link,
+     so flying it again would be a toll charged twice, and cross() ends on
+     scrollTo(0), which would drop them at the top of the page they asked to
+     open halfway down. Take Act II directly and leave the scroll alone. */
+  if(o.skipEntry){
+    crossed = true; entryDone = true;
+    entry = 1; charge = 1; chargeT = 1; crossT = 1; crossTarget = 1;
+    clearTimeout(typing);
+    if(gate) gate.classList.add("gone");
+    document.body.classList.add("through");
+    glStop();
+    o.setEnergy(0.2);
+    observe();
+  }
 
   return {
     destroy: function(){
