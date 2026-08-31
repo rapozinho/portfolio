@@ -357,9 +357,6 @@ body.through #site{display:block;padding-top:var(--top-h)}
   .role{grid-column:2;grid-row:2;align-self:start;margin-top:7px}
   .bio{grid-column:1/-1;grid-row:3;margin-top:20px}
   .figs{grid-column:1/-1;grid-row:4}
-  /* the caption was set for a 210px photo; at 104px it wrapped to two lines and
-     took a third of the badge */
-  .ph em{font-size:8px;letter-spacing:.06em;padding:4px 5px}
 }
 .ph{position:relative;background:var(--void);border:1px solid var(--line-hot)}
 /* height:auto is load-bearing: without it the img height attribute applies as a
@@ -372,12 +369,6 @@ body.through #site{display:block;padding-top:var(--top-h)}
 }
 .ph i{position:absolute;width:2px;top:0;bottom:0;left:0;z-index:2;
   background:linear-gradient(180deg,transparent,var(--red),transparent);box-shadow:0 0 14px 1px var(--red)}
-.ph em{
-  position:absolute;bottom:0;left:0;right:0;z-index:3;font-style:normal;
-  background:rgba(5,7,12,.86);border-top:1px solid var(--line);
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;padding:5px 8px;
-  text-transform:uppercase;color:var(--cyan);
-}
 .name{margin:0;font-family:var(--disp);font-size:clamp(30px,4.6vw,48px);font-weight:700;line-height:.98;letter-spacing:.01em}
 .role{margin:11px 0 0;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--muted)}
@@ -550,8 +541,21 @@ body.through #site{display:block;padding-top:var(--top-h)}
    twelve certificates were landing in a single column: 869px of stack for
    cards that are 81px tall and mostly empty space. At 148px they pair up and
    the section loses about 430px, half a screen, with nothing removed. */
+/* Three to a row on a phone, stated rather than derived: auto-fill would have
+   to be told a minimum under about 110px to reach three at 343px of content,
+   and that same minimum would let a wider screen pack in four or five.
+   break-word rather than anywhere, so a word splits only when it truly cannot
+   fit: these are titles, and "ORQUESTRAN-DO" is a last resort, not a default. */
 @media (max-width:760px){
-  .shs{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:6px}
+  .shs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .sh{min-width:0}
+  .sh b,.sh i{overflow-wrap:break-word}
+}
+/* Three needs about 110px a card to hold these titles. Below 360px the track
+   falls to 89px and the long ones stopped wrapping and started being cut off
+   at the card edge: ORQUESTRAND, INTEGRAÇÃ, CONHECEND. Two fit there. */
+@media (max-width:359px){
+  .shs{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 .sh{position:relative;display:block;background:var(--surface-2);border:1px solid var(--line);
   padding:12px 13px 11px 16px;transition:border-color .17s,background .17s}

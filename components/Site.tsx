@@ -50,7 +50,6 @@ export default function Site() {
                   intrinsic ratio. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/eu.jpg" alt="Maurício Raposo" width={751} height={1026} />
-              <em>{t(IDENT.badge)}</em>
             </div>
             <div>
               <h3 className="name" data-r style={{ "--i": 1 } as React.CSSProperties}>

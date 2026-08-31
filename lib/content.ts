@@ -63,7 +63,6 @@ export const TERM: Record<Lang, Array<[string, string]>> = {
 /* ── 01 identity ────────────────────────────────────────────────────── */
 export const IDENT = {
   title: { pt: "Identificação", en: "Identity" },
-  badge: { pt: "id confirmado", en: "id confirmed" },
   name: "Maurício Raposo",
   role: {
     pt: "engenheiro e analista de dados",
