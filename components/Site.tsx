@@ -38,9 +38,11 @@ export default function Site() {
           <div className="ident">
             <div className="ph" data-r style={{ "--i": 0 } as React.CSSProperties}>
               <i />
-              {/* A plain img on purpose: the shader builds its match-cut texture from
-                  this element's resolved src, so a responsive srcset would hand it a
-                  different file per device.
+              {/* This was a plain img because the shader built its match-cut texture
+                  from the element's resolved src, and a responsive srcset would have
+                  handed it a different file per device. The match cut is gone, so
+                  that constraint is gone with it and next/image is now open if the
+                  srcset is wanted.
 
                   width/height are the file's real intrinsic size, and .ph img sets
                   height:auto. Both matter: these attributes are presentational hints,

@@ -21,10 +21,6 @@ export const FRAG = [
   "uniform float     uEntry;",   /* 0 = deep in the Old Net, 1 = at the wall */
   "uniform float     uAppr;",
   "uniform float     uCross;",
-  "uniform float     uReveal;",
-  "uniform vec4      uTarget;",
-  "uniform sampler2D uPhoto;",
-  "uniform float     uHasPhoto;",
   "",
   "float h11(float x){ return fract(sin(x * 127.13) * 43758.5453); }",
   "float h21(vec2 p){",
@@ -96,10 +92,24 @@ export const FRAG = [
   "  vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;",
   "  float H2 = uRes.y * 0.5;",
   "",
+  /* One envelope drives the crossing. It opens as the wall starts to give,
+     peaks while the frame is being torn through, and returns to zero, so Act II
+     is arrived at clean rather than mid-effect. */
+  "  float brk = exp(-pow((uCross - 0.52) / 0.27, 2.0));",
+  "",
   "  float band = floor(gl_FragCoord.y / 7.0);",
   "  float burst = step(0.968, h21(vec2(floor(uT * 3.4), 7.7)));",
   "  float gk = h21(vec2(band, floor(uT * 14.0)));",
-  "  uv.x += step(0.88, gk) * (gk - 0.5) * 0.05 * (burst + uCross * 2.0);",
+  "  uv.x += step(0.88, gk) * (gk - 0.5) * 0.05 * burst;",
+  /* The crossing is the whole frame breaking along its own scanlines. This
+     shears the ray direction, so the geometry genuinely tears rather than a
+     filter being laid over a picture of it. Finer bands and a faster reseed
+     than the idle glitch above: that one is the wall ticking over, this one is
+     the wall failing. */
+  "  float tb = floor(gl_FragCoord.y / 4.0);",
+  "  float tk = h21(vec2(tb, floor(uT * 26.0)));",
+  "  float tear = (tk - 0.5) * step(0.55, tk) * brk;",
+  "  uv.x += tear * 0.30;",
   "",
   /* A single path in Z. The entry flight covers the lattice and the darkness
      past it; scroll covers the approach. No branch, so no cut. */
@@ -114,9 +124,10 @@ export const FRAG = [
   /* PITCH tilts the view up so the horizon sits at ~64% of frame height
      instead of dead centre, which is how the wall gets to own the frame. */
   "  vec3  rd  = normalize(vec3(uv.x * fov, uv.y * fov + 0.12, 1.0));",
-  /* Yaw about Y, up to +/-0.62 rad (~35 deg). Damped to zero through the
-     crossing: the photo match cut is measured in screen space against a
-     forward view, so a turned camera would land the face off its rectangle. */
+  /* Yaw about Y, up to +/-0.62 rad (~35 deg). Still damped to zero through the
+     crossing, now for a different reason than it was: the breach has to read as
+     forward motion, and a camera turned off-axis at the moment the wall gives
+     makes the push look like a drift. */
   "  float yaw = uM.x * 0.55 * (1.0 - uCross);",
   "  float cy = cos(yaw), sy = sin(yaw);",
   "  rd = vec3(rd.x * cy + rd.z * sy, rd.y, rd.z * cy - rd.x * sy);",
@@ -415,24 +426,11 @@ export const FRAG = [
      completely. 0.5 is chosen. */
   "  col = col * (1.0 - clamp(netA, 0.0, 1.0) * 0.5) + netCol;",
   "",
-  /* ── the photograph, landing on the Act II rectangle ── */
-  "  if(uHasPhoto > 0.5 && uReveal > 0.001){",
-  "    float s = max(wallZ - ro.z, 0.001);",
-  /* photo box follows the figure's new scale/lift: centre -0.10*1.95+0.48,
-     half-size 0.623*1.95 x 0.85*1.95 */
-  "    vec2 srcC = (vec2(0.0, 0.285) - ro.xy) / (fov * s);",
-  "    vec2 srcH = vec2(1.215, 1.658) / (fov * s);",
-  "    float k2 = ss(0.28, 0.96, uCross);",
-  "    vec2 cN = mix(srcC, uTarget.xy, k2);",
-  "    vec2 hN = max(mix(srcH, uTarget.zw, k2), vec2(0.001));",
-  "    vec2 puv = (uv - cN) / hN * 0.5 + 0.5;",
-  "    puv.y = 1.0 - puv.y;",
-  "    puv += (vec2(vn(uv * 9.0 + uT * 0.2), vn(uv * 9.0 + 9.3)) - 0.5) * (1.0 - uReveal) * 0.045;",
-  "    vec2 ok = step(vec2(0.0), puv) * step(puv, vec2(1.0));",
-  "    vec3 ph = texture2D(uPhoto, clamp(puv, 0.0, 1.0)).rgb;",
-  "    float m = ok.x * ok.y * k2 * uReveal;",
-  "    col = mix(col, ph * 1.20, m);",
-  "  }",
+  /* The photograph used to land here, morphing from a rectangle at wall
+     distance onto the one Act II would draw it in. It put the crossing's whole
+     climax on one face in the middle of the frame, which is not what the
+     crossing is about: the subject is the wall giving way. The frame itself now
+     carries it, below. */
   "",
   /* ── void: at distance the wall is swallowed by black ── */
   "  float d2 = dot(uv, uv);",
@@ -447,6 +445,13 @@ export const FRAG = [
      hard black bar down each side, not a falloff. */
   "  col *= 1.0 - d2 * mix(1.10, 0.16, vOpen);",
   "",
+  /* The signal comes apart on the same bands the geometry is shearing on, and
+     it comes apart into the site's own pair: red is the wall, cyan is what the
+     wall is holding. Opposed channels, so a band that loses red gains exactly
+     the cyan it lost, and the frame reads as one signal splitting rather than
+     as two colours being added to it. */
+  "  col.r  += tear * 2.6;",
+  "  col.gb -= vec2(tear * 2.6);",
   "  col += PALE * exp(-pow((uCross - 0.62) / 0.14, 2.0)) * 0.8;",
   /* push colour away from its own luminance: the wall reads as lit glass,
      not tinted grey */

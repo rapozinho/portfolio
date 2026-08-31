@@ -84,10 +84,8 @@ export function mountEngine(o: EngineOpts): Engine {
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   
-    ["uRes","uT","uM","uEntry","uAppr","uCross","uReveal","uTarget","uPhoto","uHasPhoto"].forEach(function(n){ uni[n] = gl.getUniformLocation(prog, n) });
+    ["uRes","uT","uM","uEntry","uAppr","uCross"].forEach(function(n){ uni[n] = gl.getUniformLocation(prog, n) });
     glResize();
-    loadPhoto();
-    measureTarget();
     return true;
   }
   
@@ -95,57 +93,13 @@ export function mountEngine(o: EngineOpts): Engine {
      devicePixelRatio: a 4K screen would otherwise ask for 8M pixels x 78 steps.
      Small screens still render 1:1; big ones scale down and the CSS upscales. */
   
-  /* The photograph is already in the DOM for Act II — reuse that data URI as a
-     texture instead of shipping the bytes twice. NPOT is fine on WebGL1 with
-     CLAMP_TO_EDGE and no mipmaps. */
-  var photoTex: any = null, photoReady = false;
-  function loadPhoto(){
-    var el: any = document.querySelector(".ph img");
-    if(!el || !gl) return;
-    var img = new Image();
-    img.onload = function(){
-      photoTex = gl.createTexture();
-      gl.bindTexture(gl.TEXTURE_2D, photoTex);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      photoReady = true;
-    };
-    img.src = el.src;
-  }
-  
-  
-  /* The shader has to land the photograph exactly where Act II will draw it,
-     so measure that rectangle rather than guessing at the CSS. #site is display
-     :none before the crossing, so reveal it invisibly for one reflow. */
-  var target: number[] = [-0.28, 0.02, 0.075, 0.102];   /* sane default if measuring fails */
-  function measureTarget(){
-    var site = document.getElementById("site");
-    var ph = document.querySelector(".ph");
-    if(!site || !ph) return;
-    var wasThrough = document.body.classList.contains("through");
-    if(!wasThrough){
-      /* .through also supplies #site padding-top, so measuring without it
-         reported the photo 49px too high and the match cut would jump */
-      site.style.visibility = "hidden";
-      document.body.classList.add("through");
-    }
-    var r = ph.getBoundingClientRect();
-    if(!wasThrough){
-      document.body.classList.remove("through");
-      site.style.visibility = "";
-    }
-    if(r.width < 4 || r.height < 4) return;
-    var W = innerWidth, H = innerHeight;
-    /* shader uses uv = (frag - 0.5*res)/res.y, and frag.y counts up from the bottom */
-    var cx = (r.left + r.width  / 2 - W / 2) / H;
-    var cy = (H / 2 - (r.top + r.height / 2)) / H;
-    target = [cx, cy, (r.width / 2) / H, (r.height / 2) / H];
-  }
-  
+  /* The crossing used to end on a match cut: the photograph was uploaded as a
+     texture and the shader flew it from a rectangle at wall distance onto the
+     one Act II would draw it in, which meant measuring that rectangle from the
+     DOM every resize and briefly forcing .through to measure it correctly. The
+     crossing is the whole frame now, so the texture, the measurement and the
+     reflow it needed are all gone with it. */
+
   function glResize(){
     if(!gl) return;
     var budget = matchMedia("(pointer: coarse)").matches ? 820000 : 1600000;
@@ -194,27 +148,19 @@ export function mountEngine(o: EngineOpts): Engine {
   
     crossT += (crossTarget - crossT) * 0.019;   /* slower still: five curtains to clear */
   
-    /* the photograph resolves over the last third of the approach */
-    var reveal = Math.min(1, Math.max(0, (charge - 0.34) / 0.52) + crossT * 0.9);
-  
     gl.uniform2f(uni.uRes, glc.width, glc.height);
     gl.uniform1f(uni.uT, RM ? 2.4 : t);
     gl.uniform2f(uni.uM, mx, my);
     gl.uniform1f(uni.uEntry, entry);
     gl.uniform1f(uni.uAppr, charge);
     gl.uniform1f(uni.uCross, crossT);
-    gl.uniform1f(uni.uReveal, reveal);
-    gl.uniform4f(uni.uTarget, target[0], target[1], target[2], target[3]);
-    gl.uniform1f(uni.uHasPhoto, photoReady ? 1 : 0);
-    if(photoReady){
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, photoTex);
-      gl.uniform1i(uni.uPhoto, 0);
-    }
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-  
-    if(reveal > 0.9) idLine();
-  
+
+    /* The identification used to wait on the photograph being legible. With no
+       photograph it waits on the push instead, at the point the approach is
+       nearly home or the wall has started to give. */
+    if(charge > 0.86 || crossT > 0.06) idLine();
+
     setMeter(charge);
   
     glRaf = requestAnimationFrame(glFrame);
@@ -224,7 +170,7 @@ export function mountEngine(o: EngineOpts): Engine {
   if(glOK){
     document.body.classList.add("gl-ok");
     glRaf = requestAnimationFrame(glFrame);
-    on(window, "resize", function(){ glResize(); measureTarget() });
+    on(window, "resize", function(){ glResize() });
     addEventListener("pointermove", function(e){
       tmx = (e.clientX / Math.max(1, innerWidth)  - 0.5) * 2;
       tmy = (e.clientY / Math.max(1, innerHeight) - 0.5) * -2;
