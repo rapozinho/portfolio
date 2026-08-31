@@ -259,8 +259,32 @@ body.landed .cue{opacity:1;transform:none}
   .g-act{align-items:stretch}
   .breach-btn{justify-content:center}
   .g-skip{text-align:center}
-  .term{max-width:none}
+  /* flex-basis follows the main axis, and this rule flips that axis to column.
+     The 340px in `flex:1 1 340px` was written as a WIDTH for the row layout, so
+     down here it silently became a HEIGHT floor, and flex-grow:1 then let it
+     take more: measured at 320px wide, the terminal stood 340px tall and pushed
+     the meter, the breach button and the skip link off the bottom of a fixed,
+     unscrollable overlay. Let it be its content instead. */
+  .term{max-width:none;flex:0 1 auto}
   .term__bd{min-height:96px;font-size:11px}
+}
+
+/* Height queries. Every other query in this file asks how narrow the screen is,
+   and none of them catches the case that actually breaks: a phone held
+   sideways is 375px TALL. #gate is a fixed full-viewport grid with no scroll,
+   so whatever does not fit is not merely below the fold, it is unreachable.
+   Measured at 667x375 before this existed: the meter, the breach button and the
+   skip link were all entirely off-screen, leaving the visitor a scroll gesture
+   nothing on screen mentions. The terminal is atmosphere and the action block
+   is the way through, so the terminal is what gives way. */
+@media (max-height:600px){
+  #gate{padding:12px clamp(16px,4vw,44px) 14px}
+  .g-bot{gap:10px}
+  .g-act{gap:8px}
+  .term__bd{min-height:0;max-height:96px;overflow:hidden;line-height:1.6}
+}
+@media (max-height:460px){
+  .term{display:none}
 }
 
 /* the crossing: the overlay clears, the shader does the travel */
@@ -385,6 +409,16 @@ body.through #site{display:block;padding-top:var(--top-h)}
   font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--amber);border-bottom:1px solid transparent;transition:border-color .16s}
 .gate-go a:hover{border-bottom-color:var(--amber)}
+/* A finger is not a cursor. These are the way into every project and they stand
+   18px tall, which is a comfortable click and a miss for a thumb. Keyed to the
+   pointer rather than the width, because it is the input device that decides
+   this and a small window with a mouse is still fine. The underline goes on
+   touch: it only ever appeared on hover, which a touch screen does not have, so
+   the space it occupied becomes the tap target instead. */
+@media (pointer:coarse){
+  .gate-go{gap:2px 14px}
+  .gate-go a{border-bottom:0;padding:12px 0}
+}
 
 /* ── TIMELINE ── */
 .tl{list-style:none;margin:0;padding:0}
@@ -424,7 +458,14 @@ body.through #site{display:block;padding-top:var(--top-h)}
   box-shadow:inset 0 -1px 0 rgba(252,238,10,.55)}
 @media (max-width:640px){
   .sk__row{grid-template-columns:minmax(0,1fr)}
-  .sk__s{grid-column:1;grid-row:2;justify-self:start;margin-top:8px}
+  /* nowrap is right for the pill while it sits in a column of its own, and
+     wrong once this rule gives it a whole row: the longest label, "certificado
+     · fora de produção", measures 319px against a 280px column at 320px wide,
+     so it held the document 19px wider than the viewport. Nothing showed a
+     scrollbar, because body carries overflow-x:hidden, and the page was simply
+     19px too wide underneath it. */
+  .sk__s{grid-column:1;grid-row:2;justify-self:start;margin-top:8px;
+    white-space:normal;max-width:100%}
   .sk__d{grid-row:3}
 }
 
@@ -689,6 +730,17 @@ body.through #site{display:block;padding-top:var(--top-h)}
 @media (max-width:620px){
   .cm{padding:0}
   .cm__p{height:100%;max-width:none;clip-path:none;border:0}
+  /* The close control is last in the source, so once the header wrapped it came
+     to rest on a line of its own under the language and download links, reading
+     as a stray button rather than the way out of the dialog. Order it beside the
+     title and give the title a basis that leaves exactly the close button and
+     one gap, so the actions are pushed to the row below together. */
+  .cm__h{align-items:flex-start}
+  .cm__t{order:1;flex:1 1 calc(100% - 46px)}
+  .cm__c{order:2}
+  .cm__lang{order:3}
+  .cm__d{order:4}
+  .cm__x{order:5}
 }
 @media (prefers-reduced-motion:reduce){
   .cm{animation:none}
