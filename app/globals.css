@@ -575,6 +575,21 @@ body.through #site{display:block;padding-top:var(--top-h)}
   padding:12px 13px 11px 16px;transition:border-color .17s,background .17s}
 .sh::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line-hot)}
 .sh:hover{background:var(--surface-3);border-color:var(--line-hot)}
+/* the hover preview: the document itself, near the cursor, so the card does not
+   have to announce that it opens */
+.peek{
+  position:fixed;top:0;left:0;z-index:70;pointer-events:none;
+  width:280px;padding:5px;background:var(--surface);
+  border:1px solid var(--line-hot);box-shadow:var(--shadow);
+  animation:peek-in .12s ease-out;
+  will-change:transform;
+}
+.peek img{display:block;width:100%;height:auto}
+@keyframes peek-in{from{opacity:0}to{opacity:1}}
+/* a tap fires mouseenter as well, and the JS guard is the first line of defence
+   rather than the only one */
+@media (hover:none),(pointer:coarse){.peek{display:none}}
+@media (prefers-reduced-motion:reduce){.peek{animation:none}}
 .sh h4{margin:0;font-family:var(--disp);font-size:14px;font-weight:600;line-height:1.2}
 .sh p{margin:6px 0 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
   text-transform:uppercase;color:var(--muted)}

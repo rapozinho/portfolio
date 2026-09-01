@@ -8,6 +8,7 @@ import {
   STACK_LEDE, TIMELINE, type Shard,
 } from "@/lib/content";
 import CertModal from "./CertModal";
+import CertPeek from "./CertPeek";
 import { Rich, useLang } from "./Lang";
 
 /* Act II. Everything here was built with innerHTML in the prototype and rebuilt
@@ -27,6 +28,10 @@ function SecHead({ n, title }: { n: string; title: string }) {
 export default function Site() {
   const { lang, t } = useLang();
   const [openCert, setOpenCert] = useState<Shard | null>(null);
+  /* which certificate the cursor is over, and where it came in. Only the shard
+     drives a render; the panel's position is written to the node directly. */
+  const [peek, setPeek] = useState<Shard | null>(null);
+  const [peekAt, setPeekAt] = useState<{ x: number; y: number } | null>(null);
 
 
   return (
@@ -220,6 +225,15 @@ export default function Site() {
                 href={`/certificados/${lang}/${s.slug}.pdf`}
                 target="_blank"
                 rel="noopener"
+                /* Guarded on the pointer, not on width: a tap fires mouseenter
+                   too, and a preview that appears under the finger that opened
+                   the card is noise. */
+                onMouseEnter={(e) => {
+                  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+                  setPeekAt({ x: e.clientX, y: e.clientY });
+                  setPeek(s);
+                }}
+                onMouseLeave={() => setPeek(null)}
                 onClick={(e) => {
                   /* let the browser keep modifier clicks, so "open in new tab"
                      and middle-click go on working */
@@ -289,6 +303,8 @@ export default function Site() {
         </div>
       </section>
 
+      {/* hidden while the modal is up: the document is already on screen, full size */}
+      <CertPeek shard={openCert ? null : peek} lang={lang} at={peekAt} />
       <CertModal shard={openCert} onClose={() => setOpenCert(null)} />
     </main>
   );
