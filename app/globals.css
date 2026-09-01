@@ -656,7 +656,12 @@ body.through #site{display:block;padding-top:var(--top-h)}
 .net__ch span{
   font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
   color:#5b6780;
+  display:inline-flex;align-items:center;gap:6px;
 }
+/* currentColor, so the mark is the same ink as its label and follows it on
+   hover without a rule of its own */
+.net__ch svg{width:12px;height:12px;fill:currentColor;flex:none}
+.net__ch a:hover span{color:var(--muted)}
 .net__ch b{font-family:var(--mono);font-size:13px;font-weight:400;color:var(--fg);letter-spacing:.02em}
 .net__ch a:hover b{color:var(--amber)}
 

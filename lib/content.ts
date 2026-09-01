@@ -536,10 +536,22 @@ export const NET = {
    reads the DOM, where "LinkedIn" and "GitHub" are the names of the products.
    The values are what actually changes on screen, since .net__ch b carries no
    transform, so the LinkedIn one reads as a name rather than a URL fragment. */
-export const CONTACT: Array<{ label: Bi; value: string; href: string; ext?: boolean }> = [
-  { label: { pt: "LinkedIn", en: "LinkedIn" }, value: "Maurício Raposo", href: "https://www.linkedin.com/in/mauricio-raposo/", ext: true },
-  { label: { pt: "GitHub", en: "GitHub" }, value: "@rapozinho", href: "https://github.com/rapozinho", ext: true },
-  { label: { pt: "Telefone", en: "Phone" }, value: "(81) 99188-6180", href: "tel:+5581991886180" },
+export type Channel = {
+  label: Bi;
+  value: string;
+  href: string;
+  ext?: boolean;
+  /* drawn inline in components/Site.tsx: a mark is recognised before a word is
+     read, and these two are the ones a recruiter looks for by shape */
+  icon: "linkedin" | "github" | "phone";
+};
+
+export const CONTACT: Channel[] = [
+  { icon: "linkedin", label: { pt: "LinkedIn", en: "LinkedIn" }, value: "Maurício Raposo", href: "https://www.linkedin.com/in/mauricio-raposo/", ext: true },
+  { icon: "github", label: { pt: "GitHub", en: "GitHub" }, value: "@rapozinho", href: "https://github.com/rapozinho", ext: true },
+  /* The country code was already in the href and missing from the text, so the
+     number read as local while the link dialled international. */
+  { icon: "phone", label: { pt: "Telefone", en: "Phone" }, value: "+55 (81) 99188-6180", href: "tel:+5581991886180" },
 ];
 
 export const FOOT: Bi = {
