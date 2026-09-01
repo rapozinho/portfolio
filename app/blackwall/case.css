@@ -267,3 +267,28 @@
   #case .dec__row { grid-template-columns: 1fr; gap: 5px }
   #case .dec__k { padding-top: 0 }
 }
+
+/* ── screenshots ──────────────────────────────────────────────────────
+   A case study about a dashboard that never shows the dashboard asks the
+   reader to take every claim on faith. These are the demo build, which is the
+   real front end reading recorded payloads, so what is on screen is what the
+   thing does. */
+#case .shot { margin: 40px 0 0 }
+#case .shot img {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--line-hot);
+  background: var(--void);
+}
+#case .shot figcaption {
+  margin: 10px 0 0;
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.6;
+  color: var(--muted); max-width: 64ch;
+}
+/* Two up where there is room. They are steps in one flow, so reading them side
+   by side says more than stacking them does. */
+#case .shots { display: grid; gap: 26px; margin: 42px 0 0 }
+@media (min-width: 860px) {
+  #case .shots { grid-template-columns: 1fr 1fr; gap: 20px }
+  #case .shots .shot { margin: 0 }
+  #case .shots figcaption { font-size: 11px }
+}

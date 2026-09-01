@@ -25,6 +25,18 @@ function Row({ k, children, cost }: { k: string; children: string; cost?: boolea
   );
 }
 
+/* A screenshot with its caption. Plain img: these are fixed assets at a fixed
+   width, so there is nothing for next/image to negotiate. */
+function Shot({ shot, cap }: { shot: (typeof CASE.shots)[number]; cap: string }) {
+  return (
+    <figure className="shot">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={`/blackwall/${shot.src}.webp`} alt={cap} width={shot.w} height={shot.h} loading="lazy" />
+      <figcaption>{cap}</figcaption>
+    </figure>
+  );
+}
+
 function SecHead({ label }: { label: string }) {
   return (
     <div className="case__sh">
@@ -106,6 +118,9 @@ export default function CaseStudy() {
             ))}
           </dl>
 
+          {/* The product, before any of the prose about it. */}
+          <Shot shot={CASE.shots[0]} cap={t(CASE.shots[0].cap)} />
+
           <section className="case__s">
             <SecHead label={t(CASE.secProblem)} />
             {CASE.problem.map((p, i) => (
@@ -132,6 +147,13 @@ export default function CaseStudy() {
               ))}
             </ol>
           </section>
+
+          {/* the two steps the decisions above are describing, side by side */}
+          <div className="shots">
+            {CASE.shots.slice(1).map((s) => (
+              <Shot key={s.src} shot={s} cap={t(s.cap)} />
+            ))}
+          </div>
 
           <section className="case__s">
             <SecHead label={t(CASE.secStack)} />

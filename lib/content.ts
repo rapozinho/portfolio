@@ -184,6 +184,38 @@ export const CASE = {
     { k: { pt: "bases atendidas", en: "databases served" }, v: { pt: "8", en: "8" } },
     { k: { pt: "idiomas", en: "languages" }, v: { pt: "3", en: "3" } },
   ],
+  /* Captured from the demo build, which is the real front end reading recorded
+     API payloads. A case study about a dashboard that never shows the dashboard
+     asks the reader to take every claim on faith. */
+  shots: [
+    {
+      src: "painel",
+      w: 1400,
+      h: 826,
+      cap: {
+        pt: "Um painel depois de rodar: doze indicadores contra a janela anterior, o aviso de que a margem da loja própria vem zerada nesta base, e o gráfico trocando de métrica e de granularidade.",
+        en: "A panel after it runs: twelve indicators against the previous window, the warning that one store's margin arrives at zero for this database, and the chart switching metric and granularity.",
+      },
+    },
+    {
+      src: "portais",
+      w: 1400,
+      h: 831,
+      cap: {
+        pt: "A entrada: cada operação atrás da parede, com o estado da conexão à vista.",
+        en: "The way in: each operation behind the wall, its connection state in the open.",
+      },
+    },
+    {
+      src: "base",
+      w: 1400,
+      h: 729,
+      cap: {
+        pt: "Dentro de uma base: painéis para ler na tela, e extrações que devolvem o mesmo SQL em CSV.",
+        en: "Inside one database: panels to read on screen, and extractions returning the same SQL as CSV.",
+      },
+    },
+  ],
   secProblem: { pt: "O problema", en: "The problem" },
   secDecisions: { pt: "Decisões", en: "Decisions" },
   secStack: { pt: "Stack", en: "Stack" },
