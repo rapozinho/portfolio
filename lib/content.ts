@@ -128,8 +128,11 @@ export const PORTALS: Portal[] = [
   {
     label: { pt: "Automação de rotina", en: "Routine automation" },
     note: {
-      pt: "Um processo que comia <b>um a dois dias</b> de trabalho manual: reconstruído em Python com extração SQL e coleta via Microsoft Graph API. Agora 5 a 10 minutos.",
-      en: "A process that ate <b>one to two days</b> of manual work: rebuilt in Python with SQL extraction and Microsoft Graph API collection. Now 5 to 10 minutes.",
+      /* The bots are named here because they are how anyone actually reaches
+         this: without that, two cards claimed the same saving and neither said
+         they were halves of one thing. */
+      pt: "Um processo que comia <b>um a dois dias</b> de trabalho manual: reconstruído em Python com extração SQL e coleta via Microsoft Graph API, e entregue pelos bots do Telegram. Agora 5 a 10 minutos.",
+      en: "A process that ate <b>one to two days</b> of manual work: rebuilt in Python with SQL extraction and Microsoft Graph API collection, delivered through the Telegram bots. Now 5 to 10 minutes.",
     },
     kv: [
       { pt: "antes <b>1–2 d</b>", en: "before <b>1–2 d</b>" },
@@ -138,7 +141,9 @@ export const PORTALS: Portal[] = [
     status: { kind: "warn", label: { pt: "interno · NDA", en: "internal · NDA" } },
   },
   {
-    label: { pt: "Bots de relatório", en: "Telegram report bots" },
+    /* "consultas", to agree with the note under it: the card called them report
+       bots while the text described query bots. */
+    label: { pt: "Bots de consultas", en: "Telegram query bots" },
     /* The visitor's own text. Two mechanical corrections to it: Telegram in its
        real casing, like every other product name here, and "Permitem" to agree
        with the plural subject. */
@@ -303,8 +308,8 @@ export const TIMELINE: Array<{ when: Bi; role: Bi; where: string; note: Bi }> = 
        while GGR, turnover and retention say which industry and which numbers.
        Each line now says what the technique buys instead of only naming it. */
     note: {
-      pt: "SQL avançado em PostgreSQL e SQL Server para apurar GGR, turnover e retenção, que são os números pelos quais a operação decide. Modelo tabelas, chaves e relacionamentos para que a integridade seja garantida pelo banco e não por combinação entre pessoas. Coleta em tempo real pela Microsoft Graph API. Plantão quando uma rotina morre às 2h.",
-      en: "Advanced SQL on PostgreSQL and SQL Server to compute GGR, turnover and retention, the numbers the operation decides on. I model tables, keys and relationships so integrity is enforced by the database rather than agreed between people. Real-time collection through the Microsoft Graph API. On call when a routine dies at 2am.",
+      pt: "SQL avançado em PostgreSQL e SQL Server para apurar GGR, turnover e retenção, que são os números pelos quais a operação decide. Modelo tabelas, chaves e relacionamentos para que a integridade seja garantida pelo banco e não por combinação entre pessoas. Coleta em tempo real pela Microsoft Graph API. Uso modelos de linguagem para escrever query e revisar código mais rápido, e confiro o resultado contra o banco antes de confiar nele. Plantão quando uma rotina morre às 2h.",
+      en: "Advanced SQL on PostgreSQL and SQL Server to compute GGR, turnover and retention, the numbers the operation decides on. I model tables, keys and relationships so integrity is enforced by the database rather than agreed between people. Real-time collection through the Microsoft Graph API. I use language models to write queries and review code faster, and I check the result against the database before trusting it. On call when a routine dies at 2am.",
     },
   },
   {
