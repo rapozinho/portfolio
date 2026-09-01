@@ -139,9 +139,12 @@ export const PORTALS: Portal[] = [
   },
   {
     label: { pt: "Bots de relatório", en: "Telegram report bots" },
+    /* The visitor's own text. Two mechanical corrections to it: Telegram in its
+       real casing, like every other product name here, and "Permitem" to agree
+       with the plural subject. */
     note: {
-      pt: "Três bots mantidos vivos para os times de KPI e Produto. Relatórios sob demanda no chat, conferidos entre banco, Excel, Power BI e BetMetrica antes de qualquer envio.",
-      en: "Three bots kept alive for the KPI and Product teams. Reports on demand in chat, cross-checked against the database, Excel, Power BI and BetMetrica before anything is sent.",
+      pt: "Bots de consultas no Telegram que simplificam a distribuição de dados para as equipes de KPI e Produto. Permitem consultas rápidas via chat, reduzindo gargalos na extração de dados e aumentando a produtividade dos times.",
+      en: "Telegram query bots that simplify how data reaches the KPI and Product teams. They answer queries straight from chat, reducing bottlenecks in data extraction and raising the productivity of both teams.",
     },
     kv: [
       { pt: "bots <b>3</b>", en: "bots <b>3</b>" },
