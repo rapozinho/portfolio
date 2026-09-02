@@ -154,7 +154,7 @@ export const PORTALS: Portal[] = [
     kv: [
       { pt: "bots <b>3</b>", en: "bots <b>3</b>" },
       { pt: "times <b>2</b>", en: "teams <b>2</b>" },
-      { pt: "KPIs <b>GGR +2</b>", en: "KPIs <b>GGR +2</b>" },
+      { pt: "indicadores <b>3</b>", en: "indicators <b>3</b>" },
     ],
     status: { kind: "warn", label: { pt: "interno · NDA", en: "internal · NDA" } },
   },
@@ -229,8 +229,8 @@ export const CASE = {
       en: "Operational numbers reached decision-makers by different routes: a spreadsheet here, a screenshot of a dashboard there, a report someone assembled by hand last week. When two of them disagreed, and they did, nobody knew which was right, because there was no source anyone could re-run.",
     },
     {
-      pt: "A vertical de apostas piora isso: número errado é dinheiro, não erro de arredondamento. O portal existe para que a resposta seja sempre a mesma query rodando sobre a mesma base, e para que qualquer pessoa consiga reproduzi-la.",
-      en: "The betting vertical makes that worse: a wrong number is money, not a rounding error. The portal exists so the answer is always the same query running against the same database, and so anyone can reproduce it.",
+      pt: "Num negócio onde número errado é dinheiro e não erro de arredondamento, isso sai caro. O portal existe para que a resposta seja sempre a mesma query rodando sobre a mesma base, e para que qualquer pessoa consiga reproduzi-la.",
+      en: "In a business where a wrong number is money and not a rounding error, that gets expensive. The portal exists so the answer is always the same query running against the same database, and so anyone can reproduce it.",
     },
   ],
   decisions: [
@@ -241,8 +241,8 @@ export const CASE = {
         en: "Translate at query level, not just in the interface",
       },
       problem: {
-        pt: "Três idiomas. Traduzir só os rótulos da UI deixaria os dados em português dentro de um relatório em inglês: nome de produto, status de aposta, categoria.",
-        en: "Three languages. Translating only the UI labels would leave the data in Portuguese inside an English report: product name, bet status, category.",
+        pt: "Três idiomas. Traduzir só os rótulos da UI deixaria os dados em português dentro de um relatório em inglês: nome de produto, status de transação, categoria.",
+        en: "Three languages. Translating only the UI labels would leave the data in Portuguese inside an English report: product name, transaction status, category.",
       },
       choice: {
         pt: "A camada de idioma desce até a query: o catálogo devolve o rótulo já na língua pedida, então o relatório sai inteiro coerente.",
@@ -279,8 +279,8 @@ export const CASE = {
         en: "One codebase for both verticals",
       },
       problem: {
-        pt: "Apostas e e-commerce têm métricas diferentes, já que GGR e turnover não existem no segundo. O caminho fácil é dois portais.",
-        en: "Betting and e-commerce have different metrics, since GGR and turnover do not exist in the second. The easy path is two portals.",
+        pt: "As duas verticais apuram métricas diferentes: o que uma calcula não existe na outra. O caminho fácil é dois portais.",
+        en: "The two verticals compute different metrics: what one calculates does not exist in the other. The easy path is two portals.",
       },
       choice: {
         pt: "Um código, com o catálogo de queries parametrizado por vertical. Correção de bug vale para as duas.",
@@ -335,13 +335,15 @@ export const TIMELINE: Array<{ when: Bi; role: Bi; where: string; note: Bi }> = 
     when: { pt: "2025.05 → atual", en: "2025.05 → present" },
     role: { pt: "Engenheiro e analista de dados júnior", en: "Junior data engineer & analyst" },
     where: "BSA Tech · Recife/PE",
-    /* The acronyms that prove something stay and the ones that only filled space
-       go: joins, subconsultas and CTEs are table stakes for anyone writing SQL,
-       while GGR, turnover and retention say which industry and which numbers.
-       Each line now says what the technique buys instead of only naming it. */
+    /* Named techniques only where naming one proves something: joins,
+       subconsultas and CTEs are table stakes for anyone writing SQL, so they
+       went, and each line says what a technique buys rather than only listing
+       it. The metrics are stated in neutral terms on purpose. The industry ones
+       were more specific and they identified the employer's sector to anyone
+       working in it, which the owner does not want the site to do. */
     note: {
-      pt: "SQL avançado em PostgreSQL e SQL Server para apurar GGR, turnover e retenção, que são os números pelos quais a operação decide. Modelo tabelas, chaves e relacionamentos para que a integridade seja garantida pelo banco e não por combinação entre pessoas. Coleta em tempo real pela Microsoft Graph API. Uso modelos de linguagem para escrever query e revisar código mais rápido, e confiro o resultado contra o banco antes de confiar nele. Plantão quando uma rotina morre às 2h.",
-      en: "Advanced SQL on PostgreSQL and SQL Server to compute GGR, turnover and retention, the numbers the operation decides on. I model tables, keys and relationships so integrity is enforced by the database rather than agreed between people. Real-time collection through the Microsoft Graph API. I use language models to write queries and review code faster, and I check the result against the database before trusting it. On call when a routine dies at 2am.",
+      pt: "SQL avançado em PostgreSQL e SQL Server para apurar receita, margem e retenção, que são os números pelos quais a operação decide. Modelo tabelas, chaves e relacionamentos para que a integridade seja garantida pelo banco e não por combinação entre pessoas. Coleta em tempo real pela Microsoft Graph API. Uso modelos de linguagem para escrever query e revisar código mais rápido, e confiro o resultado contra o banco antes de confiar nele. Plantão quando uma rotina morre às 2h.",
+      en: "Advanced SQL on PostgreSQL and SQL Server to compute revenue, margin and retention, the numbers the operation decides on. I model tables, keys and relationships so integrity is enforced by the database rather than agreed between people. Real-time collection through the Microsoft Graph API. I use language models to write queries and review code faster, and I check the result against the database before trusting it. On call when a routine dies at 2am.",
     },
   },
   {
@@ -418,12 +420,12 @@ export const SKILLS: Skill[] = [
   },
   {
     name: { pt: "BI", en: "BI" },
-    tag: { pt: "power bi · betmetrica · matplotlib", en: "power bi · betmetrica · matplotlib" },
+    tag: { pt: "power bi · matplotlib · chart.js", en: "power bi · matplotlib · chart.js" },
     st: "prod",
     cad: { pt: "em produção · semanal", en: "in production · weekly" },
     note: {
-      pt: "Power BI, BetMetrica e Matplotlib. E conferir um número em <em>quatro fontes</em> antes de ele chegar numa tela.",
-      en: "Power BI, BetMetrica and Matplotlib. And cross-checking one number across <em>four sources</em> before it reaches a screen.",
+      pt: "Power BI, Matplotlib e Chart.js. E conferir um número em <em>quatro fontes</em> antes de ele chegar numa tela.",
+      en: "Power BI, Matplotlib and Chart.js. And cross-checking one number across <em>four sources</em> before it reaches a screen.",
     },
   },
   {
@@ -483,7 +485,7 @@ export const STACK: Array<{ id: Tier; label: Bi; note: Bi; items: string[] }> = 
       "MySQL",
       "NumPy", "Matplotlib", "FastAPI",
       "Graph API", "Telegram API", "Requests",
-      "Power BI", "BetMetrica", "Chart.js", "Excel",
+      "Power BI", "Chart.js", "Excel",
       "Docker Compose", "nginx",
       "Jira", "Jupyter",
     ],

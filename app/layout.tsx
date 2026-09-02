@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: "Maurício Raposo · Engenheiro e analista de dados",
   description:
-    "Engenheiro e analista de dados júnior na BSA Tech. SQL avançado, pipelines em Python e automação em produção na vertical de apostas, onde número errado é dinheiro.",
+    "Engenheiro e analista de dados júnior na BSA Tech. SQL avançado, pipelines em Python e automação em produção, num setor onde número errado é dinheiro e não erro de arredondamento.",
   keywords: [
     "engenheiro de dados", "analista de dados", "data engineer",
     "SQL", "Python", "PostgreSQL", "SQL Server", "Power BI", "Recife",
